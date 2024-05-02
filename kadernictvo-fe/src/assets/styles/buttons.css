@@ -1,0 +1,30 @@
+.btn-cus{
+    position: relative;
+    transition: 1s all ease;
+    color: white;
+}
+
+.btn-cus:hover{
+    color: black;
+    transition: 0.6s all ease;
+}
+
+.btn-cus::before{
+    background: #ffffff;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: -1;
+    transition: all 0.6s ease;
+}
+
+.btn-fill::before{
+    width: 0;
+    height: 100%;
+}
+
+.btn-fill:hover::before{
+    width: 100%;
+}

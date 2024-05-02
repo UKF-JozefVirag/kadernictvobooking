@@ -1,27 +1,9 @@
 <template>
-<!--    <img-->
-<!--        class="header-img"-->
-<!--        src="../assets/header.jpg"-->
-<!--        alt="header image"-->
-<!--    >-->
-
-    <div id="carouselExampleSlidesOnly" class="carousel slide header-img" data-bs-ride="carousel">
-        <div class="carousel-inner">
-            <div class="carousel-item active">
-                <img src="../assets/header.jpg" class="d-block w-100" alt="header">
-            </div>
-            <div class="carousel-item">
-                <img src="../assets/inside.jpg" class="d-block w-100" alt="inside">
-            </div>
-            <div class="carousel-item">
-                <img src="../assets/outside.jpg" class="d-block w-100" alt="oustide">
-            </div>
-        </div>
-    </div>
-
     <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand" href="#"><img src="../assets/logo-light.png" alt="logo" width="100px"></a>
+            <a class="navbar-brand" href="#"><img src="../assets/logo-light.png"
+                                                  alt="logo"
+                                                  width="100px"></a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -58,17 +40,6 @@ export default {
 </script>
 
 <style scoped>
-    .header-img {
-        height: 100vh;
-        width: 100vw;
-        object-fit: cover;
-        filter: brightness(0.6);
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: -1;
-    }
-
     li {
         font-size: large;
     }
