@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/styles/buttons.css";
+@import "../assets/styles/buttons.scss";
 .header-img {
     height: 100vh;
     width: 100vw;

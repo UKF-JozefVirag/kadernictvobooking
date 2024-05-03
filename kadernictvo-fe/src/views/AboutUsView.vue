@@ -18,7 +18,7 @@
         <v-row>
             <v-col offset="1" cols="10" align-self="center" class="text-center">
                 <v-carousel :show-arrows="false" hide-delimiters
-                            cycle>
+                            cycle class="shadow-lg">
                     <v-carousel-item
                         v-for="(item,i) in images"
                         :key="i"
@@ -41,13 +41,13 @@ export default {
         return {
             images: [
                 {
-                    src: 'src/assets/images/beard1.jpg',
+                    src: 'src/assets/images/carousel/carousel1.jpg',
                 },
                 {
-                    src: 'src/assets/images/fade1.jpg',
+                    src: 'src/assets/images/carousel/carousel2.jpg',
                 },
                 {
-                    src: 'src/assets/images/fade2.jpg',
+                    src: 'src/assets/images/carousel/carousel3.jpg',
                 },
             ]
         }
