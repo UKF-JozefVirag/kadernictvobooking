@@ -1,8 +1,8 @@
 <template>
     <NavBar></NavBar>
-<!--    <ScrollToTopButton></ScrollToTopButton>-->
     <HeaderComponent></HeaderComponent>
     <AboutUsView></AboutUsView>
+    <ServicesView></ServicesView>
     <RouterView />
 </template>
 
@@ -11,7 +11,7 @@ import { RouterLink, RouterView } from 'vue-router'
 import NavBar from "@/components/NavBar.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import AboutUsView from "@/views/AboutUsView.vue";
-// import ScrollToTopButton from "@/components/ScrollToTopButton.vue";
+import ServicesView from "@/views/ServicesView.vue";
 </script>
 
 <style>

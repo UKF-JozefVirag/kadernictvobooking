@@ -2,7 +2,7 @@
     <v-container>
         <img
             class="header-img"
-            src="../assets/header.jpg"
+            src="../assets/images/header.jpg"
             alt="header image"
         >
 
@@ -35,7 +35,7 @@ export default {
     height: 100vh;
     width: 100vw;
     object-fit: cover;
-    filter: brightness(0.6);
+    filter: brightness(0.4);
     position: absolute;
     top: 0;
     left: 0;

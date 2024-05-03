@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="aboutContainer">
         <v-row>
             <v-col align-self="center">
                 <SectionDescriber section-name="O nás" class="text-black"></SectionDescriber>
@@ -29,7 +29,6 @@
             </v-col>
         </v-row>
     </v-container>
-
 </template>
 
 <script>
@@ -42,13 +41,13 @@ export default {
         return {
             images: [
                 {
-                    src: 'src/assets/beard1.jpg',
+                    src: 'src/assets/images/beard1.jpg',
                 },
                 {
-                    src: 'src/assets/fade1.jpg',
+                    src: 'src/assets/images/fade1.jpg',
                 },
                 {
-                    src: 'src/assets/fade2.jpg',
+                    src: 'src/assets/images/fade2.jpg',
                 },
             ]
         }
@@ -57,6 +56,8 @@ export default {
 </script>
 
 <style scoped>
-
+.aboutContainer {
+    height: 100vh;
+}
 
 </style>

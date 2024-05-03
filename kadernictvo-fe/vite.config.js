@@ -18,4 +18,5 @@ export default defineConfig({
         usePolling: true
     }
   },
+  base: '/kadernictvo-fe/'
 })
