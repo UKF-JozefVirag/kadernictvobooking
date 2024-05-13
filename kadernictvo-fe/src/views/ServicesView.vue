@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container class="mt-5">
         <v-row>
             <v-col>
                 <SectionDescriber section-name="Naše služby"></SectionDescriber>
