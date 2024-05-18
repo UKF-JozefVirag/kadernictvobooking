@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
+
 * {
     box-sizing: border-box;
 }
@@ -282,3 +284,114 @@ body {
 }
 
 /* INNER END */
+
+/* === REVIEWS START=== */
+// Variables
+$white: rgba(255, 255, 255, .75);
+$dark: #111;
+$lightGray: rgba(255, 255, 255, .3);
+$primaryFontSize: 18px;
+
+// Mixins
+@mixin text-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reviews {
+    overflow: hidden;
+
+
+    .carousel {
+        padding: 140px 0;
+
+        .carousel-arrow {
+            bottom: 50%;
+            transform: translateX(-50%);
+        }
+
+        .carousel-control {
+            .fa {
+                position: absolute;
+            }
+
+            &.left .fa {
+                right: 18px;
+                top: 9px;
+                transform: rotate(-45deg);
+            }
+
+            &.right {
+                margin-left: 0;
+                margin-right: -44px;
+
+                .fa {
+                    left: 18px;
+                    bottom: 9px;
+                    transform: rotate(-45deg);
+                }
+            }
+        }
+    }
+}
+
+.review-comment {
+    font-size: $primaryFontSize;
+    color: $white;
+    max-width: 750px;
+    margin: 0 auto 20px auto;
+    line-height: 1.7;
+}
+
+.author {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: $lightGray;
+    letter-spacing: .2em;
+}
+
+.title {
+    font-weight: 300;
+    font-family: 'Dosis', sans-serif;
+    margin-bottom: 75px;
+    text-transform: uppercase;
+    color: $dark;
+    letter-spacing: .3em;
+
+    & > * {
+        font-size: $primaryFontSize;
+    }
+
+    &.small {
+        letter-spacing: .4em;
+        margin-bottom: 30px;
+
+        & > * {
+            font-size: 15px;
+        }
+    }
+
+    &.less-margin {
+        margin-bottom: 20px;
+    }
+
+    &.white {
+        color: $white;
+    }
+
+    @media (max-width: 767px) {
+        margin-bottom: 40px;
+    }
+
+    @media (max-width: 479px) {
+        margin-bottom: 30px;
+        text-align: center;
+
+        .title-link {
+            float: none !important;
+            display: block;
+            margin-top: 10px;
+        }
+    }
+}

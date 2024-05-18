@@ -3,6 +3,7 @@
     <HeaderComponent></HeaderComponent>
     <AboutUsView></AboutUsView>
     <ServicesView></ServicesView>
+    <ReviewsCarousel></ReviewsCarousel>
     <RouterView />
 </template>
 
@@ -12,6 +13,7 @@ import NavBar from "@/components/NavBar.vue";
 import HeaderComponent from "@/components/HeaderComponent.vue";
 import AboutUsView from "@/views/AboutUsView.vue";
 import ServicesView from "@/views/ServicesView.vue";
+import ReviewsCarousel from "@/components/ReviewsCarousel.vue";
 </script>
 
 <style>
