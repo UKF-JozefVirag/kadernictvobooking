@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="mt-5">
+    <v-container fluid class="mt-5 contactus">
         <v-row>
             <v-col>
                 <SectionDescriber section-name="Kontakt"></SectionDescriber>
@@ -18,10 +18,10 @@
                 <h2 class="text-left">Otváracie hodiny</h2>
                 <v-row class="d-flex justify-space-between mt-3">
                     <v-col class="text-left">
-                        <p class="h6 ">Pondelok</p>
+                        <p class="h6">Pondelok</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">08:00 - 20:00</p>
+                        <p class="h6 hours">08:00 - 20:00</p>
                     </v-col>
                 </v-row>
                 <v-row class="d-flex justify-space-between">
@@ -29,40 +29,40 @@
                         <p class="h6 ">Utorok</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">08:00 - 20:00</p>
+                        <p class="h6 hours">08:00 - 20:00</p>
                     </v-col>
                 </v-row>
                 <v-row class="d-flex justify-space-between">
                     <v-col class="text-left">
-                        <p class="h6 ">Streda</p>
+                        <p class="h6">Streda</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">08:00 - 20:00</p>
+                        <p class="h6 hours">08:00 - 20:00</p>
                     </v-col>
                 </v-row>
                 <v-row class=" d-flex justify-space-between
                     ">
                     <v-col class="text-left">
-                        <p class="h6 ">Štvrtok</p>
+                        <p class="h6">Štvrtok</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">08:00 - 20:00</p>
+                        <p class="h6 hours">08:00 - 20:00</p>
                     </v-col>
                 </v-row>
                 <v-row class="d-flex justify-space-between">
                     <v-col class="text-left">
-                        <p class="h6 ">Piatok</p>
+                        <p class="h6">Piatok</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">08:00 - 20:00</p>
+                        <p class="h6 hours">08:00 - 20:00</p>
                     </v-col>
                 </v-row>
                 <v-row class="d-flex justify-space-between">
                     <v-col class="text-left">
-                        <p class="h6 ">Sobota</p>
+                        <p class="h6">Sobota</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">12:00 - 18:00</p>
+                        <p class="h6 hours">12:00 - 18:00</p>
                     </v-col>
                 </v-row>
                 <v-row class="d-flex justify-space-between">
@@ -70,7 +70,7 @@
                         <p class="h6 ">Nedeľa</p>
                     </v-col>
                     <v-col class="text-right">
-                        <p class="h6">Zatvorené</p>
+                        <p class="h6 hours">Zatvorené</p>
                     </v-col>
                 </v-row>
                 <hr>
@@ -79,7 +79,7 @@
                         <p class="h6">Telefónne číslo: </p>
                     </v-col>
                     <v-col class="text-right">
-                        <a href="tel:0950444555" class="h6">0950 444 555</a>
+                        <a href="tel:0950444555" class="h6 hours">0950 444 555</a>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -87,7 +87,7 @@
                         <p class="h6">Email: </p>
                     </v-col>
                     <v-col class="text-right">
-                        <a href="mailto: info@barbershop.sk" class="h6">info@barbershop.sk</a>
+                        <a href="mailto: info@barbershop.sk" class="h6 hours">info@barbershop.sk</a>
                     </v-col>
                 </v-row>
             </v-col>
@@ -113,4 +113,13 @@ export default {
         margin-right: 10px;
     }
 }
+
+.hours {
+    font-weight: normal;
+}
+
+.contactus {
+    letter-spacing: 2px;
+}
+
 </style>
