@@ -4,6 +4,7 @@
     <AboutUsView></AboutUsView>
     <ServicesView></ServicesView>
     <ReviewsCarousel></ReviewsCarousel>
+    <GalleryView></GalleryView>
     <ContactUs></ContactUs>
     <RouterView />
 </template>
@@ -16,6 +17,10 @@ import AboutUsView from "@/views/AboutUsView.vue";
 import ServicesView from "@/views/ServicesView.vue";
 import ReviewsCarousel from "@/components/ReviewsCarousel.vue";
 import ContactUs from "@/views/ContactUs.vue";
+import GalleryView from "@/views/GalleryView.vue";
+
+
+
 </script>
 
 <style>
