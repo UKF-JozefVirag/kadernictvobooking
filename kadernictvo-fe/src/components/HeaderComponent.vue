@@ -18,7 +18,7 @@
                     </div>
                     <div class="col-md-3"></div>
                 </div>
-                <span class="inner-decor-down rhomb-icon white-icon"><i class="fa fa-chevron-down" aria-hidden="true"></i></span>
+                <span class="inner-decor-down rhomb-icon white-icon"><a href="#about-us"><i class="fa fa-chevron-down" aria-hidden="true"></i></a></span>
             </div>
         </section>
     </main>

@@ -1,5 +1,5 @@
 <template>
-    <header class="header">
+    <header class="header" id="header">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="#"><img src="../assets/images/logo-light.png"
@@ -11,19 +11,19 @@
                 <div class="collapse navbar-collapse " id="header-nav">
                     <ul class="navbar-nav mx-auto header-nav">
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#">Domov</a>
+                            <a class="nav-link" href="#header">Domov</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">O nás</a>
+                            <a class="nav-link" href="#about-us">O nás</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#">Naše služby</a>
+                            <a class="nav-link" href="#services">Naše služby</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Galéria</a>
+                            <a class="nav-link" href="#gallery">Galéria</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#">Kontakt</a>
+                            <a class="nav-link" href="#contact-us">Kontakt</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Online rezervácia</a>

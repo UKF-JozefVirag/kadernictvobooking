@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="aboutContainer mt-5">
+    <v-container fluid class="aboutContainer mt-5" id="about-us">
         <v-row>
             <v-col align-self="center">
                 <SectionDescriber section-name="O nás" class="text-black"></SectionDescriber>
