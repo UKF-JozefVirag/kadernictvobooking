@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap');
 
+
 * {
     box-sizing: border-box;
 }
@@ -88,29 +89,6 @@ body {
 }
 
 /* RHOMB-ICON END */
-
-/* ARROW-UP START */
-
-.arrow-up a {
-    position: fixed;
-    z-index: 999;
-    right: 30px;
-    bottom: 30px;
-    font-size: 28px;
-    color: #c6c6c6;
-    transition: all .3s linear;
-
-    &:hover {
-        color: #777;
-    }
-
-    @media (max-width: 479px) {
-        right: 15px;
-        bottom: 15px;
-    }
-}
-
-/* ARROW-UP END */
 
 /* HEADER START */
 
@@ -291,13 +269,6 @@ $white: rgba(255, 255, 255, .75);
 $dark: #111;
 $lightGray: rgba(255, 255, 255, .3);
 $primaryFontSize: 18px;
-
-// Mixins
-@mixin text-ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
 
 .reviews {
     overflow: hidden;

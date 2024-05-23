@@ -6,6 +6,7 @@
     <ReviewsCarousel></ReviewsCarousel>
     <GalleryView></GalleryView>
     <ContactUs></ContactUs>
+    <FooterComponent></FooterComponent>
     <RouterView />
 </template>
 
@@ -18,6 +19,7 @@ import ServicesView from "@/views/ServicesView.vue";
 import ReviewsCarousel from "@/components/ReviewsCarousel.vue";
 import ContactUs from "@/views/ContactUs.vue";
 import GalleryView from "@/views/GalleryView.vue";
+import FooterComponent from "@/components/FooterComponent.vue";
 
 
 

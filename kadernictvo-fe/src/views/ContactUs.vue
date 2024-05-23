@@ -93,7 +93,6 @@
             </v-col>
         </v-row>
     </v-container>
-    <div style="border-bottom: 1px solid #ececec;"></div>
 </template>
 
 <script>

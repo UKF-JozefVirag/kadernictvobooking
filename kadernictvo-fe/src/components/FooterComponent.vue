@@ -1,0 +1,87 @@
+<template>
+    <div class="bg-black text-white mt-5 footer">
+        <v-container fluid class="px-5">
+            <v-row class="mt-2 mb-2">
+                <v-col>
+                    <p class="h6 footer-h">O nás</p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet.. <a href="#" class="readmore">Čítať viac</a></p>
+
+                </v-col>
+                <v-col>
+                    <p class="h6 footer-h">Kontakt</p>
+                    <v-row>
+                        <a href="#" class="mt-3 address"><BIconGeoAlt></BIconGeoAlt>Štefánikova trieda 61, 949 01 Nitra</a>
+                    </v-row>
+                    <v-row>
+                        <a href="tel:0950444555" class="mt-3 address"><BIconPhone></BIconPhone>0950 444 555</a>
+                    </v-row>
+                    <v-row>
+                        <a href="mailto: info@barbershop.sk" class="mt-3 address"><BIconEnvelope></BIconEnvelope>info@barbershop.sk</a>
+                    </v-row>
+                </v-col>
+                <v-col>
+                    <p class="h6 footer-h">Sociálne siete</p>
+                    <v-row>
+                        <v-col lg="2"><a href="https://www.instagram.com" class="footer-s"><BIconInstagram class="icon"></BIconInstagram></a></v-col>
+                        <v-col lg="2"><a href="https://www.facebook.com" class="footer-s"><BIconFacebook class="icon"></BIconFacebook></a></v-col>
+                        <v-col lg="2"><a href="https://www.tiktok.com" class="footer-s"><BIconTiktok class="icon"></BIconTiktok></a></v-col>
+                    </v-row>
+                </v-col>
+                <v-col>
+                    <p class="h6 footer-h">Newsletter</p>
+                    <p>Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.</p>
+                    <v-text-field bg-color="white" class="text-black" variant="filled" label="Email" type="email"></v-text-field>
+                    <v-btn type="submit" block>Odoslať</v-btn>
+                </v-col>
+            </v-row>
+        </v-container>
+    </div>
+</template>
+
+<script>
+export default {
+    name: "FooterComponent"
+}
+</script>
+
+<style lang="scss" scoped>
+.icon {
+    width: 48px;
+    height: 48px;
+    transition: 0.5s ease-in-out;
+    &:hover {
+        color: #d09c6e;
+    }
+}
+.footer {
+    letter-spacing: 2px;
+}
+
+.footer-h {
+    color: #d09c6e;
+}
+
+.footer-s {
+    text-decoration: none;
+    color: white;
+}
+
+.address {
+    margin-left: 10px;
+    text-decoration: none;
+    color: white;
+    display: flex;
+    align-items: center;
+    :nth-child(1) {
+        margin-right: 10px;
+    }
+}
+
+.readmore {
+    color: white;
+    transition: 0.5s ease-in-out;
+    &:hover {
+        color: #d09c6e;
+    }
+}
+</style>
