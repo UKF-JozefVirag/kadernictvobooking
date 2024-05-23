@@ -14,7 +14,7 @@
                         <a class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="#">Rezervovať online termín</a>
                     </div>
                     <div class="col-md-3 col-sm-12 mb-3 mb-md-0 ">
-                        <a class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="#">Zavolajte na 0987 123 456</a>
+                        <a class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="tel:0950444555">Zavolajte na 0987 123 456</a>
                     </div>
                     <div class="col-md-3"></div>
                 </div>
