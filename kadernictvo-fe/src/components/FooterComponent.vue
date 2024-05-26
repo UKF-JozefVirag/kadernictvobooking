@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-black text-white mt-5 footer">
+    <footer class="bg-black text-white mt-5 footer">
         <v-container fluid class="px-5">
             <v-row class="mt-2 mb-2">
                 <v-col>
@@ -52,7 +52,7 @@
                 </v-col>
             </v-row>
         </v-container>
-    </div>
+    </footer>
 </template>
 
 <script>
