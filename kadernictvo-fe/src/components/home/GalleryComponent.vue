@@ -5,8 +5,8 @@
 </template>
 
 <script>
-import ImageGallery from "@/components/ImageGallery.vue";
-import SectionDescriber from "@/components/SectionDescriber.vue";
+import ImageGallery from "@/components/home/ImageGallery.vue";
+import SectionDescriber from "@/components/home/SectionDescriber.vue";
 
 export default {
     name: "GalleryView",

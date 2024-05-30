@@ -48,7 +48,7 @@
                     <p class="h6 footer-h">Newsletter</p>
                     <p>Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.</p>
                     <v-text-field bg-color="white" class="text-black" variant="filled" label="Email" type="email"></v-text-field>
-                    <v-btn type="submit" block>Odoslať</v-btn>
+                    <v-btn class="btnnn" :ripple="false"  variant="outlined" block>Odoslať</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -100,5 +100,9 @@ export default {
     &:hover {
         color: #d09c6e;
     }
+}
+
+.btnnn::before {
+    background-color: transparent !important;
 }
 </style>

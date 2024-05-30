@@ -25,8 +25,8 @@
 </template>
 
 <script>
-import SectionDescriber from "@/components/SectionDescriber.vue";
-import ServiceCard from "@/components/ServiceCard.vue";
+import SectionDescriber from "@/components/home/SectionDescriber.vue";
+import ServiceCard from "@/components/home/ServiceCard.vue";
 
 export default {
     name: "ServicesView",

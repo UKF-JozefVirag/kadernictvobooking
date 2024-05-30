@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import '../assets/js/bootstrap.min.js'
+import '../../assets/js/bootstrap.min.js'
 
 export default {
     name: "HeaderComponent"

@@ -29,7 +29,7 @@ export default {
 </script>
 
 <style scoped>
-@import "../assets/styles/buttons.scss";
+@import "../../assets/styles/buttons.scss";
 
 .btn-cus {
     color: black;

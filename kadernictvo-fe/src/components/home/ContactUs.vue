@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import SectionDescriber from "@/components/SectionDescriber.vue";
+import SectionDescriber from "@/components/home/SectionDescriber.vue";
 
 export default {
     name: "ContactUs",
