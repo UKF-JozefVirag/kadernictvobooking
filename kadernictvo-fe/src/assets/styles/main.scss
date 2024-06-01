@@ -366,3 +366,30 @@ $primaryFontSize: 18px;
         }
     }
 }
+
+.btn-white {
+    cursor: pointer;
+    border: 0;
+    border-radius: 4px;
+    font-weight: 600;
+    width: 200px;
+    padding: 10px 0;
+    box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+    transition: 0.4s;
+    :hover {
+        color: white;
+        box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+        background-color: rgb(0, 0, 0);
+    }
+}
+
+input[type="text"] {
+    outline: none;
+}
+
+
+
+.v-btn__overlay {
+    background: transparent !important;
+    transition: 0.5s ease-in-out;
+}

@@ -4,7 +4,7 @@
             <v-row class="mt-2 mb-2">
                 <v-col>
                     <p class="h6 footer-h">O nás</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet.. <a href="#about-us" class="readmore">Čítať viac</a></p>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet.. <a href="#about-us" class="read-more">Čítať viac</a></p>
                 </v-col>
                 <v-col>
                     <p class="h6 footer-h">Kontakt</p>
@@ -47,8 +47,8 @@
                 <v-col>
                     <p class="h6 footer-h">Newsletter</p>
                     <p>Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.</p>
-                    <v-text-field bg-color="white" class="text-black" variant="filled" label="Email" type="email"></v-text-field>
-                    <v-btn class="btnnn" :ripple="false"  variant="outlined" block>Odoslať</v-btn>
+                    <input type="text" placeholder="Email" style="width: 100%; height: 50px;" class="my-3 p-3 rounded-2 text-black bg-white">
+                    <v-btn type="submit" class="w-100 submit-button" :ripple="false" plain block>Odoslať</v-btn>
                 </v-col>
             </v-row>
         </v-container>
@@ -94,7 +94,7 @@ export default {
     }
 }
 
-.readmore {
+.read-more {
     color: white;
     transition: 0.5s ease-in-out;
     &:hover {
@@ -102,7 +102,12 @@ export default {
     }
 }
 
-.btnnn::before {
-    background-color: transparent !important;
+.submit-button {
+    background-color: white;
+    transition: 0.3s ease-in-out;
+    color: black;
+    &:hover {
+        color: #d09c6e;
+    }
 }
 </style>
