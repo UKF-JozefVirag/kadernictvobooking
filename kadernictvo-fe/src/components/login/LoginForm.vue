@@ -11,12 +11,17 @@
                     <h3 style="color: #d09c6e">Sign in</h3>
                 </v-col>
             </v-row>
+            <v-row class="text-center" v-if="loading">
+                <v-col align-self="center">
+                    <img width="40" src="@/assets/images/loader.svg" alt="...">
+                </v-col>
+            </v-row>
             <v-row class="justify-center">
                 <v-col cols="12">
-                    <input type="text" class="form-control" placeholder="Email" v-model="email">
+                    <input type="text" class="form-control" placeholder="Email" v-model="formData.email">
                 </v-col>
                 <v-col cols="12">
-                    <input type="password" class="form-control" placeholder="Password" v-model="password">
+                    <input type="password" class="form-control" placeholder="Password" v-model="formData.password">
                 </v-col>
             </v-row>
             <v-row class="text-left">
@@ -29,7 +34,7 @@
             </v-row>
             <v-row>
                 <v-col cols="12">
-                    <v-btn type="submit" :ripple="false" plain class="w-100 submit-button" form="loginform">Sign in</v-btn>
+                    <v-btn type="submit" :ripple="false" plain class="w-100 submit-button" form="loginform" @click="login">Sign in</v-btn>
                 </v-col>
             </v-row>
             <v-row class="text-center">
@@ -48,20 +53,34 @@ export default {
     name: "LoginForm",
     data() {
         return {
-            email: '',
-            password: ''
+            formData: {
+                email: '',
+                password: '',
+            },
+            errors: {},
+            loading: false
         };
     },
     methods: {
         async login() {
+            this.loading = true;
             try {
-                await axios.get('http://localhost:8080/sanctum/csrf-cookie');
-                await axios.post('http://localhost:8080/login', {
-                    email: this.email,
-                    password: this.password
-                });
+                const response = await axios.post(
+                    'http://localhost:8000/api/login',
+                    this.formData,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+
+                localStorage.setItem('token', response.data.token);
+                this.$router.push('/dashboard');
             } catch (error) {
-                console.error('Login failed: ' + error)
+                console.log(error);
+            } finally {
+                this.loading = false;
             }
         }
     }
