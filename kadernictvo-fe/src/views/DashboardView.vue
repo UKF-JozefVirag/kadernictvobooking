@@ -1,10 +1,13 @@
 <template>
-    dashboard!
+    <SideBar></SideBar>
 </template>
 
 <script>
+import SideBar from "@/components/dashboard/SideBar.vue";
+
 export default {
-    name: "DashboardView"
+    name: "DashboardView",
+    components: {SideBar}
 }
 </script>
 
