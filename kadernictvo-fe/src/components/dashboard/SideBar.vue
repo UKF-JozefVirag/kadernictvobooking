@@ -2,7 +2,7 @@
     <v-card>
         <v-layout>
             <v-app-bar color="black" prominent>
-                <v-app-bar-nav-icon variant="text" color="white" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+                <v-app-bar-nav-icon variant="text" color="white" :ripple="false" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
 
                 <v-toolbar-title>Dashboard</v-toolbar-title>
 
@@ -11,9 +11,9 @@
                 <template v-if="$vuetify.display.mdAndUp">
                     <v-menu transition="scale-transition">
                         <template v-slot:activator="{ props }">
-                            <v-btn color="white" v-bind="props">
+                            <v-btn color="white" :ripple="false" v-bind="props">
                                 {{ email }}
-                                <BIconCaretDownFill style="color: white"></BIconCaretDownFill>
+                                <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
                             </v-btn>
                         </template>
                         <v-list>
@@ -31,9 +31,9 @@
 
                 <v-menu transition="scale-transition">
                     <template v-slot:activator="{ props }">
-                        <v-btn color="white" v-bind="props">
+                        <v-btn color="white" v-bind="props" :ripple="false">
                             SK
-                            <BIconCaretDownFill style="color: white"></BIconCaretDownFill>
+                            <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
                         </v-btn>
                     </template>
                     <v-list>
@@ -128,6 +128,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+#icon-caret {
+    color: white;
+}
 </style>
