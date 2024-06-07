@@ -44,25 +44,32 @@
             </v-row>
         </v-container>
     </v-form>
+    <SnackComponent :color="color" :snack-open="snackOpen" :text="snackText"></SnackComponent>
 </template>
 
 <script>
 import axios from 'axios';
+import SnackComponent from "@/components/common/SnackComponent.vue";
 
 export default {
     name: "LoginForm",
+    components: {SnackComponent},
     data() {
         return {
             formData: {
                 email: '',
                 password: '',
             },
+            color: '',
+            snackText: '',
+            snackOpen: false,
             errors: {},
             loading: false
         };
     },
     methods: {
         async login() {
+            this.snackOpen = false;
             this.loading = true;
             try {
                 const response = await axios.post(
@@ -74,11 +81,19 @@ export default {
                         }
                     }
                 );
-
+                this.snackOpen = true;
+                this.color = "success";
+                this.snackText = "Successfully logged in";
                 localStorage.setItem('token', response.data.token);
                 this.$router.push('/dashboard');
-            } catch (error) {
-                console.log(error);
+            } catch (e) {
+                this.color = "danger";
+                this.snackOpen = true;
+                if (e.response && e.response.data && e.response.data.message) {
+                    this.snackText = e.response.data.message;
+                } else {
+                    this.snackText = "An error occurred";
+                }
             } finally {
                 this.loading = false;
             }
