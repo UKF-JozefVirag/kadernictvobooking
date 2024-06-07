@@ -20,6 +20,7 @@ class UpdateProfile extends Controller
 
     public function setProfileInfo(Request $request)
     {
+        //TODO: add validation if email already exists in db before updating it
         $validator = Validator::make($request->all(), [
             'firstName' => 'sometimes|required|string|max:255',
             'lastName' => 'sometimes|required|string|max:255',
