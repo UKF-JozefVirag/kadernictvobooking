@@ -29,14 +29,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.background {
-    overflow: hidden;
-    background-color: #000000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
+
 
 .status-error {
     font-size: 8rem;

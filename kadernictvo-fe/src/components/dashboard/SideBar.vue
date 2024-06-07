@@ -1,67 +1,65 @@
 <template>
-    <v-card>
-        <v-layout>
-            <v-app-bar color="black" prominent>
-                <v-app-bar-nav-icon variant="text" color="white" :ripple="false" @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-
-                <v-toolbar-title>Dashboard</v-toolbar-title>
-
-                <v-spacer></v-spacer>
-
-                <template v-if="$vuetify.display.mdAndUp">
-                    <v-menu transition="scale-transition">
-                        <template v-slot:activator="{ props }">
-                            <v-btn color="white" :ripple="false" v-bind="props">
-                                {{ email }}
-                                <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
-                            </v-btn>
-                        </template>
-                        <v-list>
-                            <v-list-item
-                                v-for="(item, index) in profileItems"
-                                :key="index"
-                                :value="index"
-                                @click="handleProfileItemClick(item)"
-                            >
-                                <v-list-item-title>{{ item.title }}</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
+    <v-layout>
+        <v-app-bar color="black" prominent absolute id="sidebar">
+            <v-app-bar-nav-icon variant="text" color="white" :ripple="false"
+                                @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+            <v-spacer></v-spacer>
+            <v-menu transition="scale-transition">
+                <template v-slot:activator="{ props }">
+                    <v-btn color="white" :ripple="false" v-bind="props">
+                        {{ email }}
+                        <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
+                    </v-btn>
                 </template>
-
-                <v-menu transition="scale-transition">
-                    <template v-slot:activator="{ props }">
-                        <v-btn color="white" v-bind="props" :ripple="false">
-                            SK
-                            <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
-                        </v-btn>
-                    </template>
-                    <v-list>
-                        <v-list-item
-                            v-for="(item, index) in languages"
-                            :key="index"
-                            :value="index"
-                        >
-                            <v-list-item-title>{{ item.short }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-            </v-app-bar>
-
-            <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : undefined" temporary>
                 <v-list>
                     <v-list-item
-                        v-for="(item, index) in dashboardItems"
+                        v-for="(item, index) in profileItems"
                         :key="index"
                         :value="index"
+                        @click="handleProfileItemClick(item)"
                     >
                         <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
-            </v-navigation-drawer>
+            </v-menu>
 
-        </v-layout>
-    </v-card>
+            <!-- Language Menu -->
+            <v-menu transition="scale-transition">
+                <template v-slot:activator="{ props }">
+                    <v-btn color="white" v-bind="props" :ripple="false">
+                        SK
+                        <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item
+                        v-for="(item, index) in languages"
+                        :key="index"
+                        :value="index"
+                    >
+                        <v-list-item-title>{{ item.short }}</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+        </v-app-bar>
+
+        <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : 'left'" clipped>
+            <v-list>
+                <v-list-item
+                    v-for="(item, index) in dashboardItems"
+                    :key="index"
+                    :value="index"
+                    :prepend-icon="item.icon"
+                    @click="handleProfileItemClick(item)"
+                >
+                    <template v-slot:prepend>
+                        <v-icon></v-icon>
+                    </template>
+                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
+    </v-layout>
 </template>
 
 <script>
@@ -74,19 +72,19 @@ export default {
         group: null,
         email: 'email@email.com',
         dashboardItems: [
-            { title: 'Foo', value: 'foo' },
-            { title: 'Bar', value: 'bar' },
-            { title: 'Fizz', value: 'fizz' },
-            { title: 'Buzz', value: 'buzz' },
+            {title: 'Dashboard', value: 'dashboard', icon: "mdi-view-dashboard"},
+            {title: 'Calendar', value: 'calendar', icon: "mdi-calendar-blank"},
+            {title: 'Customers', value: 'customers', icon: "mdi-account-multiple"},
+            {title: 'Report', value: 'report', icon: "mdi-chart-bar"},
         ],
         profileItems: [
-            { title: "My profile", value: 'profile' },
-            { title: "Settings", value: "settings" },
-            { title: "Logout", value: "logout" }
+            {title: "My profile", value: 'profile'},
+            {title: "Settings", value: "settings"},
+            {title: "Logout", value: "logout"}
         ],
         languages: [
-            { name: "English", short: "EN" },
-            { name: "Slovak", short: "SK" }
+            {name: "English", short: "EN"},
+            {name: "Slovak", short: "SK"}
         ]
     }),
 
@@ -98,16 +96,23 @@ export default {
 
     methods: {
         handleProfileItemClick(item) {
-            if (item.value === 'logout') {
-                this.logout();
-            } else {
-                console.log(`Navigating to ${item.value}`);
+            switch (item.value) {
+                case "logout":
+                    this.logout();
+                    break;
+                case "profile":
+                    this.$router.push('/profile');
+                    break;
+                case "dashboard":
+                    this.$router.push('/dashboard');
+                    break;
+                default:
+                    console.log(`Navigating to ${item.value}`);
             }
         },
 
         async logout() {
             try {
-
                 const response = await axios.post(
                     'http://localhost:8000/api/logout',
                     {},
@@ -123,7 +128,7 @@ export default {
             } catch (error) {
                 console.log(error);
             }
-        }
+        },
     }
 }
 </script>
@@ -131,5 +136,9 @@ export default {
 <style lang="scss" scoped>
 #icon-caret {
     color: white;
+}
+
+#sidebar {
+    position: static !important;
 }
 </style>

@@ -3,6 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import PageNotFoundView from "@/views/PageNotFoundView.vue";
 import DashboardView from "@/views/DashboardView.vue";
+import ProfileView from "@/views/ProfileView.vue";
 
 const routes = [
     {
@@ -23,6 +24,12 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: DashboardView,
+        beforeEnter: isAuthenticated
+    },
+    {
+        path: '/profile',
+        name: 'profile',
+        component: ProfileView,
         beforeEnter: isAuthenticated
     }
 ];

@@ -1,0 +1,110 @@
+<template>
+    <v-card class="p-3">
+        <v-card-title>
+            <h3>My profile</h3>
+        </v-card-title>
+        <v-card-subtitle>
+            <v-row>
+                <v-col cols="12">
+                    <p>These are the email and name associated with your user profile and will be used in
+                        email communications we send you.</p>
+                    <hr>
+                </v-col>
+            </v-row>
+        </v-card-subtitle>
+        <v-form @submit.prevent="saveProfileInfo">
+            <v-card-text>
+                <v-row>
+                    <v-col cols="6">
+                        <h6>Email<span class="text-danger">*</span></h6>
+                        <v-text-field placeholder="johndoe@example.com" v-model="email"></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <h6>Phone number<span class="text-danger"></span></h6>
+                        <v-text-field placeholder="+421 123 456 789" type="text" v-model="phoneNumber"></v-text-field>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col cols="6">
+                        <h6>First name<span class="text-danger">*</span></h6>
+                        <v-text-field placeholder="John" v-model="firstName"></v-text-field>
+                    </v-col>
+                    <v-col cols="6">
+                        <h6>Last name<span class="text-danger">*</span></h6>
+                        <v-text-field placeholder="Doe" v-model="lastName"></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-card-actions>
+                <v-row>
+                    <v-col cols="3">
+                        <v-btn class="ms-2" color="primary" :ripple="false" variant="elevated" plain block type="submit">Save</v-btn>
+                    </v-col>
+                </v-row>
+            </v-card-actions>
+        </v-form>
+    </v-card>
+</template>
+
+<script>
+import axios from "axios";
+
+export default {
+    name: "UserInfo",
+    data() {
+        return {
+            firstName: "",
+            lastName: "",
+            phoneNumber: "",
+            email: ""
+        }
+    },
+    beforeMount() {
+        this.fetchProfileInfo();
+    },
+    methods: {
+        async saveProfileInfo() {
+            try {
+                const response = await axios.patch(
+                    'http://localhost:8000/api/profile',
+                    {
+                        firstName: this.firstName,
+                        lastName: this.lastName,
+                        phoneNumber: this.phoneNumber,
+                        email: this.email
+                    },
+                    {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }
+                );
+            } catch (error) {
+                console.log(error);
+            }
+        },
+
+        async fetchProfileInfo() {
+            try {
+                const response = await axios.get(
+                    'http://localhost:8000/api/profile', {
+                        headers: {
+                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                        }
+                    }
+                );
+                this.firstName = response.data.data.first_name;
+                this.lastName = response.data.data.last_name;
+                this.phoneNumber = response.data.data.phoneNumber;
+                this.email = response.data.data.email;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+}
+</script>
+
+<style scoped>
+
+</style>

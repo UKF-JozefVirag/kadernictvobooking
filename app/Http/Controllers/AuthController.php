@@ -20,7 +20,8 @@ class AuthController extends Controller
     {
         try {
             $validateUser = Validator::make($request->all(), [
-                'name' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
                 'email' => 'required|email|unique:users,email',
                 'password' => 'required|min:6'
             ]);
@@ -34,7 +35,8 @@ class AuthController extends Controller
             }
 
             $user = User::create([
-                'name' => $request->name,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
                 'email' => $request->email,
                 'password' => $request->password
             ]);
@@ -89,17 +91,6 @@ class AuthController extends Controller
                 "message" => $th->getMessage()
             ], 500);
         }
-    }
-
-    public function profile()
-    {
-        $user = \auth()->user();
-        return response()->json([
-            "status" => true,
-            "message" => "Profile information",
-            "data" => $user,
-            "id" => \auth()->user()->id
-        ]);
     }
 
     public function logout()
