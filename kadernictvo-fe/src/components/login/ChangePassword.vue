@@ -2,6 +2,7 @@
     <v-card class="p-3">
         <v-card-title>
             <h3>Change password</h3>
+            <p class="text-danger text-h5">Still in implementation, email provider needs to be configured for this functionality !</p>
         </v-card-title>
         <v-card-subtitle>
             <v-row>
