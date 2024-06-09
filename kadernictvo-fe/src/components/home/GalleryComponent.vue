@@ -1,5 +1,5 @@
 <template>
-    <SectionDescriber section-name="Galéria" class="mt-5" id="gallery"></SectionDescriber>
+    <SectionDescriber :section-name="$t('gallery.sectionName')" class="mt-5" id="gallery"></SectionDescriber>
     <ImageGallery :images="images"></ImageGallery>
     <div style="border-bottom: 1px solid #ececec;"></div>
 </template>

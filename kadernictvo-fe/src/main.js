@@ -13,6 +13,21 @@ import {
     BootstrapIconsPlugin
 } from "bootstrap-icons-vue";
 
+import { createI18n } from 'vue-i18n';
+
+import en from './assets/locales/en.json';
+import sk from './assets/locales/sk.json';
+
+const i18n = createI18n({
+    locale: 'sk',
+    fallbackLocale: 'sk',
+    messages: {
+        en,
+        sk
+    }
+});
+
+
 const app = createApp(App)
 
 const vuetify = createVuetify({
@@ -20,4 +35,4 @@ const vuetify = createVuetify({
     directives,
 })
 
-createApp(App).use(vuetify).use(router).use(BootstrapIconsPlugin).mount('#app')
+createApp(App).use(vuetify).use(i18n).use(router).use(BootstrapIconsPlugin).mount('#app')

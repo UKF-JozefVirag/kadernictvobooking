@@ -1,0 +1,88 @@
+{
+    "nav": {
+        "home": "Home",
+        "about": "About Us",
+        "services": "Our Services",
+        "gallery": "Gallery",
+        "contact": "Contact",
+        "reservation": "Online Reservation"
+    },
+    "header": {
+        "slogan": "your hair is our canvas",
+        "title": "Barbershop Bratislava",
+        "book_online": "Book Online Appointment",
+        "call_us": "Call Us at 0987 123 456"
+    },
+    "about": {
+        "section_name": "About Us",
+        "paragraph_1": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquid at commodi cum dignissimos eveniet excepturi exercitationem, facilis, illum in laboriosam molestiae odio quis reiciendis saepe sapiente sint tempora ut voluptatibus. Amet dignissimos esse quas quibusdam? Dignissimos, dolorum totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+        "paragraph_2": "A alias doloribus fuga odit quisquam, reprehenderit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti minus quas sequi sint tenetur! Cupiditate fugit rerum sequi ullam veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet animi aspernatur atque, aut cumque dolores doloribus fugit illo illum itaque magnam minus modi numquam officia placeat quibusdam quidem quo ratione repudiandae sed sint soluta sunt totam ut vel vitae!"
+    },
+    "reviews": {
+        "title": "What they said about us?",
+        "comments": [
+            {
+                "comment": "Professional approach and amazing service! I will definitely come back!",
+                "author": "Eva",
+                "rating": "5"
+            },
+            {
+                "comment": "The staff was very friendly and the atmosphere was pleasant. I definitely recommend it!",
+                "author": "Peter",
+                "rating": "4.5"
+            },
+            {
+                "comment": "Wonderful experience! Perfect color selection and amazing haircuts.",
+                "author": "Jana",
+                "rating": "5"
+            }
+        ]
+    },
+    "services": {
+        "sectionName": "Our services"
+    },
+    "gallery": {
+        "sectionName": "Gallery"
+    },
+    "contact": {
+        "sectionName": "Contact",
+        "whereToFindUs": "Where to find us",
+        "address": "Štefánikova trieda 61, 949 01 Nitra",
+        "openingHours": "Opening Hours",
+        "days": {
+            "monday": "Monday",
+            "tuesday": "Tuesday",
+            "wednesday": "Wednesday",
+            "thursday": "Thursday",
+            "friday": "Friday",
+            "saturday": "Saturday",
+            "sunday": "Sunday"
+        },
+        "hours": {
+            "monday": "08:00 - 20:00",
+            "tuesday": "08:00 - 20:00",
+            "wednesday": "08:00 - 20:00",
+            "thursday": "08:00 - 20:00",
+            "friday": "08:00 - 20:00",
+            "saturday": "12:00 - 18:00",
+            "sunday": "Closed"
+        },
+        "phoneNumber": "Phone Number: ",
+        "email": "Email: ",
+        "phone": "0950 444 555",
+        "emailAddress": "info@barbershop.sk"
+    },
+    "footer": {
+        "aboutUs": "About Us",
+        "aboutUsText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet..",
+        "readMore": "Read more",
+        "contact": "Contact",
+        "address": "Štefánikova trieda 61, 949 01 Nitra",
+        "phone": "0950 444 555",
+        "email": "info@barbershop.sk",
+        "socialMedia": "Social Media",
+        "newsletter": "Newsletter",
+        "newsletterText": "Want to know what we are planning? Subscribe to our newsletter and join us.",
+        "submit": "Submit"
+    }
+}

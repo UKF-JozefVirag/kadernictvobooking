@@ -1,0 +1,88 @@
+{
+    "nav": {
+        "home": "Domov",
+        "about": "O nás",
+        "services": "Naše služby",
+        "gallery": "Galéria",
+        "contact": "Kontakt",
+        "reservation": "Online rezervácia"
+    },
+    "header": {
+        "slogan": "vaše vlasy sú naše plátno",
+        "title": "Barbershop Bratislava",
+        "book_online": "Rezervovať online termín",
+        "call_us": "Zavolajte na 0987 123 456"
+    },
+    "about": {
+        "section_name": "O nás",
+        "paragraph_1": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquid at commodi cum dignissimos eveniet excepturi exercitationem, facilis, illum in laboriosam molestiae odio quis reiciendis saepe sapiente sint tempora ut voluptatibus. Amet dignissimos esse quas quibusdam? Dignissimos, dolorum totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
+        "paragraph_2": "A alias doloribus fuga odit quisquam, reprehenderit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti minus quas sequi sint tenetur! Cupiditate fugit rerum sequi ullam veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet animi aspernatur atque, aut cumque dolores doloribus fugit illo illum itaque magnam minus modi numquam officia placeat quibusdam quidem quo ratione repudiandae sed sint soluta sunt totam ut vel vitae!"
+    },
+    "reviews": {
+        "title": "Čo o nás povedali?",
+        "comments": [
+            {
+                "comment": "Profesionálny prístup a úžasná služba! Rozhodne sa sem ešte vrátim!",
+                "author": "Eva",
+                "rating": "5"
+            },
+            {
+                "comment": "Personál bol veľmi milý a vstupná atmosféra bola príjemná. Určite odporúčam!",
+                "author": "Peter",
+                "rating": "4.5"
+            },
+            {
+                "comment": "Nádherný zážitok! Perfektný výber farieb a úžasné strihy.",
+                "author": "Jana",
+                "rating": "5"
+            }
+        ]
+    },
+    "services": {
+        "sectionName": "Naše služby"
+    },
+    "gallery": {
+        "sectionName": "Galéria"
+    },
+    "contact": {
+        "sectionName": "Kontakt",
+        "whereToFindUs": "Kde nás nájdete",
+        "address": "Štefánikova trieda 61, 949 01 Nitra",
+        "openingHours": "Otváracie hodiny",
+        "days": {
+            "monday": "Pondelok",
+            "tuesday": "Utorok",
+            "wednesday": "Streda",
+            "thursday": "Štvrtok",
+            "friday": "Piatok",
+            "saturday": "Sobota",
+            "sunday": "Nedeľa"
+        },
+        "hours": {
+            "monday": "08:00 - 20:00",
+            "tuesday": "08:00 - 20:00",
+            "wednesday": "08:00 - 20:00",
+            "thursday": "08:00 - 20:00",
+            "friday": "08:00 - 20:00",
+            "saturday": "12:00 - 18:00",
+            "sunday": "Zatvorené"
+        },
+        "phoneNumber": "Telefónne číslo: ",
+        "email": "Email: ",
+        "phone": "0950 444 555",
+        "emailAddress": "info@barbershop.sk"
+    },
+    "footer": {
+        "aboutUs": "O nás",
+        "aboutUsText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet..",
+        "readMore": "Čítať viac",
+        "contact": "Kontakt",
+        "address": "Štefánikova trieda 61, 949 01 Nitra",
+        "phone": "0950 444 555",
+        "email": "info@barbershop.sk",
+        "socialMedia": "Sociálne siete",
+        "newsletter": "Newsletter",
+        "newsletterText": "Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.",
+        "submit": "Odoslať"
+    }
+}

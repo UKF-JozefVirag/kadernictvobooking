@@ -2,23 +2,17 @@
     <v-container fluid class="aboutContainer mt-5" id="about-us">
         <v-row>
             <v-col align-self="center">
-                <SectionDescriber section-name="O nás" class="text-black"></SectionDescriber>
+                <SectionDescriber :section-name="$t('about.section_name')" class="text-black"></SectionDescriber>
             </v-col>
         </v-row>
         <v-row align="center">
             <v-col offset="1" cols="10" class="text">
                 <p class="text-center" style="letter-spacing: 2px">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquid at commodi cum dignissimos eveniet excepturi exercitationem,
-                    facilis, illum in laboriosam molestiae odio quis reiciendis saepe sapiente sint tempora ut voluptatibus. Amet dignissimos esse quas quibusdam?
-                    Dignissimos, dolorum totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    {{ $t('about.paragraph_1') }}
                 </p>
                 <p class="text-center" style="letter-spacing: 2px">
-                    A alias doloribus fuga odit quisquam, reprehenderit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti minus quas sequi sint tenetur!
-                    Cupiditate fugit rerum sequi ullam veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet animi aspernatur atque, aut cumque
-                    dolores doloribus fugit illo illum itaque magnam minus modi numquam officia placeat quibusdam quidem quo ratione repudiandae sed sint soluta sunt totam
-                    ut vel vitae!
+                    {{ $t('about.paragraph_2') }}
                 </p>
-
             </v-col>
         </v-row>
         <v-spacer></v-spacer>
@@ -65,9 +59,7 @@ export default {
 </script>
 
 <style scoped>
-
 .aboutContainer {
     height: 100%;
 }
-
 </style>

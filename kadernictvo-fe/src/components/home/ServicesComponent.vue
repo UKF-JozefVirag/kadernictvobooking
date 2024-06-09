@@ -2,7 +2,7 @@
     <v-container class="mt-5" id="services">
         <v-row>
             <v-col>
-                <SectionDescriber section-name="Naše služby"></SectionDescriber>
+                <SectionDescriber :section-name="$t('services.sectionName')"></SectionDescriber>
             </v-col>
         </v-row>
         <v-row>
