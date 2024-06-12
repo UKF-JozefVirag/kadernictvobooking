@@ -15,6 +15,7 @@
     "bootstrap": "^5.3.3",
     "bootstrap-icons-vue": "^1.11.3",
     "vue": "^3.4.21",
+    "vue-cal": "^4.8.1",
     "vue-gallery": "^2.0.5",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.0",

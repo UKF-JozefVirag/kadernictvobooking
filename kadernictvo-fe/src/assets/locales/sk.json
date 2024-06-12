@@ -84,5 +84,11 @@
         "newsletter": "Newsletter",
         "newsletterText": "Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.",
         "submit": "Odoslať"
+    },
+    "calendar": {
+        "orderFrom": "Objednávka od",
+        "orderTo": "Objednávka do",
+        "price": "Cena",
+        "orderDetail": "Detail objednávky"
     }
 }

@@ -413,3 +413,32 @@ input[type="text"] {
         color: #d09c6e;
     }
 }
+
+.vuecal .day-split-header {font-size: 11px;}
+.vuecal__body .split1 {border-right: 2px solid lightgrey}
+.vuecal__body .split2 {border-right: 2px solid lightgrey}
+.vuecal__body .split3 {border-right: 2px solid lightgrey}
+.vuecal__body .split4 {border-right: 2px solid lightgrey}
+.vuecal__body .split5 {border-right: 2px solid lightgrey}
+.vuecal__body .split6 {border-right: 2px solid lightgrey}
+.vuecal__body .split7 {border-right: 2px solid lightgrey}
+.vuecal__no-event {display: none;}
+.vuecal__event {cursor: pointer;}
+
+.vuecal__event-title {
+    margin: 4px 0 8px;
+}
+
+.vuecal__event-time {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.vuecal__event-content {
+    font-style: italic;
+}
+
+.v-list-item:hover > .v-list-item__overlay {
+}

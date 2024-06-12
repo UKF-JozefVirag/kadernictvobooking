@@ -22,25 +22,6 @@
                     </v-list-item>
                 </v-list>
             </v-menu>
-
-            <!-- Language Menu -->
-            <v-menu transition="scale-transition">
-                <template v-slot:activator="{ props }">
-                    <v-btn color="white" v-bind="props" :ripple="false">
-                        SK
-                        <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
-                    </v-btn>
-                </template>
-                <v-list>
-                    <v-list-item
-                        v-for="(item, index) in languages"
-                        :key="index"
-                        :value="index"
-                    >
-                        <v-list-item-title>{{ item.short }}</v-list-item-title>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
         </v-app-bar>
 
         <v-navigation-drawer v-model="drawer" :location="$vuetify.display.mobile ? 'bottom' : 'left'" clipped>
@@ -105,6 +86,9 @@ export default {
                     break;
                 case "dashboard":
                     this.$router.push('/dashboard');
+                    break;
+                case "calendar":
+                    this.$router.push('/calendar');
                     break;
                 default:
                     console.log(`Navigating to ${item.value}`);

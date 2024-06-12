@@ -84,5 +84,11 @@
         "newsletter": "Newsletter",
         "newsletterText": "Want to know what we are planning? Subscribe to our newsletter and join us.",
         "submit": "Submit"
+    },
+    "calendar": {
+        "orderFrom": "Order from",
+        "orderTo": "Order until",
+        "price": "Price",
+        "orderDetail": "Order detail"
     }
 }

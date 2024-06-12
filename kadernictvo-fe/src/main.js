@@ -4,7 +4,6 @@ import './assets/styles/buttons.scss';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
-import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import {createVuetify} from "vuetify";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -17,6 +16,8 @@ import { createI18n } from 'vue-i18n';
 
 import en from './assets/locales/en.json';
 import sk from './assets/locales/sk.json';
+import * as components from 'vuetify/components'
+import * as labsComponents from 'vuetify/labs/components'
 
 const i18n = createI18n({
     locale: 'sk',
@@ -31,7 +32,11 @@ const i18n = createI18n({
 const app = createApp(App)
 
 const vuetify = createVuetify({
-    components,
+    components: {
+        ...components,
+        ...labsComponents,
+
+    },
     directives,
 })
 

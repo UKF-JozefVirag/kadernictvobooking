@@ -2,8 +2,9 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from "@/views/HomeView.vue";
 import LoginView from "@/views/LoginView.vue";
 import PageNotFoundView from "@/views/PageNotFoundView.vue";
-import DashboardView from "@/views/DashboardView.vue";
-import ProfileView from "@/views/ProfileView.vue";
+import DashboardView from "@/views/dashboard/DashboardView.vue";
+import ProfileView from "@/views/dashboard/ProfileView.vue";
+import CalendarView from '@/views/dashboard/CalendarView.vue'
 
 const routes = [
     {
@@ -30,6 +31,12 @@ const routes = [
         path: '/profile',
         name: 'profile',
         component: ProfileView,
+        beforeEnter: isAuthenticated
+    },
+    {
+        path: '/calendar',
+        name: 'calendar',
+        component: CalendarView,
         beforeEnter: isAuthenticated
     }
 ];
