@@ -75,7 +75,7 @@ export default {
 
 .navbar-collapse {
     text-align: center;
-    width: 100vw;
+    width: 100%;
 }
 
 .dropdown-menu-dark {

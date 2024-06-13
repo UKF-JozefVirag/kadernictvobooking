@@ -1,6 +1,6 @@
 <template>
-    <NavBar class="nb justify-content-center bg-black"></NavBar>
-    <ReservationEvent class="reservation-event"></ReservationEvent>
+    <NavBar class="position-relative bg-black"></NavBar>
+    <ReservationEvent></ReservationEvent>
 </template>
 
 <script>
