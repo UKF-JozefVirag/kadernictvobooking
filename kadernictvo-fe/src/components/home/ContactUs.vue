@@ -87,7 +87,7 @@
                         <p class="h6">{{ $t('contact.email') }}</p>
                     </v-col>
                     <v-col class="text-right">
-                        <a href="mailto:info@barbershop.sk" class="h6 hours">{{ $t('contact.emailAddress') }}</a>
+                        <a :href="'mailto:' + interpolatedEmail" class="h6 hours">{{ interpolatedEmail }}</a>
                     </v-col>
                 </v-row>
             </v-col>
@@ -100,7 +100,12 @@ import SectionDescriber from "@/components/home/SectionDescriber.vue";
 
 export default {
     name: "ContactUs",
-    components: {SectionDescriber}
+    components: {SectionDescriber},
+    computed: {
+        interpolatedEmail() {
+            return this.$t('contact.emailAddress', { at: '@' });
+        }
+    }
 }
 </script>
 
@@ -120,5 +125,4 @@ export default {
 .contactus {
     letter-spacing: 2px;
 }
-
 </style>

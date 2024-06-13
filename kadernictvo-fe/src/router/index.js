@@ -5,6 +5,7 @@ import PageNotFoundView from "@/views/PageNotFoundView.vue";
 import DashboardView from "@/views/dashboard/DashboardView.vue";
 import ProfileView from "@/views/dashboard/ProfileView.vue";
 import CalendarView from '@/views/dashboard/CalendarView.vue'
+import ReservationView from '@/views/ReservationView.vue';
 
 const routes = [
     {
@@ -16,6 +17,11 @@ const routes = [
         path: '/login',
         name: 'login',
         component: LoginView
+    },
+    {
+        path: '/reservation',
+        name: 'reservation',
+        component: ReservationView
     },
     {
         path: '/:pathMatch(.*)*',

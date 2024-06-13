@@ -442,3 +442,9 @@ input[type="text"] {
 
 .v-list-item:hover > .v-list-item__overlay {
 }
+
+.v-card:hover > .v-card__overlay {
+    opacity: 0.1 !important;
+}
+
+

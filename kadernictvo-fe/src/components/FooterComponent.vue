@@ -14,13 +14,13 @@
                         </a>
                     </v-row>
                     <v-row>
-                        <a href="tel:0950444555" class="mt-3 address">
+                        <a :href="'tel:' + $t('footer.phone')" class="mt-3 address">
                             <BIconPhone></BIconPhone> {{ $t('footer.phone') }}
                         </a>
                     </v-row>
                     <v-row>
-                        <a href="mailto:info@barbershop.sk" class="mt-3 address">
-                            <BIconEnvelope></BIconEnvelope> {{ $t('footer.email') }}
+                        <a :href="'mailto:' + interpolatedEmail" class="mt-3 address">
+                            <BIconEnvelope></BIconEnvelope> {{ interpolatedEmail }}
                         </a>
                     </v-row>
                 </v-col>
@@ -57,7 +57,12 @@
 
 <script>
 export default {
-    name: "FooterComponent"
+    name: "FooterComponent",
+    computed: {
+        interpolatedEmail() {
+            return this.$t('footer.emailInterpolation', { at: '@' });
+        }
+    }
 }
 </script>
 

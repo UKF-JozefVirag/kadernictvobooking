@@ -2,29 +2,29 @@
     <header class="header" id="header">
         <nav class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand" href="#"><img src="../assets/images/logo-light.png" alt="logo" width="80px"></a>
+                <a class="navbar-brand" href="#"><img src="../assets/images/logo-light.png" alt="logo" width="50px"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#header-nav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse " id="header-nav">
+                <div class="collapse navbar-collapse" id="header-nav">
                     <ul class="navbar-nav mx-auto header-nav">
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#header">{{ $t('nav.home') }}</a>
+                            <router-link to="/" class="nav-link" href="#header">{{ $t('nav.home') }}</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#about-us">{{ $t('nav.about') }}</a>
+                            <a href="/#about-us" class="nav-link">{{ $t('nav.about') }}</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#services">{{ $t('nav.services') }}</a>
+                            <a href="/#services" class="nav-link">{{ $t('nav.services') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#gallery">{{ $t('nav.gallery') }}</a>
+                            <a href="/#gallery" class="nav-link">{{ $t('nav.gallery') }}</a>
                         </li>
                         <li class="nav-item mx-5">
-                            <a class="nav-link" href="#contact-us">{{ $t('nav.contact') }}</a>
+                            <a href="/#contact-us" class="nav-link">{{ $t('nav.contact') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">{{ $t('nav.reservation') }}</a>
+                            <router-link to="/reservation" class="nav-link">{{ $t('nav.reservation') }}</router-link>
                         </li>
                         <li class="nav-item mx-3 dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -53,12 +53,13 @@ export default {
 };
 </script>
 
-<style scoped>
-li {
+<style>
+.nav-item {
     font-size: large;
+    white-space: nowrap;
 }
 
-li::after {
+.nav-item::after {
     content: '';
     display: block;
     width: 0;
@@ -67,13 +68,14 @@ li::after {
     transition: width .3s;
 }
 
-li:hover::after {
+.nav-item:hover::after {
     width: 100%;
     transition: width .3s;
 }
 
 .navbar-collapse {
     text-align: center;
+    width: 100vw;
 }
 
 .dropdown-menu-dark {
@@ -82,5 +84,20 @@ li:hover::after {
 
 .dropdown-item {
     color: white;
+}
+
+@media (max-width: 991.98px) {
+    .navbar-collapse {
+        text-align: center;
+    }
+    .navbar-nav {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100vw;
+    }
+    .nav-item {
+        margin: 0.5rem 0;
+    }
 }
 </style>

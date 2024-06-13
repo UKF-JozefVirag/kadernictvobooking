@@ -11,9 +11,9 @@
                 <div class="row sub-title justify-content-center">
                     <div class="col-md-3"></div>
                     <div class="col-md-3 col-sm-12 mb-3 mb-md-0">
-                        <a class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="#">
+                        <router-link to="/reservation" class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="#">
                             {{ $t('header.book_online') }}
-                        </a>
+                        </router-link>
                     </div>
                     <div class="col-md-3 col-sm-12 mb-3 mb-md-0">
                         <a class="btn btn-cus btn-fill mx-2 border border-2 p-2 text-white" href="tel:0950444555">

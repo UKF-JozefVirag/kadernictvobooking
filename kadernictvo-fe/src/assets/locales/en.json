@@ -38,6 +38,9 @@
             }
         ]
     },
+    "reservation": {
+        "sectionName": "Reservation"
+    },
     "services": {
         "sectionName": "Our services"
     },
@@ -70,7 +73,7 @@
         "phoneNumber": "Phone Number: ",
         "email": "Email: ",
         "phone": "0950 444 555",
-        "emailAddress": "info@barbershop.sk"
+        "emailAddress": "info{at}barbershop.sk"
     },
     "footer": {
         "aboutUs": "About Us",
@@ -79,7 +82,7 @@
         "contact": "Contact",
         "address": "Štefánikova trieda 61, 949 01 Nitra",
         "phone": "0950 444 555",
-        "email": "info@barbershop.sk",
+        "email": "info{at}barbershop.sk",
         "socialMedia": "Social Media",
         "newsletter": "Newsletter",
         "newsletterText": "Want to know what we are planning? Subscribe to our newsletter and join us.",
