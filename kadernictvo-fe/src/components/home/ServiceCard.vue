@@ -1,18 +1,18 @@
 <template>
-    <v-card width="300px" class="mx-auto text-center">
+    <v-card width="300px" class="mx-auto text-center" v-ripple="false">
         <template v-slot:title>
             <span class="font-weight-black">{{cardTitle}}</span>
         </template>
         <v-card-text style="color: #d09c6e">
             <h6>
-                {{cardPrice}} €
+                {{cardPrice}} <span v-if="cardPrice!=null">€</span>
             </h6>
         </v-card-text>
         <img :src="cardImage" width="60px" alt="logo"/>
         <v-card-text class="bg-grey-lighten-2 pt-4 mt-2" style="letter-spacing: 2px">
             {{cardText}}
         </v-card-text>
-        <a href="#" class="btn btn-cus border-top w-100">Rezervovať</a>
+        <a href="#" class="btn btn-cus border-top w-100" v-if="reservation">Rezervovať</a>
     </v-card>
 </template>
 
@@ -24,6 +24,7 @@ export default {
         cardText: String,
         cardPrice: Number,
         cardImage: String,
+        reservation: Boolean
     }
 }
 </script>

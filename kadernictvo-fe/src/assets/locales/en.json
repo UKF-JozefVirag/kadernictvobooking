@@ -39,7 +39,17 @@
         ]
     },
     "reservation": {
-        "sectionName": "Reservation"
+        "firstSectionName": "Reservation",
+        "secondSectionName": "Employees",
+        "thirdSectionName": "Date and time",
+        "fourthSectionName": "Contact",
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "phoneNumber": "Phone number",
+        "send": "Send"
     },
     "services": {
         "sectionName": "Our services"

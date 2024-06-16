@@ -39,7 +39,17 @@
         ]
     },
     "reservation": {
-        "sectionName": "Rezervácia"
+        "firstSectionName": "Rezervácia",
+        "secondSectionName": "Zamestnanci",
+        "thirdSectionName": "Dátum a čas",
+        "fourthSectionName": "Kontakt",
+        "morning": "Ráno",
+        "afternoon": "Popoludní",
+        "firstName": "Meno",
+        "lastName": "Priezvisko",
+        "email": "Email",
+        "phoneNumber": "Telefónne číslo",
+        "send": "Odoslať"
     },
     "services": {
         "sectionName": "Naše služby"

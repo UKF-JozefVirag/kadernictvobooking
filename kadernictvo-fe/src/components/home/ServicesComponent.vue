@@ -17,6 +17,7 @@
                     :card-text="item.description"
                     :card-price="item.price"
                     :card-image="item.image"
+                    :reservation="true"
                 ></ServiceCard>
             </v-col>
         </v-row>

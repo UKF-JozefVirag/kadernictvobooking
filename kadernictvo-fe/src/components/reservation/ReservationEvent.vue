@@ -1,9 +1,10 @@
 <template>
-    <v-container class="text-dark">
-        <v-col>
-            <SectionDescriber :section-name="$t('reservation.sectionName')"></SectionDescriber>
-        </v-col>
-        {{ selectedServices }}
+    <v-container class="text-dark mt-5">
+        <v-row>
+            <v-col>
+                <SectionDescriber :section-name="$t('reservation.firstSectionName')"></SectionDescriber>
+            </v-col>
+        </v-row>
         <v-row>
             <v-col
                 v-for="service in services"
@@ -22,17 +23,17 @@
                 ></ServiceCard>
             </v-col>
         </v-row>
+    <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
     </v-container>
 </template>
 
-
 <script>
-import SectionDescriber from '@/components/home/SectionDescriber.vue'
-import ServiceCard from "@/components/home/ServiceCard.vue";
+import SectionDescriber from '@/components/home/SectionDescriber.vue';
+import ServiceCard from '@/components/home/ServiceCard.vue';
 
 export default {
     name: 'ReservationEvent',
-    components: {ServiceCard, SectionDescriber},
+    components: { ServiceCard, SectionDescriber },
     data() {
         let src = "/src/assets/images/services/";
         return {
@@ -77,7 +78,7 @@ export default {
                     id: 6,
                     title: "Starostlivosť o pleť",
                     description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur, voluptas.",
-                    price: "11,50",
+                    price: "11.50",
                     image: src + "cream.png"
                 },
                 {
@@ -97,7 +98,7 @@ export default {
                 {
                     id: 9,
                     title: "Balíček Super",
-                    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur, voluptas. consectetur adipisicing elit. Consequatur, voluptas. consectetur adipisicing elit. ",
+                    description: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequatur, voluptas. consectetur adipisicing elit. Consequatur, voluptas. consectetur adipisicing elit.",
                     price: "32",
                     image: src + "pack-super.png"
                 },
@@ -108,11 +109,11 @@ export default {
     methods: {
         toggleService(serviceId) {
             if (this.selectedServices.includes(serviceId)) {
-                this.selectedServices = this.selectedServices.filter(id => id !== serviceId)
+                this.selectedServices = this.selectedServices.filter(id => id !== serviceId);
             } else {
-                this.selectedServices.push(serviceId)
+                this.selectedServices.push(serviceId);
             }
-            this.$emit('services-selected', this.selectedServices)
+            this.$emit('services-selected', this.selectedServices);
         }
     }
 }
@@ -120,6 +121,6 @@ export default {
 
 <style scoped>
 .selected {
-    border: 3px solid #d09c6e;
+    border: 2px solid #d09c6e;
 }
 </style>

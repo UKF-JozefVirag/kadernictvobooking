@@ -447,4 +447,20 @@ input[type="text"] {
     opacity: 0.1 !important;
 }
 
+.vuecal--date-picker:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content{
+    background-color: #d09c6e !important;
+}
+
+.vuecal__cell--today .vuecal__cell-content {
+    border: 1px solid rgba(1,1,1,0.25) !important;
+}
+
+.vuecal__title-bar {
+    background-color: transparent !important;
+}
+
+.vuecal__flex .weekday-label {
+    color: black !important;
+    opacity: 1 !important;
+}
 
