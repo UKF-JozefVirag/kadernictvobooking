@@ -47,12 +47,17 @@ export default {
     },
     computed: {
         formattedDate() {
-            return this.selectedDate ? this.selectedDate.toLocaleDateString() : ''
+            if (!this.selectedDate) return '';
+            const day = String(this.selectedDate.getDate()).padStart(2, '0');
+            const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
+            const year = this.selectedDate.getFullYear();
+            return `${day}/${month}/${year}`;
         }
     },
     methods: {
         onDateClick(date) {
-            this.selectedDate = new Date(date)
+            this.selectedDate = new Date(date);
+            this.selectedDate = this.formattedDate;
             this.$emit('date-selected', this.selectedDate);
         },
         onTimeSelected(time) {

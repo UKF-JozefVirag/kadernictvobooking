@@ -14,8 +14,8 @@
                 md="4"
             >
                 <ServiceCard
-                    :class="{'selected': selectedServices.includes(service.id)}"
-                    @click="toggleService(service.id)"
+                    :class="{'selected': selectedServiceIds.includes(service.id)}"
+                    @click="toggleService(service)"
                     :card-title="service.title"
                     :card-text="service.description"
                     :card-price="service.price"
@@ -23,7 +23,7 @@
                 ></ServiceCard>
             </v-col>
         </v-row>
-    <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
+        <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
     </v-container>
 </template>
 
@@ -103,17 +103,23 @@ export default {
                     image: src + "pack-super.png"
                 },
             ],
-            selectedServices: []
+            selectedServiceIds: [],
+            selectedServiceNames: []
         }
     },
     methods: {
-        toggleService(serviceId) {
-            if (this.selectedServices.includes(serviceId)) {
-                this.selectedServices = this.selectedServices.filter(id => id !== serviceId);
+        toggleService(service) {
+            if (this.selectedServiceIds.includes(service.id)) {
+                this.selectedServiceIds = this.selectedServiceIds.filter(id => id !== service.id);
+                this.selectedServiceNames = this.selectedServiceNames.filter(name => name !== service.title);
             } else {
-                this.selectedServices.push(serviceId);
+                this.selectedServiceIds.push(service.id);
+                this.selectedServiceNames.push(service.title);
             }
-            this.$emit('services-selected', this.selectedServices);
+            this.$emit('services-selected', {
+                ids: this.selectedServiceIds,
+                names: this.selectedServiceNames
+            });
         }
     }
 }

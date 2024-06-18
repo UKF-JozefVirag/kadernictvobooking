@@ -14,8 +14,8 @@
                 md="4"
             >
                 <ServiceCard
-                    :class="{'selected': selectedEmployee === employee.id}"
-                    @click="selectEmployee(employee.id)"
+                    :class="{'selected': selectedEmployeeId === employee.id}"
+                    @click="selectEmployee(employee)"
                     :card-title="employee.name"
                     :card-text="employee.description"
                     :card-image="employee.image"
@@ -27,8 +27,8 @@
 </template>
 
 <script>
-import SectionDescriber from '@/components/home/SectionDescriber.vue'
-import ServiceCard from '@/components/home/ServiceCard.vue'
+import SectionDescriber from '@/components/home/SectionDescriber.vue';
+import ServiceCard from '@/components/home/ServiceCard.vue';
 
 export default {
     name: 'ReservationEmployee',
@@ -74,18 +74,23 @@ export default {
                     image: src + "placeholder-person.png"
                 }
             ],
-            selectedEmployee: ""
-        }
+            selectedEmployeeId: "",
+            selectedEmployeeName: ""
+        };
     },
     methods: {
-        selectEmployee(employeeId) {
-            if (this.selectedEmployee !== employeeId) {
-                this.selectedEmployee = employeeId;
-                this.$emit('employee-selected', this.selectedEmployee);
+        selectEmployee(employee) {
+            if (this.selectedEmployeeId !== employee.id) {
+                this.selectedEmployeeId = employee.id;
+                this.selectedEmployeeName = employee.name;
+                this.$emit('employee-selected', {
+                    id: this.selectedEmployeeId,
+                    name: this.selectedEmployeeName
+                });
             }
         }
     }
-}
+};
 </script>
 
 <style scoped>

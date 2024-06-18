@@ -51,6 +51,14 @@
         "phoneNumber": "Telefónne číslo",
         "send": "Odoslať"
     },
+    "reservation_modal": {
+        "confirmReservation": "Potvrdenie rezervácie",
+        "services": "Služby",
+        "employee": "Zamestnanec",
+        "date": "Dátum",
+        "time": "Čas",
+        "contactInfo": "Váš kontakt"
+    },
     "services": {
         "sectionName": "Naše služby"
     },
@@ -98,6 +106,10 @@
         "newsletterText": "Chcete vedieť, čo chystáme? Prihláste sa na odber noviniek a pripojte sa ku nám.",
         "submit": "Odoslať",
         "emailInterpolation": "info{at}barbershop.sk"
+    },
+    "buttons": {
+        "submit": "Odoslať",
+        "cancel": "Zrušiť"
     },
     "calendar": {
         "orderFrom": "Objednávka od",

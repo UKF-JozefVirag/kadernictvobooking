@@ -51,6 +51,14 @@
         "phoneNumber": "Phone number",
         "send": "Send"
     },
+    "reservation_modal": {
+        "confirmReservation": "Confirm reservation",
+        "services": "Services",
+        "employee": "Employee",
+        "date": "Date",
+        "time": "Time",
+        "contactInfo": "Your contact"
+    },
     "services": {
         "sectionName": "Our services"
     },
@@ -97,6 +105,10 @@
         "newsletter": "Newsletter",
         "newsletterText": "Want to know what we are planning? Subscribe to our newsletter and join us.",
         "submit": "Submit"
+    },
+    "buttons": {
+        "submit": "Submit",
+        "cancel": "Cancel"
     },
     "calendar": {
         "orderFrom": "Order from",
