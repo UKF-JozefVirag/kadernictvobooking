@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('datetime');
+            $table->dateTime('datetime_from');
+            $table->dateTime('datetime_to');
             $table->float('total_price');
             $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('set null');
             $table->timestamps();

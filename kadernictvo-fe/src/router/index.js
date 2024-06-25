@@ -6,6 +6,7 @@ import DashboardView from "@/views/dashboard/DashboardView.vue";
 import ProfileView from "@/views/dashboard/ProfileView.vue";
 import CalendarView from '@/views/dashboard/CalendarView.vue'
 import ReservationView from '@/views/ReservationView.vue';
+import store from "../store";
 
 const routes = [
     {
@@ -31,7 +32,7 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: DashboardView,
-        beforeEnter: isAuthenticated
+        meta: { requiresAuth: true }
     },
     {
         path: '/profile',
@@ -53,18 +54,22 @@ const router = createRouter({
 });
 
 function isAuthenticated(to, from, next) {
-    if (localStorage.getItem('token')) {
-        next();
-        return;
+    let isLogin = false;
+    isLogin = !!store.state.auth.authenticated;
+
+    if (isLogin) {
+        next()
+    } else {
+        next('/login')
     }
-    router.push({ name: 'login' });
 }
 
-router.beforeEach((to, from, next) => {
-    const isLoggedIn = !!localStorage.getItem('token');
 
-    if (to.name === 'login' && isLoggedIn) {
-        next({ name: 'dashboard' });
+
+
+router.beforeEach((to, from, next) => {
+    if (to.matched.some(record => record.meta.requiresAuth)) {
+        isAuthenticated(to, from, next);
     } else {
         next();
     }

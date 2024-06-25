@@ -102,5 +102,13 @@ class AuthController extends Controller
         ]);
     }
 
+    public function validateToken(Request $request)
+    {
+        if (Auth::guard('sanctum')->check()) {
+            return response()->json(['message' => 'Token is valid'], 200);
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+    }
 
 }

@@ -15,6 +15,7 @@
                 <v-btn
                     :class="{'selected': selectedTime === time}"
                     @click="selectTime(time)"
+                    :disabled="isTimeDisabled(time)"
                     :ripple="false"
                 >
                     {{ time }}
@@ -37,6 +38,7 @@
                 <v-btn
                     :class="{'selected': selectedTime === time}"
                     @click="selectTime(time)"
+                    :disabled="isTimeDisabled(time)"
                     :ripple="false"
                 >
                     {{ time }}
@@ -49,6 +51,12 @@
 <script>
 export default {
     name: 'TimePicker',
+    props: {
+        selectedDate: {
+            type: Date,
+            required: true
+        }
+    },
     data() {
         return {
             times: [
@@ -75,8 +83,19 @@ export default {
     },
     methods: {
         selectTime(time) {
-            this.selectedTime = time;
-            this.$emit('time-selected', time);
+            if (!this.isTimeDisabled(time)) {
+                this.selectedTime = time;
+                this.$emit('time-selected', time);
+            }
+        },
+        isTimeDisabled(time) {
+            const [hours, minutes] = time.split(':').map(Number);
+            const now = new Date();
+            const selectedDateTime = new Date(this.selectedDate);
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+
+            return selectedDateTime.setHours(hours, minutes, 0, 0) < now.setHours(currentHours, currentMinutes, 0, 0);
         }
     }
 }

@@ -14,12 +14,16 @@
                     active-view="month"
                     :locale="$i18n.locale"
                     :transitions="false"
+                    :min-date="minDate"
                     style="height: 400px"
                     @cell-click="onDateClick">
                 </vue-cal>
             </v-col>
             <v-col cols="12" sm="12" md="6" v-if="selectedDate">
-                <TimePicker @time-selected="onTimeSelected"></TimePicker>
+                <TimePicker
+                    :selected-date="selectedDate"
+                    @time-selected="onTimeSelected"
+                ></TimePicker>
             </v-col>
         </v-row>
         <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
@@ -42,7 +46,7 @@ export default {
     data() {
         return {
             selectedDate: null,
-            selectedTime: null
+            minDate: new Date().toISOString().split('T')[0] // Today's date in YYYY-MM-DD format
         }
     },
     computed: {
@@ -51,18 +55,16 @@ export default {
             const day = String(this.selectedDate.getDate()).padStart(2, '0');
             const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
             const year = this.selectedDate.getFullYear();
-            return `${day}/${month}/${year}`;
+            return `${year}-${month}-${day}`;
         }
     },
     methods: {
         onDateClick(date) {
             this.selectedDate = new Date(date);
-            this.selectedDate = this.formattedDate;
-            this.$emit('date-selected', this.selectedDate);
+            this.$emit('date-selected', this.formattedDate);
         },
         onTimeSelected(time) {
-            this.selectedTime = time;
-            this.$emit('time-selected', this.selectedTime);
+            this.$emit('time-selected', time);
         }
     }
 }

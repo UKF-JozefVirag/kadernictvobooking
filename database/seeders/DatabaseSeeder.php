@@ -17,25 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
-
-        for ($i = 0; $i < 10; $i++) {
-
-            DB::table('services')->insert([
-                'name' => Str::random(10),
-                'desc' => Str::random(20),
-                'price' => rand(1,20),
-            ]);
-            DB::table('employees')->insert([
-                'first_name' => Str::random(10),
-                'last_name' => Str::random(10),
-                'image' => Str::random(10),
-                'phone_number' => Str::random(10),
-                'email' => Str::random(10).'@gmail.com'
-            ]);
-
-
-        }
-
-
+        $this->call(ServicesTableSeeder::class);
+        $this->call(EmployeesTableSeeder::class);
     }
 }

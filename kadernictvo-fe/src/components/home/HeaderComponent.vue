@@ -1,5 +1,5 @@
 <template>
-    <main class="main">
+    <main class="main" id="home">
         <section class="inner text-center" id="inner">
             <div class="container-fluid inner-content">
                 <div class="sub-title mb-3">

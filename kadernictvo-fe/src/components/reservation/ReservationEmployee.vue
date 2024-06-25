@@ -16,7 +16,7 @@
                 <ServiceCard
                     :class="{'selected': selectedEmployeeId === employee.id}"
                     @click="selectEmployee(employee)"
-                    :card-title="employee.name"
+                    :card-title="employee.first_name"
                     :card-text="employee.description"
                     :card-image="employee.image"
                 ></ServiceCard>
@@ -29,66 +29,42 @@
 <script>
 import SectionDescriber from '@/components/home/SectionDescriber.vue';
 import ServiceCard from '@/components/home/ServiceCard.vue';
+import axios from 'axios'
 
 export default {
     name: 'ReservationEmployee',
     components: { ServiceCard, SectionDescriber },
     data() {
-        let src = "/src/assets/images/employees/";
         return {
-            employees: [
-                {
-                    id: 1,
-                    name: "John",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                },
-                {
-                    id: 2,
-                    name: "Jane",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                },
-                {
-                    id: 3,
-                    name: "Bob",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                },
-                {
-                    id: 4,
-                    name: "Martin",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                },
-                {
-                    id: 5,
-                    name: "Simon",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                },
-                {
-                    id: 6,
-                    name: "Nezáleží",
-                    description: "Barber",
-                    image: src + "placeholder-person.png"
-                }
-            ],
+            employees: [],
             selectedEmployeeId: "",
-            selectedEmployeeName: ""
+            selectedEmployeeName: "",
+            loadingEvents: false
         };
     },
     methods: {
         selectEmployee(employee) {
             if (this.selectedEmployeeId !== employee.id) {
                 this.selectedEmployeeId = employee.id;
-                this.selectedEmployeeName = employee.name;
+                this.selectedEmployeeName = employee.first_name;
                 this.$emit('employee-selected', {
                     id: this.selectedEmployeeId,
-                    name: this.selectedEmployeeName
+                    first_name: this.selectedEmployeeName
                 });
             }
-        }
+        },
+        async fetchEmployees() {
+            try {
+                const response = await axios.get('http://localhost:8000/api/employees');
+                this.employees = response.data;
+                this.loadingEvents = false;
+            } catch (error) {
+                console.error('Error fetching employees:', error);
+            }
+        },
+    },
+    created() {
+        this.fetchEmployees();
     }
 };
 </script>

@@ -114,6 +114,7 @@
     "calendar": {
         "orderFrom": "Objednávka od",
         "orderTo": "Objednávka do",
-        "price": "Cena"
+        "price": "Cena",
+        "orderDetail": "Detail objednávky"
     }
 }

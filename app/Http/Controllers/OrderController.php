@@ -32,7 +32,8 @@ class OrderController extends Controller
     {
         // Validácia vstupných údajov
         $validatedData = $request->validate([
-            'datetime' => 'required|date',
+            'datetime_from' => 'required|date',
+            'datetime_to' => 'required|date',
             'employee_id' => 'nullable|exists:employees,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
@@ -44,7 +45,8 @@ class OrderController extends Controller
 
         // Vytvorenie objednávky
         $order = Order::create([
-            'datetime' => $validatedData['datetime'],
+            'datetime_from' => $validatedData['datetime_from'],
+            'datetime_to' => $validatedData['datetime_to'],
             'total_price' => $totalPrice,
             'employee_id' => $validatedData['employee_id'] // Uistite sa, že hodnota je tu správne priradená
         ]);

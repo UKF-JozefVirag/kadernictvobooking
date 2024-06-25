@@ -50,7 +50,7 @@
 <script>
 import axios from 'axios';
 import SnackComponent from "@/components/common/SnackComponent.vue";
-
+axios.defaults.withXSRFToken = true;
 export default {
     name: "LoginForm",
     components: {SnackComponent},
@@ -72,6 +72,7 @@ export default {
             this.snackOpen = false;
             this.loading = true;
             try {
+                await axios.get("http://localhost:8000/sanctum/csrf-cookie");
                 const response = await axios.post(
                     'http://localhost:8000/api/login',
                     this.formData,

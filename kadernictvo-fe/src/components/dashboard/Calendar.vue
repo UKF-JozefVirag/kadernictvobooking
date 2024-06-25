@@ -58,8 +58,9 @@
 </template>
 
 <script>
-import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
+import VueCal from 'vue-cal';
+import 'vue-cal/dist/vuecal.css';
+import axios from 'axios';
 
 let todayDate = new Date().toISOString().slice(0, 10);
 
@@ -72,51 +73,62 @@ export default {
         return {
             selectedEvent: {},
             showDialog: false,
-            customDaySplitLabels: [
-                { id: 1, label: 'John', color: '#0000FF', class: 'split1' },
-                { id: 2, label: 'Tom', color: '#008000', class: 'split2' },
-                { id: 3, label: 'Kate', color: '#FFA500', class: 'split3' },
-                { id: 4, label: 'Jess', color: '#FF0000', class: 'split4' },
-                { id: 5, label: 'Martin', color: '#000000', class: 'split5' },
-                { id: 6, label: 'Jonathan', color: '#4a7300', class: 'split6' },
-                { id: 7, label: 'Michelle', color: '#f900ff', class: 'split7' },
-                { id: 8, label: 'Nicole', color: '#5b2c00', class: 'split8' }
-            ],
-            events: [
-                {
-                    start: todayDate + ' 9:30',
-                    end: todayDate + ' 10:00',
-                    title: 'Shopping with princess Diana',
-                    icon: 'account',
-                    contentFull: 'Aliquam rutrum nisi eget dignissim ultricies. Suspendisse sapien est, tempus faucibus nunc ut, efficitur fermentum est. Aliquam consequat velit risus',
-                    class: 'leisure',
-                    split: 1,
-                    price: 25
-                },
-                {
-                    start: todayDate + ' 14:30',
-                    end: todayDate + ' 15:00',
-                    title: 'Golf with Mario Kart characters',
-                    icon: 'triangle',
-                    contentFull: 'Okay. It will be an 18 hole golf course.',
-                    class: 'sport',
-                    split: 2,
-                    price: 15.50
-                },
-                {
-                    start: todayDate + ' 14:30',
-                    end: todayDate + ' 15:00',
-                    title: 'Miro pele repovanie',
-                    icon: 'circle',
-                    contentFull: 'Okay. It will be an 18 hole golf course.',
-                    class: 'sport',
-                    split: 4,
-                    price: 32.5
-                }
-            ]
-        }
+            customDaySplitLabels: [],
+            events: [],
+            employeesMap: {}
+        };
+    },
+    created() {
+        this.fetchEmployeesAndOrders();
     },
     methods: {
+        async fetchEmployeesAndOrders() {
+            const token = localStorage.getItem('token'); // Získajte token z localStorage
+            try {
+                const employeesResponse = await axios.get('http://localhost:8000/api/employees', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                const employees = employeesResponse.data;
+                this.customDaySplitLabels = employees.map(employee => ({
+                    id: employee.id,
+                    label: employee.first_name,
+                    color: this.assignColor(employee.id),
+                    class: 'split' + employee.id
+                }));
+
+                // Vytvoríme mapu zamestnancov
+                this.employeesMap = employees.reduce((map, employee) => {
+                    map[employee.id] = employee;
+                    return map;
+                }, {});
+
+                const ordersResponse = await axios.get('http://localhost:8000/api/orders', {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                this.events = ordersResponse.data.map(order => {
+                    const employee = this.employeesMap[order.employee_id];
+                    console.log(order);
+                    return {
+                        start: order.datetime_from,
+                        end: order.datetime_to,
+                        title: `Order with ${employee ? employee.first_name : 'Unknown'}`,
+                        icon: 'event',
+                        contentFull: `Order details for ${employee ? employee.first_name : 'Unknown'}`,
+                        class: 'order',
+                        split: order.employee_id,
+                        price: order.total_price
+                    };
+                });
+            } catch (error) {
+                console.error('Error fetching employees or orders:', error);
+            }
+        },
         onEventClick(event, e) {
             this.selectedEvent = event;
             this.showDialog = true;
@@ -137,6 +149,10 @@ export default {
         },
         getShortTitle(title) {
             return title.length > 20 ? title.slice(0, 20) + '...' : title;
+        },
+        assignColor(id) {
+            const colors = ['#0000FF', '#008000', '#FFA500', '#FF0000', '#000000', '#4a7300', '#f900ff', '#5b2c00'];
+            return colors[id % colors.length];
         }
     }
 };
@@ -163,7 +179,6 @@ export default {
 }
 
 .v-list-item:hover {
-    color: black !important;;
+    color: black !important;
 }
-
 </style>

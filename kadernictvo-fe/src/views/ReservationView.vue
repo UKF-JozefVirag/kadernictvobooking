@@ -13,7 +13,7 @@
                 <div><strong>{{$t('reservation_modal.services')}}:</strong> {{ selectedServiceNames.join(', ') }}</div>
                 <div><strong>{{$t('reservation_modal.employee')}}:</strong> {{ selectedEmployeeName }}</div>
                 <div><strong>{{$t('reservation_modal.date')}}:</strong> {{ selectedDate }}</div>
-                <div><strong>{{$t('reservation_modal.time')}}:</strong> {{ selectedTime }}</div>
+                <div><strong>{{$t('reservation_modal.time')}}:</strong> {{ selectedTime }} - {{ endTime }}</div>
                 <div><strong>{{$t('reservation_modal.contactInfo')}}:</strong></div>
                 <div>{{$t('reservation.firstName')}}: {{ contactInfo.firstName }}</div>
                 <div>{{$t('reservation.lastName')}}: {{ contactInfo.lastName }}</div>
@@ -51,7 +51,6 @@ export default {
     data() {
         return {
             selectedServices: [],
-            selectedServiceNames: [],
             selectedEmployee: '',
             selectedEmployeeName: '',
             selectedDate: null,
@@ -62,7 +61,8 @@ export default {
                 phoneNumber: '',
                 email: ''
             },
-            isModalOpen: false
+            isModalOpen: false,
+            endTime: ''
         };
     },
     computed: {
@@ -71,23 +71,28 @@ export default {
         },
         canShowContactInfo() {
             return this.selectedDate !== null && this.selectedTime !== null;
+        },
+        selectedServiceNames() {
+            return this.selectedServices.map(service => service.name);
         }
     },
     methods: {
-        handleServicesSelected(services) {
-            this.selectedServices = services.ids;
-            this.selectedServiceNames = services.names;
+        handleServicesSelected({ services }) {
+            this.selectedServices = services;
+            this.calculateEndTime();
         },
         handleEmployeeSelected(employee) {
             this.selectedEmployee = employee.id;
-            this.selectedEmployeeName = employee.name;
+            this.selectedEmployeeName = employee.first_name;
         },
         handleDateSelected(date) {
             this.selectedDate = date;
             this.selectedTime = null;
+            this.endTime = '';
         },
         handleTimeSelected(time) {
             this.selectedTime = time;
+            this.calculateEndTime();
         },
         handleContactInfoSubmitted(contactInfo) {
             this.contactInfo = contactInfo;
@@ -95,16 +100,55 @@ export default {
         openModal() {
             this.isModalOpen = true;
         },
-        submitReservation() {
+        calculateEndTime() {
+            if (!this.selectedTime || !this.selectedServices.length) {
+                this.endTime = '';
+                return;
+            }
+
+            const totalDuration = this.selectedServices.reduce((acc, service) => acc + service.duration, 0);
+
+            const [hours, minutes] = this.selectedTime.split(':').map(Number);
+            const startDateTime = new Date(this.selectedDate);
+            startDateTime.setHours(hours, minutes);
+
+            const endDateTime = new Date(startDateTime.getTime() + totalDuration * 60000);
+            const endHours = endDateTime.getHours().toString().padStart(2, '0');
+            const endMinutes = endDateTime.getMinutes().toString().padStart(2, '0');
+
+            this.endTime = `${endHours}:${endMinutes}`;
+        },
+        async submitReservation() {
+            const totalDuration = this.selectedServices.reduce((acc, service) => acc + service.duration, 0);
+            const [hours, minutes] = this.selectedTime.split(':').map(Number);
+            const startDateTime = new Date(this.selectedDate);
+            startDateTime.setHours(hours, minutes);
+            const endDateTime = new Date(startDateTime.getTime() + totalDuration * 60000);
+
             const reservationData = {
-                services: this.selectedServices,
-                employee: this.selectedEmployee,
-                date: this.selectedDate,
-                time: this.selectedTime,
-                contactInfo: this.contactInfo
+                services: this.selectedServices.map(service => service.id),
+                employee_id: this.selectedEmployee,
+                datetime_from: `${this.selectedDate} ${this.selectedTime}`,
+                datetime_to: `${endDateTime.toISOString().slice(0, 10)} ${endDateTime.toTimeString().slice(0, 5)}`
             };
 
-            console.log(reservationData);
+            const token = localStorage.getItem('token');
+            await axios.post('http://localhost:8000/api/orders', reservationData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    console.log('Order created successfully:', response.data);
+                    this.isModalOpen = false;
+                    this.$router.push('/');
+                    this.$router.go();
+                })
+                .catch(error => {
+                    console.error('Error creating order:', error);
+                });
+        },
+        close() {
             this.isModalOpen = false;
         }
     }

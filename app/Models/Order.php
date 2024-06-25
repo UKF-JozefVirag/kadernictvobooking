@@ -14,7 +14,8 @@ class Order extends Model
     protected $table = 'orders';
 
     protected $fillable = [
-        'datetime',
+        'datetime_from',
+        'datetime_to',
         'employee_id',
         'total_price',
         'created_at',
