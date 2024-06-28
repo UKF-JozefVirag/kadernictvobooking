@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from "@/views/HomeView.vue";
-import LoginView from "@/views/LoginView.vue";
-import PageNotFoundView from "@/views/PageNotFoundView.vue";
-import DashboardView from "@/views/dashboard/DashboardView.vue";
-import ProfileView from "@/views/dashboard/ProfileView.vue";
-import CalendarView from '@/views/dashboard/CalendarView.vue'
+import HomeView from '@/views/HomeView.vue';
+import LoginView from '@/views/LoginView.vue';
+import PageNotFoundView from '@/views/PageNotFoundView.vue';
+import DashboardView from '@/views/dashboard/DashboardView.vue';
+import ProfileView from '@/views/dashboard/ProfileView.vue';
+import CalendarView from '@/views/dashboard/CalendarView.vue';
 import ReservationView from '@/views/ReservationView.vue';
-import store from "../store";
+import { useAuthStore } from '@/store/auth';
 
 const routes = [
     {
@@ -17,7 +17,7 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: LoginView
+        component: LoginView,
     },
     {
         path: '/reservation',
@@ -32,7 +32,7 @@ const routes = [
         path: '/dashboard',
         name: 'dashboard',
         component: DashboardView,
-        meta: { requiresAuth: true }
+        beforeEnter: isAuthenticated
     },
     {
         path: '/profile',
@@ -53,23 +53,21 @@ const router = createRouter({
     routes
 });
 
-function isAuthenticated(to, from, next) {
-    let isLogin = false;
-    isLogin = !!store.state.auth.authenticated;
-
-    if (isLogin) {
-        next()
+async function isAuthenticated(to, from, next) {
+    const authStore = useAuthStore();
+    await authStore.checkAuthentication(); // Ensure authentication check
+    if (authStore.isAuthenticated) {
+        next();
     } else {
-        next('/login')
+        next({ name: 'login' });
     }
 }
 
-
-
-
-router.beforeEach((to, from, next) => {
-    if (to.matched.some(record => record.meta.requiresAuth)) {
-        isAuthenticated(to, from, next);
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore();
+    await authStore.checkAuthentication(); // Ensure authentication check
+    if (to.name === 'login' && authStore.getUser) {
+        next({ name: 'dashboard' });
     } else {
         next();
     }

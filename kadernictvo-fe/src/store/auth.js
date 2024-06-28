@@ -1,56 +1,48 @@
-import axios from 'axios';
+import { defineStore } from 'pinia'
+import axios from 'axios'
 
-export default {
-    namespaced: true,
-    state: {
+export const useAuthStore = defineStore('auth', {
+    state: () => ({
         authenticated: false,
-        user: {}
-    },
+        authUser: null
+    }),
     getters: {
-        authenticated(state) {
-            return state.authenticated
-        },
-        user(state) {
-            return state.user
-        }
-    },
-    mutations: {
-        SET_AUTHENTICATED(state, value) {
-            state.authenticated = value
-        },
-        SET_USER(state, value) {
-            state.user = value
-        }
+        isAuthenticated: (state) => state.authenticated,
+        getUser: (state) => state.authUser
     },
     actions: {
-        login({commit}) {
-            return axios.get('/api/user').then(({data}) => {
-                commit('SET_USER', data)
-                commit('SET_AUTHENTICATED', true)
-            }).catch(({res}) => {
-                commit('SET_USER', {})
-                commit('SET_AUTHENTICATED', false)
-            })
+        async getToken() {
+            try {
+                await axios.get('/sanctum/csrf-cookie');
+            } catch (e) {
+                console.log(e);
+            }
         },
-        getUser({commit}) {
-            return axios.get('/api/user').then(({data}) => {
+        async fetchUser() {
+            try {
+                await this.getToken();
+                const { data } = await axios.get('https://localhost:8000/api/getUserInfo');
                 if (data.success) {
-                    commit('SET_USER', data.data)
-                    commit('SET_AUTHENTICATED', true)
-                    // router.push({name: 'dashboard'})
+                    this.authUser = data;
+                    this.authenticated = true;
+                } else {
+                    this.authUser = null;
+                    this.authenticated = false;
                 }
-                // else {
-                //     commit('SET_USER', {})
-                //     commit('SET_AUTHENTICATED', false)
-                // }
-            }).catch(({res}) => {
-                commit('SET_USER', {})
-                commit('SET_AUTHENTICATED', false)
-            })
+            } catch (e) {
+                console.log(e);
+                this.authUser = null;
+                this.authenticated = false;
+            }
         },
-        logout({commit}) {
-            commit('SET_USER', {})
-            commit('SET_AUTHENTICATED', false)
+        logout() {
+            this.authUser = null;
+            this.authenticated = false;
+        },
+        async checkAuthentication() {
+            if (!this.authenticated) {
+                await this.fetchUser();
+            }
         }
     }
-}
+});

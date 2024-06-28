@@ -18,6 +18,8 @@ import en from './assets/locales/en.json';
 import sk from './assets/locales/sk.json';
 import * as components from 'vuetify/components'
 import * as labsComponents from 'vuetify/labs/components'
+import { createPinia } from 'pinia'
+
 
 const i18n = createI18n({
     locale: 'sk',
@@ -30,7 +32,7 @@ const i18n = createI18n({
 
 
 const app = createApp(App)
-
+const pinia = createPinia();
 const vuetify = createVuetify({
     components: {
         ...components,
@@ -40,4 +42,4 @@ const vuetify = createVuetify({
     directives,
 })
 
-createApp(App).use(vuetify).use(i18n).use(router).use(BootstrapIconsPlugin).mount('#app')
+createApp(App).use(vuetify).use(i18n).use(pinia).use(router).use(BootstrapIconsPlugin).mount('#app')

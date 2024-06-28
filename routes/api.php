@@ -14,7 +14,9 @@ Route::post('orders', [OrderController::class, 'store']);
 Route::get('services', [ServiceController::class, 'index']);
 Route::get('employees', [EmployeeController::class, 'index']);
 
-
+Route::middleware('auth:sanctum')->get('user', function () {
+    return auth()->user();
+});
 Route::group([
     "middleware" => ['auth:sanctum']
 ], function () {
