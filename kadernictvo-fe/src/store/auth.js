@@ -2,10 +2,10 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 export const useAuthStore = defineStore('auth', {
-    state: () => ({
+    state: {
         authenticated: false,
         authUser: null
-    }),
+    },
     getters: {
         isAuthenticated: (state) => state.authenticated,
         getUser: (state) => state.authUser
@@ -16,6 +16,8 @@ export const useAuthStore = defineStore('auth', {
                 await axios.get('/sanctum/csrf-cookie');
             } catch (e) {
                 console.log(e);
+                this.authenticated = false;
+                this.authUser = null;
             }
         },
         async fetchUser() {

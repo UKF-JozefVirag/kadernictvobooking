@@ -55,22 +55,18 @@ const router = createRouter({
 
 async function isAuthenticated(to, from, next) {
     const authStore = useAuthStore();
-    await authStore.checkAuthentication(); // Ensure authentication check
-    if (authStore.isAuthenticated) {
-        next();
+    const routesRequiringAuth = ['login', 'dashboard', 'calendar'];
+
+    if (routesRequiringAuth.includes(to.name)) {
+        await authStore.checkAuthentication(); // Ensure authentication check
+        if (authStore.isAuthenticated) {
+            next();
+        } else {
+            next({ name: 'login' });
+        }
     } else {
-        next({ name: 'login' });
+        next();
     }
 }
-
-router.beforeEach(async (to, from, next) => {
-    const authStore = useAuthStore();
-    await authStore.checkAuthentication(); // Ensure authentication check
-    if (to.name === 'login' && authStore.getUser) {
-        next({ name: 'dashboard' });
-    } else {
-        next();
-    }
-});
 
 export default router;
