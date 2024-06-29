@@ -1,12 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/views/HomeView.vue';
-import LoginView from '@/views/LoginView.vue';
-import PageNotFoundView from '@/views/PageNotFoundView.vue';
-import DashboardView from '@/views/dashboard/DashboardView.vue';
-import ProfileView from '@/views/dashboard/ProfileView.vue';
-import CalendarView from '@/views/dashboard/CalendarView.vue';
-import ReservationView from '@/views/ReservationView.vue';
-import { useAuthStore } from '@/store/auth';
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '@/views/HomeView.vue'
+import LoginView from '@/views/LoginView.vue'
+import PageNotFoundView from '@/views/PageNotFoundView.vue'
+import DashboardView from '@/views/dashboard/DashboardView.vue'
+import ProfileView from '@/views/dashboard/ProfileView.vue'
+import CalendarView from '@/views/dashboard/CalendarView.vue'
+import ReservationView from '@/views/ReservationView.vue'
+import { useAuthStore } from '@/store/auth'
 
 const routes = [
     {
@@ -17,7 +17,7 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: LoginView,
+        component: LoginView
     },
     {
         path: '/reservation',
@@ -46,27 +46,25 @@ const routes = [
         component: CalendarView,
         beforeEnter: isAuthenticated
     }
-];
+]
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes
-});
+})
 
 async function isAuthenticated(to, from, next) {
-    const authStore = useAuthStore();
-    const routesRequiringAuth = ['login', 'dashboard', 'calendar'];
 
-    if (routesRequiringAuth.includes(to.name)) {
-        await authStore.checkAuthentication(); // Ensure authentication check
-        if (authStore.isAuthenticated) {
-            next();
-        } else {
-            next({ name: 'login' });
-        }
+    if (localStorage.getItem('token')) {
+        next()
     } else {
-        next();
+        next({ name: 'login' })
     }
+
+    if (localStorage.getItem('token') && to('/login')) {
+        next({ name: 'dashboard' })
+    }
+
 }
 
-export default router;
+export default router

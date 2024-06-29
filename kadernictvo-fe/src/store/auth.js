@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia'
-import axios from 'axios'
+import { defineStore } from 'pinia';
+import axios from 'axios';
 
 export const useAuthStore = defineStore('auth', {
     state: {
@@ -7,8 +7,7 @@ export const useAuthStore = defineStore('auth', {
         authUser: null
     },
     getters: {
-        isAuthenticated: (state) => state.authenticated,
-        getUser: (state) => state.authUser
+
     },
     actions: {
         async getToken() {
@@ -40,11 +39,6 @@ export const useAuthStore = defineStore('auth', {
         logout() {
             this.authUser = null;
             this.authenticated = false;
-        },
-        async checkAuthentication() {
-            if (!this.authenticated) {
-                await this.fetchUser();
-            }
         }
     }
 });

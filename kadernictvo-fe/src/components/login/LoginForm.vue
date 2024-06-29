@@ -49,7 +49,6 @@
 
 <script>
 import axios from 'axios';
-import { useAuthStore } from '@/store/auth';
 import SnackComponent from "@/components/common/SnackComponent.vue";
 
 axios.defaults.withXSRFToken = true;
@@ -74,7 +73,6 @@ export default {
         async login() {
             this.snackOpen = false;
             this.loading = true;
-            const authStore = useAuthStore();
             try {
                 await axios.get("http://localhost:8000/sanctum/csrf-cookie");
                 const response = await axios.post(
@@ -90,7 +88,6 @@ export default {
                 this.color = "success";
                 this.snackText = "Successfully logged in";
                 localStorage.setItem('token', response.data.token);
-                authStore.authenticated = true
                 this.$router.push('/dashboard');
             } catch (e) {
                 this.color = "danger";
