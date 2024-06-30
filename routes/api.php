@@ -13,6 +13,7 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('orders', [OrderController::class, 'store']);
 Route::get('services', [ServiceController::class, 'index']);
 Route::get('employees', [EmployeeController::class, 'index']);
+//Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
 
 Route::middleware('auth:sanctum')->get('user', function () {
     return auth()->user();
@@ -25,7 +26,8 @@ Route::group([
 //   Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
     Route::patch("profile", [UpdateProfile::class, 'setProfileInfo']);
 
-//    Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
+
+    Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
     Route::resource('orders', OrderController::class);
 //   Route::resource('employees', EmployeeController::class);
 //   Route::resource('services', ServiceController::class);

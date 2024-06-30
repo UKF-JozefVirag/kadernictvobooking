@@ -45,7 +45,6 @@
 
 <script>
 import axios from "axios";
-import { useAuthStore } from '@/store/auth.js'
 
 export default {
     name: "SideBar",
@@ -98,7 +97,6 @@ export default {
 
         async logout() {
             try {
-                const authStore = useAuthStore();
                 const response = await axios.post(
                     'http://localhost:8000/api/logout',
                     {},
@@ -110,7 +108,6 @@ export default {
                     }
                 );
                 localStorage.removeItem('token');
-                authStore.authenticated = false;
                 this.$router.push('/login');
             } catch (error) {
                 console.log(error);

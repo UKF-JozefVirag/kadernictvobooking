@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 class UpdateProfile extends Controller
 {
-    public function getProfileInfo()
+    public function getProfileInfo(): \Illuminate\Http\JsonResponse
     {
         $user = \auth()->user();
         return response()->json([
