@@ -88,6 +88,7 @@ export default {
                 this.color = "success";
                 this.snackText = "Successfully logged in";
                 localStorage.setItem('token', response.data.token);
+                $cookies.set('token',response.data.token);
                 this.$router.push('/dashboard');
             } catch (e) {
                 this.color = "danger";

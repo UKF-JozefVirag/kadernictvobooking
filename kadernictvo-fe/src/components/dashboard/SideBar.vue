@@ -103,11 +103,11 @@ export default {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + localStorage.getItem('token')
+                            'Authorization': 'Bearer ' + this.$cookies.get('token')
                         }
                     }
                 );
-                localStorage.removeItem('token');
+                $cookies.remove('token');
                 this.$router.push('/login');
             } catch (error) {
                 console.log(error);

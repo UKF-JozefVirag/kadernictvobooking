@@ -83,7 +83,7 @@ export default {
     },
     methods: {
         async fetchEmployeesAndOrders() {
-            const token = localStorage.getItem('token'); // Získajte token z localStorage
+            const token = $cookies.get('token');
             try {
                 const employeesResponse = await axios.get('http://localhost:8000/api/employees', {
                     headers: {

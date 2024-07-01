@@ -19,7 +19,7 @@ import sk from './assets/locales/sk.json';
 import * as components from 'vuetify/components'
 import * as labsComponents from 'vuetify/labs/components'
 import { createPinia } from 'pinia'
-
+import VueCookies from 'vue-cookies'
 
 const i18n = createI18n({
     locale: 'sk',
@@ -42,4 +42,4 @@ const vuetify = createVuetify({
     directives,
 })
 
-createApp(App).use(vuetify).use(i18n).use(pinia).use(router).use(BootstrapIconsPlugin).mount('#app')
+createApp(App).use(vuetify).use(i18n).use(pinia).use(router).use(VueCookies).use(BootstrapIconsPlugin).mount('#app')

@@ -59,7 +59,7 @@ function fetchUser() {
         .then(() => {
             return axios.get('http://localhost:8000/api/user', {
                 headers: {
-                    Authorization: `Bearer ` + localStorage.getItem('token')
+                    Authorization: `Bearer ` + $cookies.get('token')
                 }
             });
         })
@@ -84,7 +84,7 @@ function isAuthenticated(to, from, next) {
 
 
 router.beforeEach((to, from, next) => {
-    const isLoggedIn = !!localStorage.getItem('token')
+    const isLoggedIn = !!$cookies.get('token')
 
     if (to.name === 'login' && isLoggedIn) {
         next({ name: 'dashboard' })

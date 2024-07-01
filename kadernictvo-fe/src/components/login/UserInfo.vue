@@ -92,6 +92,7 @@ export default {
             }
 
             try {
+                const token = $cookies.get('token');
                 await axios.patch(
                     'http://localhost:8000/api/profile',
                     {
@@ -102,7 +103,7 @@ export default {
                     },
                     {
                         headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                            Authorization: 'Bearer ' + { token }
                         }
                     }
                 );
@@ -126,10 +127,11 @@ export default {
 
         async fetchProfileInfo() {
             try {
+                const token = $cookies.get('token');
                 const response = await axios.get(
                     'http://localhost:8000/api/profile', {
                         headers: {
-                            Authorization: 'Bearer ' + localStorage.getItem('token')
+                            Authorization: 'Bearer ' + { token }
                         }
                     }
                 );
