@@ -111,9 +111,12 @@
         "cancel": "Cancel"
     },
     "calendar": {
+        "employee": "Employee",
         "orderFrom": "Order from",
         "orderTo": "Order until",
         "price": "Price",
-        "orderDetail": "Order detail"
+        "orderDetail": "Order detail",
+        "orderTitle": "Order for {employee}",
+        "services": "Services"
     }
 }

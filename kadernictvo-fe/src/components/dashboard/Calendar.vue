@@ -37,32 +37,29 @@
                 </div>
             </v-card-title>
             <v-card-text>
-                <p v-html="selectedEvent.contentFull"/>
-                <v-list tag='ul'>
-                    <template v-for="(item) in 3">
-                        <v-list-item tag='li'>
-                            {{ item }}
-                        </v-list-item>
-                    </template>
-                </v-list>
-
-                <strong>{{$t('calendar.orderDetail')}}</strong>
                 <v-list>
+                    <strong>{{$t('calendar.orderDetail')}}</strong>
+                    <v-list-item :title="$t('calendar.employee')" :subtitle="selectedEvent.employee ? selectedEvent.employee.first_name + ' ' + selectedEvent.employee.last_name : 'Unknown'"></v-list-item>
                     <v-list-item :title="$t('calendar.orderFrom')" :subtitle="selectedEvent.start && selectedEvent.start.formatTime()"></v-list-item>
                     <v-list-item :title="$t('calendar.orderTo')" :subtitle="selectedEvent.end && selectedEvent.end.formatTime()"></v-list-item>
                     <v-list-item :title="$t('calendar.price')" :subtitle="selectedEvent.price + ' €'"></v-list-item>
+                    <strong>{{$t('calendar.services')}}</strong>
+                    <div v-for="(service, index) in selectedEvent.services" :key="index">
+                        <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
+                    </div>
                 </v-list>
+
             </v-card-text>
         </v-card>
     </v-dialog>
 </template>
 
+
+
 <script>
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
-import axios from 'axios';
-
-let todayDate = new Date().toISOString().slice(0, 10);
+import axios from 'axios'
 
 export default {
     name: 'Calendar',
@@ -99,7 +96,6 @@ export default {
                     class: 'split' + employee.id
                 }));
 
-                // Vytvoríme mapu zamestnancov
                 this.employeesMap = employees.reduce((map, employee) => {
                     map[employee.id] = employee;
                     return map;
@@ -113,22 +109,28 @@ export default {
 
                 this.events = ordersResponse.data.map(order => {
                     const employee = this.employeesMap[order.employee_id];
-                    console.log(order);
                     return {
                         start: order.datetime_from,
                         end: order.datetime_to,
-                        title: `Order with ${employee ? employee.first_name : 'Unknown'}`,
+                        title: this.$t('calendar.orderTitle', {
+                            employee: employee ? `${employee.first_name} ${employee.last_name}` : 'Unknown'
+                        }),
                         icon: 'event',
-                        contentFull: `Order details for ${employee ? employee.first_name : 'Unknown'}`,
+                        contentFull: this.$t('calendar.orderDetail', {
+                            employee: employee ? `${employee.first_name} ${employee.last_name}` : 'Unknown'
+                        }),
                         class: 'order',
+                        services: order.services,
                         split: order.employee_id,
-                        price: order.total_price
+                        price: order.total_price,
+                        employee: employee 
                     };
                 });
             } catch (error) {
                 console.error('Error fetching employees or orders:', error);
             }
         },
+
         onEventClick(event, e) {
             this.selectedEvent = event;
             this.showDialog = true;
@@ -157,6 +159,7 @@ export default {
     }
 };
 </script>
+
 
 <style lang="scss" scoped>
 .event-card {

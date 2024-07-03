@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Service;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
@@ -13,7 +14,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::all();
+        $orders = Order::with('employee', 'services')->get();
         return response()->json($orders);
     }
 
@@ -30,7 +31,6 @@ class OrderController extends Controller
      */
     public function store(Request $request)
     {
-        // Validácia vstupných údajov
         $validatedData = $request->validate([
             'datetime_from' => 'required|date',
             'datetime_to' => 'required|date',
@@ -39,19 +39,16 @@ class OrderController extends Controller
             'services.*' => 'exists:services,id',
         ]);
 
-        // Získanie služieb a výpočet celkovej ceny
         $services = Service::whereIn('id', $validatedData['services'])->get();
         $totalPrice = $services->sum('price');
 
-        // Vytvorenie objednávky
         $order = Order::create([
             'datetime_from' => $validatedData['datetime_from'],
             'datetime_to' => $validatedData['datetime_to'],
             'total_price' => $totalPrice,
-            'employee_id' => $validatedData['employee_id'] // Uistite sa, že hodnota je tu správne priradená
+            'employee_id' => $validatedData['employee_id']
         ]);
 
-        // Priradenie služieb k objednávke
         if ($request->has('services')) {
             $order->services()->attach($validatedData['services']);
         }

@@ -19,6 +19,7 @@
                     :card-title="employee.first_name"
                     :card-text="employee.description"
                     :card-image="employee.image"
+                    :reservation="true"
                 ></ServiceCard>
             </v-col>
         </v-row>

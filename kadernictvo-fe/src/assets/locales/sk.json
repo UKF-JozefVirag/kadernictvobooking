@@ -112,9 +112,12 @@
         "cancel": "Zrušiť"
     },
     "calendar": {
+        "employee": "Zamestnanec",
         "orderFrom": "Objednávka od",
         "orderTo": "Objednávka do",
         "price": "Cena",
-        "orderDetail": "Detail objednávky"
+        "orderDetail": "Detail objednávky",
+        "orderTitle": "Objednávka pre {employee}",
+        "services": "Služby"
     }
 }
