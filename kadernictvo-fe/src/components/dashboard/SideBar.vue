@@ -17,6 +17,8 @@
                         :key="index"
                         :value="index"
                         @click="handleProfileItemClick(item)"
+                        class="navbarTile"
+                        :active-class="'active-list-item'"
                     >
                         <v-list-item-title>{{ item.title }}</v-list-item-title>
                     </v-list-item>
@@ -32,9 +34,11 @@
                     :value="index"
                     :prepend-icon="item.icon"
                     @click="handleProfileItemClick(item)"
+                    class="dashboard-item"
+                    :active-class="'active-list-item'"
                 >
                     <template v-slot:prepend>
-                        <v-icon></v-icon>
+                        <v-icon>{{ item.icon }}</v-icon>
                     </template>
                     <v-list-item-title>{{ item.title }}</v-list-item-title>
                 </v-list-item>
@@ -125,4 +129,39 @@ export default {
 #sidebar {
     position: static !important;
 }
+
+.dashboard-item,
+.navbarTile {
+    background-color: white !important;
+    transition: none !important;
+}
+
+.dashboard-item:hover,
+.navbarTile:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: black !important;
+}
+
+.dashboard-item .v-list-item__title,
+.navbarTile .v-list-item__title {
+    color: black !important;
+}
+
+.active-list-item {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: black !important;
+}
+
+.v-list-item {
+    transition: none !important;
+}
+
+.v-list-item:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    color: black !important;
+}
 </style>
+
+
+
+

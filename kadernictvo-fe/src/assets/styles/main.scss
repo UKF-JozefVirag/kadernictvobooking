@@ -464,3 +464,19 @@ input[type="text"] {
     opacity: 1 !important;
 }
 
+.navbarTile:hover {
+    border-radius: 4px;
+    background: #455A64;
+}
+
+.v-list-item__overlay, .v-list-item__underlay, .v-list-item__prepend, .v-list-item__content {
+    &:hover {
+        color: black;
+    }
+    &:focus {
+        color: black;
+    }
+    &:active {
+        color: black;
+    }
+}
