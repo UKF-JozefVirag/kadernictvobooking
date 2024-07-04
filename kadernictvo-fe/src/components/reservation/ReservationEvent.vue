@@ -24,6 +24,7 @@
                     :card-image="service.image"
                     :card-second-text="service.duration"
                     :reservation="true"
+                    :service="true"
                 ></ServiceCard>
             </v-col>
         </v-row>

@@ -132,11 +132,7 @@ export default {
                 datetime_to: `${endDateTime.toISOString().slice(0, 10)} ${endDateTime.toTimeString().slice(0, 5)}`
             };
 
-            const token = localStorage.getItem('token');
             await axios.post('http://localhost:8000/api/orders', reservationData, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
             })
                 .then(response => {
                     console.log('Order created successfully:', response.data);

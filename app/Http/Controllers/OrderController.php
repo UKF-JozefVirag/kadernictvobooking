@@ -32,8 +32,8 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'datetime_from' => 'required|date',
-            'datetime_to' => 'required|date',
+            'datetime_from' => 'required|date|after_or_equal:now',
+            'datetime_to' => 'required|date|after:datetime_from',
             'employee_id' => 'nullable|exists:employees,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
@@ -57,7 +57,6 @@ class OrderController extends Controller
         return response()->json($order->load('services'), 201);
     }
 
-
     /**
      * Display the specified resource.
      */
@@ -79,8 +78,29 @@ class OrderController extends Controller
      */
     public function update(Request $request, Order $order)
     {
-        $order->update($request->all());
-        return response()->json($order);
+        $validatedData = $request->validate([
+            'datetime_from' => 'required|date|after_or_equal:now',
+            'datetime_to' => 'required|date|after:datetime_from',
+            'employee_id' => 'nullable|exists:employees,id',
+            'services' => 'required|array',
+            'services.*' => 'exists:services,id',
+        ]);
+
+        $services = Service::whereIn('id', $validatedData['services'])->get();
+        $totalPrice = $services->sum('price');
+
+        $order->update([
+            'datetime_from' => $validatedData['datetime_from'],
+            'datetime_to' => $validatedData['datetime_to'],
+            'total_price' => $totalPrice,
+            'employee_id' => $validatedData['employee_id']
+        ]);
+
+        if ($request->has('services')) {
+            $order->services()->sync($validatedData['services']);
+        }
+
+        return response()->json($order->load('services'));
     }
 
     /**
@@ -90,5 +110,19 @@ class OrderController extends Controller
     {
         $order->delete();
         return response()->json(null, 204);
+    }
+
+    public function getOrdersByDate(Request $request)
+    {
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+        ]);
+
+        $date = $validatedData['date'];
+        $orders = Order::with('employee', 'services')
+            ->whereDate('datetime_from', $date)
+            ->get();
+
+        return response()->json($orders);
     }
 }

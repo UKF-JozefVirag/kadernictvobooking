@@ -55,6 +55,11 @@ export default {
         selectedDate: {
             type: Date,
             required: true
+        },
+        unavailableTimes: {
+            type: Array,
+            required: true,
+            default: () => []
         }
     },
     data() {
@@ -64,7 +69,7 @@ export default {
                 '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30',
                 '16:00', '16:30', '17:00', '17:30', '18:00'
             ],
-            selectedTime: null
+            selectedTime: null,
         }
     },
     computed: {
@@ -90,12 +95,28 @@ export default {
         },
         isTimeDisabled(time) {
             const [hours, minutes] = time.split(':').map(Number);
-            const now = new Date();
             const selectedDateTime = new Date(this.selectedDate);
+            selectedDateTime.setHours(hours, minutes, 0, 0);
+
+            const now = new Date();
             const currentHours = now.getHours();
             const currentMinutes = now.getMinutes();
 
-            return selectedDateTime.setHours(hours, minutes, 0, 0) < now.setHours(currentHours, currentMinutes, 0, 0);
+            if (selectedDateTime < now.setHours(currentHours, currentMinutes, 0, 0)) {
+                return true;
+            }
+
+            return this.unavailableTimes.some(unavailable => {
+                const fromTime = new Date(this.selectedDate);
+                const [fromHours, fromMinutes] = unavailable.fromTime.split(':').map(Number);
+                fromTime.setHours(fromHours, fromMinutes, 0, 0);
+
+                const toTime = new Date(this.selectedDate);
+                const [toHours, toMinutes] = unavailable.toTime.split(':').map(Number);
+                toTime.setHours(toHours, toMinutes, 0, 0);
+
+                return selectedDateTime >= fromTime && selectedDateTime < toTime;
+            });
         }
     }
 }

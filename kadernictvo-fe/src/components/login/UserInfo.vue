@@ -92,9 +92,9 @@ export default {
             }
 
             try {
-                const token = $cookies.get('token');
+                const token = decodeURIComponent($cookies.get('token'))
                 await axios.patch(
-                    'http://localhost:8000/api/profile',
+                    'http://localhost:8000/api/user',
                     {
                         firstName: this.firstName,
                         lastName: this.lastName,
@@ -127,15 +127,13 @@ export default {
 
         async fetchProfileInfo() {
             try {
-                const token = $cookies.get('token');
-                const response = await axios.get(
-                    'http://localhost:8000/api/profile', {
-                        headers: {
-                            Authorization: 'Bearer ' + { token }
-                        }
+                const token = decodeURIComponent($cookies.get('token'))
+                const response = await axios.get(`http://localhost:8000/api/user`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
                     }
-                );
-                const data = response.data.data;
+                });
+                const data = response.data;
                 this.firstName = data.first_name;
                 this.lastName = data.last_name;
                 this.phoneNumber = data.phoneNumber;

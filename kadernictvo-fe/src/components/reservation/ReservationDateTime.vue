@@ -22,6 +22,7 @@
             <v-col cols="12" sm="12" md="6" v-if="selectedDate">
                 <TimePicker
                     :selected-date="selectedDate"
+                    :unavailable-times="getUnavailableTimesForSelectedDate"
                     @time-selected="onTimeSelected"
                 ></TimePicker>
             </v-col>
@@ -35,6 +36,7 @@ import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 import SectionDescriber from '@/components/home/SectionDescriber.vue'
 import TimePicker from '@/components/reservation/TimePicker.vue'
+import axios from 'axios';
 
 export default {
     name: 'ReservationDateTime',
@@ -46,22 +48,51 @@ export default {
     data() {
         return {
             selectedDate: null,
-            minDate: new Date().toISOString().split('T')[0] // Today's date in YYYY-MM-DD format
+            minDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD format
+            orders: [], // Store all fetched orders
         }
     },
     computed: {
-        formattedDate() {
-            if (!this.selectedDate) return '';
-            const day = String(this.selectedDate.getDate()).padStart(2, '0');
-            const month = String(this.selectedDate.getMonth() + 1).padStart(2, '0');
-            const year = this.selectedDate.getFullYear();
-            return `${year}-${month}-${day}`;
+        getUnavailableTimesForSelectedDate() {
+            if (!this.selectedDate) return [];
+
+            const formattedDate = this.formatDate(this.selectedDate);
+
+            return this.orders
+                .filter(order => this.formatDate(new Date(order.datetime_from)) === formattedDate)
+                .map(order => ({
+                    fromTime: new Date(order.datetime_from).toLocaleTimeString([], {
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    }),
+                    toTime: new Date(order.datetime_to).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                }));
         }
     },
     methods: {
         onDateClick(date) {
             this.selectedDate = new Date(date);
-            this.$emit('date-selected', this.formattedDate);
+            this.fetchOrdersForDate(this.formatDate(this.selectedDate));
+            this.$emit('date-selected', this.formatDate(this.selectedDate));
+        },
+        async fetchOrdersForDate(formattedDate) {
+            const token = decodeURIComponent(this.$cookies.get('token'));
+            try {
+                const response = await axios.get(`http://localhost:8000/api/orders?date=${formattedDate}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+                this.orders = response.data;
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
+        },
+        formatDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${year}-${month}-${day}`;
         },
         onTimeSelected(time) {
             this.$emit('time-selected', time);

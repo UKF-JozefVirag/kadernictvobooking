@@ -6,7 +6,6 @@ import DashboardView from '@/views/dashboard/DashboardView.vue'
 import ProfileView from '@/views/dashboard/ProfileView.vue'
 import CalendarView from '@/views/dashboard/CalendarView.vue'
 import ReservationView from '@/views/ReservationView.vue'
-import SnackComponent from "@/components/common/SnackComponent.vue";
 import axios from 'axios'
 
 const routes = [
@@ -54,43 +53,28 @@ const router = createRouter({
     routes
 })
 
-function fetchUser() {
-    return axios.get('/sanctum/csrf-cookie')
-        .then(() => {
-            return axios.get('http://localhost:8000/api/user', {
-                headers: {
-                    Authorization: `Bearer ` + $cookies.get('token')
-                }
-            });
-        })
-        .then(response => response.data)
-        .catch(error => {
-            this.snackOpen = true;
-            this.color = "danger";
-            this.snackText = error.response.statusText;
-            return null;
+async function fetchUser() {
+    try {
+        await axios.get('/sanctum/csrf-cookie');
+        const response = await axios.get('http://localhost:8000/api/user', {
+            headers: {
+                Authorization: `Bearer ${decodeURIComponent($cookies.get('token'))}`
+            }
         });
-}
-
-function isAuthenticated(to, from, next) {
-    fetchUser().then(user => {
-        if (user) {
-            next();
-        } else {
-            router.push({ name: 'login' });
-        }
-    });
-}
-
-
-router.beforeEach((to, from, next) => {
-    const isLoggedIn = !!$cookies.get('token')
-
-    if (to.name === 'login' && isLoggedIn) {
-        next({ name: 'dashboard' })
-    } else {
-        next()
+        return response.data;
+    } catch (error) {
+        console.log('Error fetching user:', error);
+        return null;
     }
-})
+}
+
+async function isAuthenticated(to, from, next) {
+    const user = await fetchUser();
+    if (user) {
+        next();
+    } else {
+        next({ name: 'login' });
+    }
+}
 
 export default router

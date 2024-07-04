@@ -80,7 +80,7 @@ export default {
     },
     methods: {
         async fetchEmployeesAndOrders() {
-            const token = $cookies.get('token');
+            const token = decodeURIComponent($cookies.get('token'))
             try {
                 const employeesResponse = await axios.get('http://localhost:8000/api/employees', {
                     headers: {
@@ -123,7 +123,7 @@ export default {
                         services: order.services,
                         split: order.employee_id,
                         price: order.total_price,
-                        employee: employee 
+                        employee: employee
                     };
                 });
             } catch (error) {
@@ -164,15 +164,19 @@ export default {
 <style lang="scss" scoped>
 .event-card {
     display: flex;
-    align-items: center;
-    height: 100%;
+    justify-content: left;
+    align-items: start;
+    padding: 4px;
+    font-size: 0.9em;
     color: white;
-    padding: 0 5px;
 }
 
 .event-text {
-    display: inline;
-    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    font-size: 0.9em;
 }
 
 @media (max-width: 600px) {

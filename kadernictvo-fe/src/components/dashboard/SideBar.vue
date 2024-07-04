@@ -103,7 +103,7 @@ export default {
                     {
                         headers: {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + this.$cookies.get('token')
+                            'Authorization': 'Bearer ' + decodeURIComponent($cookies.get('token'))
                         }
                     }
                 );
