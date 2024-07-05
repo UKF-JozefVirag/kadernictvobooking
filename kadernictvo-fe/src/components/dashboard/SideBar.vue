@@ -6,7 +6,7 @@
             <v-spacer></v-spacer>
             <v-menu transition="scale-transition">
                 <template v-slot:activator="{ props }">
-                    <v-btn color="white" :ripple="false" v-bind="props">
+                    <v-btn color="white" :ripple="false" v-bind="props" id="btn">
                         {{ email }}
                         <BIconCaretDownFill id="icon-caret"></BIconCaretDownFill>
                     </v-btn>
@@ -51,7 +51,7 @@ export default {
     data: () => ({
         drawer: false,
         group: null,
-        email: 'email@email.com',
+        email: 'example@email.com',
         dashboardItems: [
             {title: 'Dashboard', value: 'dashboard', icon: "mdi-view-dashboard"},
             {title: 'Calendar', value: 'calendar', icon: "mdi-calendar-blank"},
@@ -74,7 +74,6 @@ export default {
             this.drawer = false;
         },
     },
-
     methods: {
         handleProfileItemClick(item) {
             switch (item.value) {
@@ -97,7 +96,7 @@ export default {
 
         async logout() {
             try {
-                const response = await axios.post(
+                await axios.post(
                     'http://localhost:8000/api/logout',
                     {},
                     {
@@ -113,6 +112,25 @@ export default {
                 console.log(error);
             }
         },
+
+        async getUser() {
+            try {
+                const response = await axios.get(
+                    'http://localhost:8000/api/user',
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                        }
+                    });
+                this.email = response.data.email;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    },
+    mounted() {
+        this.getUser();
     }
 }
 </script>
@@ -120,6 +138,10 @@ export default {
 <style lang="scss" scoped>
 #icon-caret {
     color: white;
+}
+
+#btn {
+    text-transform: unset !important;
 }
 
 #sidebar {
