@@ -20,7 +20,7 @@
             <v-col
                 cols="12"
                 md="6"
-                lg="4"
+                lg="3"
                 class="d-flex justify-content-start"
                 d-flex
                 flex-column
@@ -35,7 +35,7 @@
             <v-col
                 cols="12"
                 md="6"
-                lg="4"
+                lg="3"
                 class="d-flex justify-content-lg-center"
                 d-flex
                 flex-column
@@ -51,7 +51,23 @@
             <v-col
                 cols="12"
                 md="6"
-                lg="4"
+                lg="3"
+                class="d-flex justify-content-lg-center"
+                d-flex
+                flex-column
+                align-self-center
+            >
+                <EarningCard
+                    title="Počet rezervácií za týždeň"
+                    :value="[5, 7, 8, 6, 10, 9, 11]"
+                    color="blue"
+                    sparklineColor="info"
+                />
+            </v-col>
+            <v-col
+                cols="12"
+                md="6"
+                lg="3"
                 class="d-flex justify-content-lg-end"
                 d-flex
                 flex-column
@@ -69,38 +85,17 @@
             <v-col cols="12" md="9" lg="8" align-self="start">
                 <v-card class="fixed-card">
                     <v-card-title>Latest orders</v-card-title>
-                    <v-card-text v-for="(order, index) in orders" :key="index" class="order-text">
-                        <a href="#" class="order-link">Order #{{ order.number }}</a> created {{ order.time }}. {{ order.items }} items. <br> {{ order.customer }}
-                        <span class="float-right">{{ order.amount }} €</span>
-                        <hr />
-                    </v-card-text>
+                    <v-virtual-scroll :items="orders" max-height="400">
+                        <v-card-text v-for="(order, index) in orders" :key="index" class="order-text">
+                            <a href="#" class="order-link">Order #{{ order.number }}</a> created {{ order.time }}. {{ order.items }} items. <br> {{ order.customer }}
+                            <span class="float-right">{{ order.amount }} €</span>
+                            <hr />
+                        </v-card-text>
+                    </v-virtual-scroll>
                 </v-card>
             </v-col>
             <v-col cols="12" md="3" lg="4" align-self="start">
-                <v-card>
-                    <v-card-title>Lorem ipsum dolor sit.</v-card-title>
-                    <v-card-text>
-                        Lorem ipsum dolor. Lorem ipsum dolor sit amet, consectetur
-                        adipisicing elit. Aliquam cumque deleniti dicta rerum, sunt
-                        voluptate? A enim laudantium numquam! Aliquid?
-                    </v-card-text>
-                    <v-card-text>
-                        Lorem ipsum dolor. Lorem ipsum dolor sit amet, consectetur
-                        adipisicing elit. Aliquam cumque deleniti dicta rerum, sunt
-                        voluptate? A enim laudantium numquam! Aliquid?
-                    </v-card-text>
-                </v-card>
-                <v-card class="mt-3">
-                    <v-card-title>Lorem ipsum dolor sit.</v-card-title>
-                    <v-card-text>
-                        Lorem ipsum dolor. Lorem ipsum dolor sit amet, consectetur
-                        adipisicing elit. Aliquam cumque deleniti dicta rerum, sunt
-                        voluptate? A enim laudantium numquam! Aliquid?
-                    </v-card-text>
-                    <v-card-text>
-                        Lorem ipsum dolor. Lorem ipsum dolor sit amet
-                    </v-card-text>
-                </v-card>
+                <AppointmentsStats></AppointmentsStats>
             </v-col>
         </v-row>
     </v-container>
@@ -109,9 +104,10 @@
 <script>
 import EarningCard from "@/components/dashboard/EarningCard.vue";
 import SideBar from "@/components/dashboard/SideBar.vue";
+import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue'
 
 export default {
-    components: { SideBar, EarningCard },
+    components: { AppointmentsStats, SideBar, EarningCard },
     data() {
         return {
             items: ["day", "week", "month"],
@@ -138,10 +134,6 @@ export default {
 </script>
 
 <style scoped>
-.fixed-card {
-    max-height: 400px;
-    overflow-y: auto;
-}
 
 .order-link {
     color: #d09c6e;
@@ -155,5 +147,9 @@ export default {
 .order-text {
     margin-top: 0;
     padding-top: 0;
+}
+
+body {
+    scrollbar-width: thin;
 }
 </style>
