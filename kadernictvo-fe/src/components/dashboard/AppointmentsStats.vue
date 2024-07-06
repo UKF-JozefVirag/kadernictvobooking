@@ -1,73 +1,18 @@
 <template>
-    <v-card height="400">
+    <v-card height="450" class="shadow-lg">
         <v-card-title>Appointments Quick Stats</v-card-title>
         <v-card-text>
             <v-list>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-clock</v-icon>
-                            <span>Čakajúce:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            8
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-check</v-icon>
-                            <span>Schválené:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            10
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-close</v-icon>
-                            <span>Zrušené:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            2
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-check-circle-outline</v-icon>
-                            <span>Dokončené:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            18
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-cancel</v-icon>
-                            <span>Odmietnuté:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            2
-                        </v-col>
-                    </v-row>
-                </v-list-item>
-                <v-list-item>
-                    <v-row class="d-flex justify-between align-center">
-                        <v-col cols="auto">
-                            <v-icon class="mr-2" color="grey darken-1">mdi-account-remove</v-icon>
-                            <span>Nezúčastnené:</span>
-                        </v-col>
-                        <v-col cols="auto">
-                            0
-                        </v-col>
-                    </v-row>
+                <v-list-item v-for="(stat, key) in stats" :key="key">
+                    <div class="d-flex justify-space-between align-center mt-3">
+                        <div>
+                            <v-icon :color="stat.color" :style="{backgroundColor: stat.backgroundColor, borderRadius: '50%'}">mdi-{{ stat.icon }}</v-icon>
+                            <span :style="{color: stat.color}">{{ key }}:</span>
+                        </div>
+                        <div>
+                            {{ stat.value }}
+                        </div>
+                    </div>
                 </v-list-item>
             </v-list>
         </v-card-text>
@@ -80,12 +25,12 @@ export default {
     data() {
         return {
             stats: {
-                pending: 5,
-                approved: 15,
-                canceled: 2,
-                completed: 10,
-                rejected: 0,
-                unattended: 0
+                'Čakajúce': { value: 8, icon: 'clock', color: 'rgba(255, 165, 0, 1)', backgroundColor: 'rgba(255, 165, 0, 0.15)' },
+                'Schválené': { value: 10, icon: 'check', color: 'green', backgroundColor: 'rgba(0, 128, 0, 0.15)' },
+                'Zrušené': { value: 2, icon: 'cancel', color: 'red', backgroundColor: 'rgba(255, 0, 0, 0.15)' },
+                'Dokončené': { value: 18, icon: 'check-circle', color: 'green', backgroundColor: 'rgba(0, 128, 0, 0.15)' },
+                'Odmietnuté': { value: 2, icon: 'close-circle', color: 'red', backgroundColor: 'rgba(255, 0, 0, 0.15)' },
+                'Nezúčastnené': { value: 0, icon: 'alert', color: 'yellow', backgroundColor: 'rgba(255, 255, 0, 0.15)' }
             }
         }
     }
@@ -93,11 +38,8 @@ export default {
 </script>
 
 <style scoped>
-.badge-text {
-    color: white;
-    font-weight: bold;
-    padding: 4px 8px;
-    border-radius: 999px;
-    text-transform: uppercase;
+.d-flex {
+    display: flex;
+    justify-content: space-between;
 }
 </style>

@@ -83,7 +83,7 @@
         </v-row>
         <v-row>
             <v-col cols="12" md="9" lg="8" align-self="start">
-                <v-card class="fixed-card">
+                <v-card class="fixed-card shadow-lg">
                     <v-card-title>Latest orders</v-card-title>
                     <v-virtual-scroll :items="orders" max-height="400">
                         <v-card-text v-for="(order, index) in orders" :key="index" class="order-text">
