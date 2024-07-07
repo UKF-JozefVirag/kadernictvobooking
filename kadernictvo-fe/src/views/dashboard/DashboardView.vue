@@ -10,9 +10,7 @@
                     aria-label="Default select example"
                     v-model="selectedOption"
                 >
-                    <option v-for="(item, index) in items" :key="index" :value="item">{{
-                            item.text
-                        }}</option>
+                    <option v-for="(item, index) in items" :key="index" :value="item.value">{{ item.text }}</option>
                 </select>
             </v-col>
         </v-row>
@@ -46,7 +44,7 @@
                     :value="[5, 7, 8, 6, 10, 9, 11]"
                     color="blue"
                     sparklineColor="info"
-                 ></EarningCard>
+                ></EarningCard>
             </v-col>
             <v-col
                 cols="12"
@@ -114,14 +112,18 @@ export default {
     components: { AppointmentsStats, SideBar, EarningCard },
     data() {
         return {
-            items: [
-                { value: "day", text: this.$t('dashboard.day') },
-                { value: "week", text: this.$t('dashboard.week') },
-                { value: "month", text: this.$t('dashboard.month') }
-            ],
-            selectedOption: "day",
+            selectedOption: '1',
             orders: this.generateOrders(),
         };
+    },
+    computed: {
+        items() {
+            return [
+                { value: '1', text: this.$t('dashboard.day') },
+                { value: '2', text: this.$t('dashboard.week') },
+                { value: '3', text: this.$t('dashboard.month') }
+            ];
+        }
     },
     methods: {
         generateOrders() {
@@ -138,6 +140,9 @@ export default {
             return orders;
         },
     },
+    created() {
+        this.selectedOption = '1';
+    }
 };
 </script>
 
@@ -171,4 +176,3 @@ body {
     scrollbar-width: thin;
 }
 </style>
-
