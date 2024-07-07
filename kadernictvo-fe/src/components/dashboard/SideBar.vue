@@ -32,11 +32,12 @@
                     :value="index"
                     :prepend-icon="item.icon"
                     @click="handleProfileItemClick(item)"
+
                 >
                     <template v-slot:prepend>
                         <v-icon></v-icon>
                     </template>
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title style="color: black; background-color: white">{{ item.title }}</v-list-item-title>
                 </v-list-item>
             </v-list>
         </v-navigation-drawer>

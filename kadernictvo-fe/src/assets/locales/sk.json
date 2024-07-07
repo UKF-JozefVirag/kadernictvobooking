@@ -119,5 +119,31 @@
         "orderDetail": "Detail objednávky",
         "orderTitle": "Objednávka pre {employee}",
         "services": "Služby"
+    },
+    "dashboard": {
+        "day": "Deň",
+        "week": "Týždeň",
+        "month": "Mesiac"
+    },
+    "earning_cards": {
+        "orders": "Objednávky",
+        "revenue": "Príjmy",
+        "customers": "Nový zákazníci",
+        "retention": "Miera udržania zákazníkov"
+    },
+    "latest_orders": {
+        "latestOrder": "Posledné objednávky",
+        "order": "Objednávka",
+        "created": "vytvorená",
+        "minutesAgo": "minút dozadu",
+        "items": "položky"
+    },
+    "appointments": {
+        "title": "Rýchle štatistiky rezervácií",
+        "pending": "Čakajúce",
+        "approved": "Schválené",
+        "cancelled": "Zrušené",
+        "completed": "Dokončené",
+        "noShow": "Nezúčastnené"
     }
 }

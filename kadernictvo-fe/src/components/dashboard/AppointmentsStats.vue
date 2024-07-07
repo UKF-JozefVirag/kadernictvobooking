@@ -1,18 +1,19 @@
 <template>
     <v-card height="450" class="shadow-lg">
-        <v-card-title>Appointments Quick Stats</v-card-title>
+        <v-card-title>{{ $t('appointments.title') }}</v-card-title>
         <v-card-text>
-            <v-list>
+            <v-list class="px-2">
                 <v-list-item v-for="(stat, key) in stats" :key="key">
-                    <div class="d-flex justify-space-between align-center mt-3">
+                    <div class="d-flex justify-space-between align-center">
                         <div>
-                            <v-icon :color="stat.color" :style="{backgroundColor: stat.backgroundColor, borderRadius: '50%'}">mdi-{{ stat.icon }}</v-icon>
-                            <span :style="{color: stat.color}">{{ key }}:</span>
+                            <v-icon :color="stat.color" class="p-3" :style="{backgroundColor: stat.backgroundColor}">mdi-{{ stat.icon }}</v-icon>
+                            <span class="ms-3 text-black">{{ key }}:</span>
                         </div>
-                        <div>
+                        <div class="text-black">
                             {{ stat.value }}
                         </div>
                     </div>
+                    <hr style="color: black">
                 </v-list-item>
             </v-list>
         </v-card-text>
@@ -25,16 +26,41 @@ export default {
     data() {
         return {
             stats: {
-                'Čakajúce': { value: 8, icon: 'clock', color: 'rgba(255, 165, 0, 1)', backgroundColor: 'rgba(255, 165, 0, 0.15)' },
-                'Schválené': { value: 10, icon: 'check', color: 'green', backgroundColor: 'rgba(0, 128, 0, 0.15)' },
-                'Zrušené': { value: 2, icon: 'cancel', color: 'red', backgroundColor: 'rgba(255, 0, 0, 0.15)' },
-                'Dokončené': { value: 18, icon: 'check-circle', color: 'green', backgroundColor: 'rgba(0, 128, 0, 0.15)' },
-                'Odmietnuté': { value: 2, icon: 'close-circle', color: 'red', backgroundColor: 'rgba(255, 0, 0, 0.15)' },
-                'Nezúčastnené': { value: 0, icon: 'alert', color: 'yellow', backgroundColor: 'rgba(255, 255, 0, 0.15)' }
+                [this.$t('appointments.pending')]: {
+                    value: 8,
+                    icon: 'clock-outline',
+                    color: 'rgb(255,165,0)',
+                    backgroundColor: 'rgba(255, 165, 0, 0.15)'
+                },
+                [this.$t('appointments.approved')]: {
+                    value: 10,
+                    icon: 'check',
+                    color: 'rgb(0,255,0)',
+                    backgroundColor: 'rgba(0,255,0, 0.15)'
+                },
+                [this.$t('appointments.cancelled')]: {
+                    value: 2,
+                    icon: 'cancel',
+                    color: 'rgb(176,0,0)',
+                    backgroundColor: 'rgba(176,0,0, 0.15)'
+                },
+                [this.$t('appointments.completed')]: {
+                    value: 18,
+                    icon: 'checkbox-marked-outline',
+                    color: 'rgb(100,0,215)',
+                    backgroundColor: 'rgba(100,0,215, 0.15)'
+                },
+                [this.$t('appointments.noShow')]: {
+                    value: 0,
+                    icon: 'moon-waning-crescent',
+                    color: 'rgb(190,148,0)',
+                    backgroundColor: 'rgba(190,148,0, 0.15)'
+                }
             }
         }
     }
 }
+
 </script>
 
 <style scoped>
@@ -42,4 +68,5 @@ export default {
     display: flex;
     justify-content: space-between;
 }
+
 </style>
