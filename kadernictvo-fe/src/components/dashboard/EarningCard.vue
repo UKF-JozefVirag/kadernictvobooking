@@ -10,18 +10,7 @@
             <v-sheet color="white">
                 <v-row no-gutters>
                     <v-col cols="12">
-                        <v-sparkline
-                            :model-value="value"
-                            :color="sparklineColor"
-                            :labels="value"
-                            label-size="14"
-                            height="100"
-                            padding="24"
-                            stroke-linecap="round"
-                            smooth
-                            auto-draw
-                        >
-                        </v-sparkline>
+                        <Line :data="chartData" :options="chartOptions"></Line>
                     </v-col>
                 </v-row>
             </v-sheet>
@@ -31,6 +20,10 @@
 
 <script setup>
 import { defineProps, computed } from 'vue'
+import { Line } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement)
 
 const props = defineProps({
     title: {
@@ -48,6 +41,10 @@ const props = defineProps({
     sparklineColor: {
         type: String,
         default: 'success'
+    },
+    labels: {
+        type: Array,
+        required: false
     }
 })
 
@@ -67,6 +64,40 @@ const subtitle = computed(() => {
 const isNegative = computed(() => {
     return calculatePercentageChange(props.value) < 0
 })
+
+const chartData = computed(() => ({
+    labels: props.labels,
+    datasets: [
+        {
+            label: props.title,
+            backgroundColor: props.color,
+            borderColor: props.color,
+            data: props.value,
+            fill: false,
+            tension: 0.4
+        }
+    ]
+}))
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+        x: {
+            grid: {
+                drawOnChartArea: false
+            }
+        },
+        y: {
+            grid: {
+                drawOnChartArea: false
+            },
+            ticks: {
+                stepSize: 1
+            }
+        }
+    }
+}
 </script>
 
 <style scoped>
@@ -77,6 +108,4 @@ const isNegative = computed(() => {
 .text-success {
     color: green;
 }
-
-
 </style>

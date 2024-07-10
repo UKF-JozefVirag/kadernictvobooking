@@ -134,7 +134,7 @@
         "latestOrder": "Latest orders",
         "order": "Order",
         "created": "created",
-        "minutesAgo": "minutes ago",
+        "minutesAgo": "3ago",
         "items": "items"
     },
     "appointments": {

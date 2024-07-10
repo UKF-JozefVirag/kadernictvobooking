@@ -135,7 +135,7 @@
         "latestOrder": "Posledné objednávky",
         "order": "Objednávka",
         "created": "vytvorená",
-        "minutesAgo": "minút dozadu",
+        "minutesAgo": "dozadu",
         "items": "položky"
     },
     "appointments": {

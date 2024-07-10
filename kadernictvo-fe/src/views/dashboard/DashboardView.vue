@@ -25,7 +25,8 @@
             >
                 <EarningCard
                     :title="$t('earning_cards.orders')"
-                    :value="[423, 446, 675, 510, 590, 610, 760]"
+                    :value="ordersCount"
+                    :labels="ordersLabels"
                     color="green"
                     sparklineColor="success"
                 >{{ $t('earning_cards.orders') }}</EarningCard>
@@ -41,7 +42,8 @@
             >
                 <EarningCard
                     :title="$t('earning_cards.revenue')"
-                    :value="[5, 7, 8, 6, 10, 9, 11]"
+                    :value="revenuesCount"
+                    :labels="revenuesLabels"
                     color="blue"
                     sparklineColor="info"
                 ></EarningCard>
@@ -84,36 +86,73 @@
                 <v-card class="fixed-card shadow-lg">
                     <v-card-title>{{$t('latest_orders.latestOrder')}}</v-card-title>
                     <v-virtual-scroll :items="orders" max-height="400">
-                        <v-card-text v-for="(order, index) in orders" :key="index" class="order-text">
-                            <div class="order-details">
-                                <a href="#" class="order-link me-1">{{ $t('latest_orders.order') }} #{{ order.number }}.</a>
-                                {{ $t('latest_orders.created') }}: {{ order.time }} {{ $t('latest_orders.minutesAgo') }}. {{ order.items }} {{ $t('latest_orders.items') }}.
-                                <span class="customer">{{ order.customer }}</span>
-                                <span class="amount">{{ order.amount }} €</span>
-                            </div>
-                            <hr />
-                        </v-card-text>
+                        <template v-slot:default="{ item: order }">
+                            <v-card-text :key="order.id" class="order-text">
+                                <div class="order-details">
+                                    <a href="#" @click="onEventClick(order, $event)" class="order-link me-1">
+                                        {{ $t('latest_orders.order') }} #{{ order.id }}
+                                    </a>
+                                    - {{ $t('latest_orders.created') }}: {{ order.formattedMinutesAgo }}. {{ $t('latest_orders.minutesAgo') }}.
+                                    {{ order.items }} {{ $t('latest_orders.items') }}.
+                                    <span class="customer">{{ order.customer }}</span>
+                                    <span class="amount">{{ order.total_price }} €</span>
+                                </div>
+                                <hr />
+                            </v-card-text>
+                        </template>
                     </v-virtual-scroll>
                 </v-card>
+
             </v-col>
             <v-col cols="12" md="3" lg="4" align-self="start">
                 <AppointmentsStats></AppointmentsStats>
             </v-col>
         </v-row>
+
+        <v-dialog v-model="showDialog" max-width="500" variant="flat">
+            <v-card>
+                <v-card-title>
+                    <p class="text-center">{{ $t('latest_orders.order')}} #{{ selectedEvent.id }}</p>
+                </v-card-title>
+                <v-card-text>
+                    <v-list>
+                        <strong>{{$t('calendar.orderDetail')}}</strong>
+                        <v-list-item :title="$t('calendar.employee')" :subtitle="selectedEvent.employee ? selectedEvent.employee.first_name + ' ' + selectedEvent.employee.last_name : 'Unknown'"></v-list-item>
+                        <v-list-item :title="$t('calendar.orderFrom')" :subtitle="formatDateTime(selectedEvent.datetime_from)"></v-list-item>
+                        <v-list-item :title="$t('calendar.orderTo')" :subtitle="formatDateTime(selectedEvent.datetime_to)"></v-list-item>
+                        <v-list-item :title="$t('calendar.price')" :subtitle="selectedEvent.total_price + ' €'"></v-list-item>
+                        <strong>{{$t('calendar.services')}}</strong>
+                        <div v-for="(service, index) in selectedEvent.services" :key="index">
+                            <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
+                        </div>
+                    </v-list>
+
+                </v-card-text>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 
+
 <script>
-import EarningCard from "@/components/dashboard/EarningCard.vue";
-import SideBar from "@/components/dashboard/SideBar.vue";
-import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue'
+import { format, parseISO, differenceInMinutes } from 'date-fns'; // Import necessary functions from date-fns
+import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
+import SideBar from '@/components/dashboard/SideBar.vue';
+import EarningCard from '@/components/dashboard/EarningCard.vue';
+import axios from 'axios';
 
 export default {
     components: { AppointmentsStats, SideBar, EarningCard },
     data() {
         return {
             selectedOption: '1',
-            orders: this.generateOrders(),
+            orders: [],
+            ordersCount: [],
+            ordersLabels: [],
+            revenuesCount: [],
+            revenuesLabels: [],
+            selectedEvent: {},
+            showDialog: false,
         };
     },
     computed: {
@@ -126,25 +165,123 @@ export default {
         }
     },
     methods: {
-        generateOrders() {
-            const orders = [];
-            for (let i = 1; i <= 7; i++) {
-                orders.push({
-                    number: i,
-                    time: (Math.random() * 60).toFixed(0),
-                    items: (Math.random() * 5).toFixed(0),
-                    customer: "John Doe",
-                    amount: (Math.random() * 100).toFixed(2),
-                });
-            }
-            return orders;
+        onEventClick(order, e) {
+            this.selectedEvent = order;
+            this.showDialog = true;
+            e.preventDefault();
+            e.stopPropagation();
         },
+        formatDateTime(datetime) {
+            const parsedDateTime = parseISO(datetime);
+            return format(parsedDateTime, 'dd/MM/yyyy HH:mm:ss');
+        },
+
+        async getOrders() {
+            const response = await axios.get('http://localhost:8000/api/stats/latest-orders', {
+                headers: {
+                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                }
+            });
+            const now = new Date();
+            this.orders = response.data.map(order => {
+                const createdAt = parseISO(order.created_at);
+                const minutesAgo = differenceInMinutes(now, createdAt);
+                return {
+                    ...order,
+                    time: format(createdAt, 'HH:mm'),
+                    minutesAgo: minutesAgo,
+                    formattedMinutesAgo: this.formatMinutes(minutesAgo),
+                    items: order.services.length,
+                    customer: `${order.employee.first_name} ${order.employee.last_name}`
+                };
+            });
+
+            this.orders.sort((a, b) => b.id - a.id);
+        },
+        async getRevenues() {
+            const response = await axios.get('http://localhost:8000/api/stats/revenue?range=' + this.selectedOption, {
+                headers: {
+                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                }
+            });
+            const data = response.data.data;
+
+            this.revenuesLabels = Object.keys(data).map(dateString => {
+                const date = parseISO(dateString);
+                if (this.selectedOption === '2') { // Weekly
+                    return format(date, 'dd/MM');
+                } else if (this.selectedOption === '3') { // Monthly
+                    return format(date, 'dd/MM');
+                }
+                return dateString;
+            });
+
+            this.revenuesCount = Object.values(data);
+        },
+
+        async getOrdersCount() {
+            const response = await axios.get('http://localhost:8000/api/stats/orders?range=' + this.selectedOption, {
+                headers: {
+                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                }
+            });
+            const data = response.data.data;
+
+            this.ordersLabels = Object.keys(data).map(dateString => {
+                const date = parseISO(dateString);
+                if (this.selectedOption === '2') { // Weekly
+                    return format(date, 'dd/MM');
+                } else if (this.selectedOption === '3') { // Monthly
+                    return format(date, 'dd/MM');
+                }
+                return dateString;
+            });
+
+            this.ordersCount = Object.values(data);
+        },
+
+        formatMinutes(minutes) {
+            if (minutes < 60) {
+                return `${minutes}m`;
+            } else if (minutes < 1440) { // less than 24 hours
+                const hours = Math.floor(minutes / 60);
+                const remainingMinutes = minutes % 60;
+                if (remainingMinutes === 0) {
+                    return `${hours}h`;
+                } else {
+                    return `${hours}h ${remainingMinutes}m`;
+                }
+            } else { // 24 hours or more
+                const days = Math.floor(minutes / 1440);
+                const remainingHours = Math.floor((minutes % 1440) / 60);
+                const remainingMinutes = minutes % 60;
+                if (remainingHours === 0 && remainingMinutes === 0) {
+                    return `${days}d`;
+                } else if (remainingHours === 0) {
+                    return `${days}d ${remainingMinutes}m`;
+                } else if (remainingMinutes === 0) {
+                    return `${days}d ${remainingHours}h`;
+                } else {
+                    return `${days}d ${remainingHours}h ${remainingMinutes}m`;
+                }
+            }
+        }
     },
-    created() {
-        this.selectedOption = '1';
+    watch: {
+        selectedOption() {
+            this.getOrdersCount();
+            this.getOrders();
+            this.getRevenues();
+        }
+    },
+    mounted() {
+        this.getOrdersCount();
+        this.getOrders();
+        this.getRevenues();
     }
 };
 </script>
+
 
 <style scoped>
 .order-link {
@@ -172,7 +309,7 @@ export default {
     float: right;
 }
 
-body {
-    scrollbar-width: thin;
+.v-list-item:hover {
+    color: black !important;
 }
 </style>
