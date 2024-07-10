@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\QuickStatsController;
 use App\Http\Controllers\UpdateProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,17 @@ Route::group([
     Route::get('orders',  [OrderController::class, 'index']);
    Route::post('employees', [EmployeeController::class, 'store']);
    Route::post('services', [ServiceController::class, 'store']);
+
+    Route::get('stats/orders', [QuickStatsController::class, 'getOrders']);
+    Route::get('stats/revenue', [QuickStatsController::class, 'getRevenue']);
+    Route::get('stats/customers', [QuickStatsController::class, 'getNewCustomers']);
+    Route::get('stats/retention', [QuickStatsController::class, 'getCustomerRetention']);
+    Route::get('stats/latest-orders', [QuickStatsController::class, 'getLatestOrders']);
+    Route::get('stats/profit', [QuickStatsController::class, 'getProfit']);
+
+    Route::get('stats/new-customers', [QuickStatsController::class, 'getNewCustomers']);
+    Route::get('stats/new-customers-overtime', [QuickStatsController::class, 'getNewCustomersOverTime']);
+
 });
 
 //Route::get('/user', function (Request $request) {

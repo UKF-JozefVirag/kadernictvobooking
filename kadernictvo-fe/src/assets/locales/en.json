@@ -118,5 +118,31 @@
         "orderDetail": "Order detail",
         "orderTitle": "Order for {employee}",
         "services": "Services"
+    },
+    "dashboard": {
+        "day": "Day",
+        "week": "Week",
+        "month": "Month"
+    },
+    "earning_cards": {
+        "orders": "Orders",
+        "revenue": "Revenue",
+        "customers": "New customers",
+        "retention": "Customer retention rate"
+    },
+    "latest_orders": {
+        "latestOrder": "Latest orders",
+        "order": "Order",
+        "created": "created",
+        "minutesAgo": "3ago",
+        "items": "items"
+    },
+    "appointments": {
+        "title": "Appointment quick stats",
+        "pending": "Pending",
+        "approved": "Approved",
+        "cancelled": "Cancelled",
+        "completed": "Completed",
+        "noShow": "No Show"
     }
 }

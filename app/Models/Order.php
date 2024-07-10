@@ -34,4 +34,9 @@ class Order extends Model
         return $this->belongsToMany(Service::class, 'order_has_service', 'order_id', 'service_id')
             ->withTimestamps();
     }
+
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dateTime('datetime_to');
             $table->float('total_price');
             $table->foreignId('employee_id')->nullable()->constrained('employees')->onDelete('set null');
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('set null');
             $table->timestamps();
         });
     }

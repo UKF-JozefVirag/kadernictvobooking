@@ -169,6 +169,8 @@ export default {
     padding: 4px;
     font-size: 0.9em;
     color: white;
+    width: 100%;
+    height: 100%;
 }
 
 .event-text {

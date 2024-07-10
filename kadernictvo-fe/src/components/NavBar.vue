@@ -48,6 +48,13 @@ export default {
     methods: {
         changeLanguage(lang) {
             this.$i18n.locale = lang;
+            localStorage.setItem('language', lang); // Uložte jazyk do localStorage
+        }
+    },
+    created() {
+        const savedLanguage = localStorage.getItem('language');
+        if (savedLanguage) {
+            this.$i18n.locale = savedLanguage;
         }
     }
 };
@@ -90,12 +97,14 @@ export default {
     .navbar-collapse {
         text-align: center;
     }
+
     .navbar-nav {
         display: flex;
         flex-direction: column;
         align-items: center;
         width: 100vw;
     }
+
     .nav-item {
         margin: 0.5rem 0;
     }
