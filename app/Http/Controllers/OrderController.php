@@ -37,6 +37,11 @@ class OrderController extends Controller
             'employee_id' => 'nullable|exists:employees,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
+            'email' => 'required|email',
+            'phone_number' => [
+                'required',
+                'regex:/^09\d{2} \d{3} \d{3}$|^09\d{8}$/'
+            ],
         ]);
 
         $services = Service::whereIn('id', $validatedData['services'])->get();
@@ -53,9 +58,9 @@ class OrderController extends Controller
             $order->services()->attach($validatedData['services']);
         }
 
-        // Vrátenie odpovede s objednávkou a službami
         return response()->json($order->load('services'), 201);
     }
+
 
     /**
      * Display the specified resource.

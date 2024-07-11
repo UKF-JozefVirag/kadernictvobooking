@@ -49,7 +49,18 @@
         "lastName": "Priezvisko",
         "email": "Email",
         "phoneNumber": "Telefónne číslo",
-        "send": "Odoslať"
+        "send": "Odoslať",
+        "required": "je povinné pole"
+    },
+    "reservation_errors": {
+        "servicesNotSelected": "Prosím, vyberte si aspoň jednu zo služieb.",
+        "employeeNotSelected": "Prosím, vyberte si zamestnanca.",
+        "dateNotSelected": "Prosím, vyberte si dátum.",
+        "timeNotSelected": "Prosím, vyberte si čas.",
+        "firstNameNotEntered": "Prosím, zadajte svoje meno",
+        "lastNameNotEntered": "Prosím, zadajte svoje priezvisko.",
+        "phoneNotValid": "Vaše číslo má zlý formát.",
+        "emailNotValid": "Váš email má zlý formát."
     },
     "reservation_modal": {
         "confirmReservation": "Potvrdenie rezervácie",

@@ -31,7 +31,8 @@ export default {
         },
         color: {
             type: String,
-            required: true
+            required: true,
+            default: "warning"
         },
         snackOpen: {
             type: Boolean,

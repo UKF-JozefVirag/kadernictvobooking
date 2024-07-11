@@ -26,6 +26,7 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <SnackComponent :color="yellow" :snack-open="snackOpen" :text="snackText"></SnackComponent>
     <FooterComponent></FooterComponent>
 </template>
 
@@ -37,6 +38,7 @@ import ReservationEmployee from '@/components/reservation/ReservationEmployee.vu
 import ReservationDateTime from '@/components/reservation/ReservationDateTime.vue';
 import ReservationContactInfo from '@/components/reservation/ReservationContactInfo.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
+import SnackComponent from "@/components/common/SnackComponent.vue";
 
 export default {
     name: 'ReservationView',
@@ -46,7 +48,8 @@ export default {
         ReservationDateTime,
         ReservationEmployee,
         ReservationEvent,
-        NavBar
+        NavBar,
+        SnackComponent
     },
     data() {
         return {
@@ -62,7 +65,9 @@ export default {
                 email: ''
             },
             isModalOpen: false,
-            endTime: ''
+            endTime: '',
+            snackText: '',
+            snackOpen: false,
         };
     },
     computed: {
@@ -98,7 +103,62 @@ export default {
             this.contactInfo = contactInfo;
         },
         openModal() {
-            this.isModalOpen = true;
+            if (this.validateForm()) {
+                this.isModalOpen = true;
+            }
+        },
+        validateForm() {
+            if (!this.selectedServices.length) {
+                this.showSnackbar(this.$t("reservation_errors.servicesNotSelected"));
+                return false;
+            }
+            if (!this.selectedEmployee) {
+                this.showSnackbar(this.$t("reservation_errors.employeeNotSelected"));
+                return false;
+            }
+            if (!this.selectedDate) {
+                this.showSnackbar(this.$t("reservation_errors.dateNotSelected"));
+                return false;
+            }
+            if (!this.selectedTime) {
+                this.showSnackbar(this.$t("reservation_errors.timeNotSelected"));
+                return false;
+            }
+            if (!this.contactInfo.firstName) {
+                this.showSnackbar(this.$t("reservation_errors.firstNameNotEntered"));
+                return false;
+            }
+            if (!this.contactInfo.lastName) {
+                this.showSnackbar(this.$t("reservation_errors.lastNameNotEntered"));
+                return false;
+            }
+            if (!this.validatePhoneNumber(this.contactInfo.phoneNumber)) {
+                this.showSnackbar(this.$t("reservation_errors.phoneNotValid"));
+                return false;
+            }
+            if (!this.validateEmail(this.contactInfo.email)) {
+                this.showSnackbar(this.$t("reservation_errors.emailNotValid"));
+                return false;
+            }
+            return true;
+        },
+        validatePhoneNumber(phoneNumber) {
+            const phoneRegex = /^09\d{2} \d{3} \d{3}$|^09\d{8}$/;
+            return phoneRegex.test(phoneNumber);
+        },
+        validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        },
+        async showSnackbar(message) {
+            this.snackOpen = true;
+            this.snackText = message;
+
+            await this.sleep(2000);
+            this.snackOpen = false;
+        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         },
         calculateEndTime() {
             if (!this.selectedTime || !this.selectedServices.length) {
@@ -132,8 +192,7 @@ export default {
                 datetime_to: `${endDateTime.toISOString().slice(0, 10)} ${endDateTime.toTimeString().slice(0, 5)}`
             };
 
-            await axios.post('http://localhost:8000/api/orders', reservationData, {
-            })
+            await axios.post('http://localhost:8000/api/orders', reservationData, {})
                 .then(response => {
                     console.log('Order created successfully:', response.data);
                     this.isModalOpen = false;

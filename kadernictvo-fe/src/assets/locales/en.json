@@ -49,7 +49,18 @@
         "lastName": "Last name",
         "email": "Email",
         "phoneNumber": "Phone number",
-        "send": "Send"
+        "send": "Send",
+        "required": "is required field"
+    },
+    "reservation_errors": {
+        "servicesNotSelected": "Please select at least one of the services",
+        "employeeNotSelected": "Please select an employee.",
+        "dateNotSelected": "Please select a date.",
+        "timeNotSelected": "Please select a time.",
+        "firstNameNotEntered": "Please enter your name",
+        "lastNameNotEntered": "Please enter your last name.",
+        "phoneNotValid": "Your number is in the wrong format.",
+        "emailNotValid": "Your email has the wrong format."
     },
     "reservation_modal": {
         "confirmReservation": "Confirm reservation",
