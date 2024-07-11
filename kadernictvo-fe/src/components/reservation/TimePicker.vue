@@ -60,6 +60,10 @@ export default {
             type: Array,
             required: true,
             default: () => []
+        },
+        employeeId: {
+            type: Number,
+            required: true
         }
     },
     data() {

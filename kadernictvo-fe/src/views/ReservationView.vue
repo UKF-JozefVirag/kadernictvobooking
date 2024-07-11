@@ -2,8 +2,17 @@
     <NavBar class="position-relative bg-black"></NavBar>
     <ReservationEvent @services-selected="handleServicesSelected"></ReservationEvent>
     <ReservationEmployee @employee-selected="handleEmployeeSelected"></ReservationEmployee>
-    <ReservationDateTime v-if="canShowDateTime" @date-selected="handleDateSelected" @time-selected="handleTimeSelected"></ReservationDateTime>
-    <ReservationContactInfo v-if="canShowContactInfo" @contact-info-submitted="handleContactInfoSubmitted" @open-modal="openModal"></ReservationContactInfo>
+    <ReservationDateTime
+        v-if="canShowDateTime"
+        :employee-id="selectedEmployee"
+        @date-selected="handleDateSelected"
+        @time-selected="handleTimeSelected"
+    ></ReservationDateTime>
+    <ReservationContactInfo
+        v-if="canShowContactInfo"
+        @contact-info-submitted="handleContactInfoSubmitted"
+        @open-modal="openModal"
+    ></ReservationContactInfo>
     <v-dialog v-model="isModalOpen" max-width="600">
         <v-card>
             <v-card-title>
@@ -54,7 +63,7 @@ export default {
     data() {
         return {
             selectedServices: [],
-            selectedEmployee: '',
+            selectedEmployee: '', // Employee ID
             selectedEmployeeName: '',
             selectedDate: null,
             selectedTime: null,

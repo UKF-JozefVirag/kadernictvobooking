@@ -12,8 +12,10 @@ use Illuminate\Support\Facades\Route;
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 Route::post('orders', [OrderController::class, 'store']);
+Route::get('/getEmployeeOrders', [OrderController::class, 'getEmployeeOrders']);
 Route::get('services', [ServiceController::class, 'index']);
 Route::get('employees', [EmployeeController::class, 'index']);
+
 
 Route::get('/orders-by-date', [OrderController::class, 'getOrdersByDate']);
 

@@ -23,6 +23,7 @@
                 <TimePicker
                     :selected-date="selectedDate"
                     :unavailable-times="getUnavailableTimesForSelectedDate"
+                    :employee-id="employeeId"
                     @time-selected="onTimeSelected"
                 ></TimePicker>
             </v-col>
@@ -32,10 +33,10 @@
 </template>
 
 <script>
-import VueCal from 'vue-cal'
-import 'vue-cal/dist/vuecal.css'
-import SectionDescriber from '@/components/home/SectionDescriber.vue'
-import TimePicker from '@/components/reservation/TimePicker.vue'
+import VueCal from 'vue-cal';
+import 'vue-cal/dist/vuecal.css';
+import SectionDescriber from '@/components/home/SectionDescriber.vue';
+import TimePicker from '@/components/reservation/TimePicker.vue';
 import axios from 'axios';
 
 export default {
@@ -44,6 +45,12 @@ export default {
         TimePicker,
         SectionDescriber,
         VueCal,
+    },
+    props: {
+        employeeId: {
+            type: Number,
+            required: true
+        }
     },
     data() {
         return {
@@ -78,7 +85,7 @@ export default {
         async fetchOrdersForDate(formattedDate) {
             const token = decodeURIComponent(this.$cookies.get('token'));
             try {
-                const response = await axios.get(`http://localhost:8000/api/orders?date=${formattedDate}`, {
+                const response = await axios.get(`http://localhost:8000/api/getEmployeeOrders?date=${formattedDate}&employee_id=${this.employeeId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

@@ -18,6 +18,22 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 
+    public function getEmployeeOrders(Request $request)
+    {
+        $validatedData = $request->validate([
+            'date' => 'required|date',
+            'employee_id' => 'required|exists:employees,id',
+        ]);
+
+        $orders = Order::whereDate('datetime_from', $validatedData['date'])
+            ->where('employee_id', $validatedData['employee_id'])
+            ->with('services', 'employee', 'customer')
+            ->get();
+
+        return response()->json($orders, 200);
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -44,6 +60,24 @@ class OrderController extends Controller
             ],
         ]);
 
+        // Check for conflicting orders
+        if ($validatedData['employee_id']) {
+            $conflictingOrders = Order::where('employee_id', $validatedData['employee_id'])
+                ->where(function ($query) use ($validatedData) {
+                    $query->whereBetween('datetime_from', [$validatedData['datetime_from'], $validatedData['datetime_to']])
+                        ->orWhereBetween('datetime_to', [$validatedData['datetime_from'], $validatedData['datetime_to']])
+                        ->orWhere(function ($query) use ($validatedData) {
+                            $query->where('datetime_from', '<', $validatedData['datetime_from'])
+                                ->where('datetime_to', '>', $validatedData['datetime_to']);
+                        });
+                })
+                ->exists();
+
+            if ($conflictingOrders) {
+                return response()->json(['message' => 'The employee is not available at the selected time.'], 409);
+            }
+        }
+
         $services = Service::whereIn('id', $validatedData['services'])->get();
         $totalPrice = $services->sum('price');
 
@@ -51,7 +85,9 @@ class OrderController extends Controller
             'datetime_from' => $validatedData['datetime_from'],
             'datetime_to' => $validatedData['datetime_to'],
             'total_price' => $totalPrice,
-            'employee_id' => $validatedData['employee_id']
+            'employee_id' => $validatedData['employee_id'],
+            'email' => $validatedData['email'],
+            'phone_number' => $validatedData['phone_number'],
         ]);
 
         if ($request->has('services')) {
@@ -60,6 +96,7 @@ class OrderController extends Controller
 
         return response()->json($order->load('services'), 201);
     }
+
 
 
     /**
