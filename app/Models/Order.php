@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\DB;
+use InvalidArgumentException;
 
 class Order extends Model
 {
@@ -23,6 +26,37 @@ class Order extends Model
     ];
 
     public $timestamps = true;
+
+    public static function countUniqueCustomersByTimeRange($timeRange)
+    {
+        $date = Carbon::now();
+
+        switch ($timeRange) {
+            case '1':
+            case 'day':
+                $startDate = $date->copy()->startOfDay();
+                break;
+            case '2':
+            case 'week':
+                $startDate = $date->copy()->startOfWeek();
+                break;
+            case '3':
+            case 'month':
+                $startDate = $date->copy()->startOfMonth();
+                break;
+            default:
+                throw new InvalidArgumentException("Invalid time range provided.");
+        }
+
+        $endDate = $date->copy()->endOfDay();
+
+        return DB::table('orders')
+            ->select('customer_id')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('customer_id')
+            ->havingRaw('COUNT(*) = 1')
+            ->count();
+    }
 
     public function employee(): BelongsTo
     {

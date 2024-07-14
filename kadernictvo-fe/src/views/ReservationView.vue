@@ -198,19 +198,27 @@ export default {
                 services: this.selectedServices.map(service => service.id),
                 employee_id: this.selectedEmployee,
                 datetime_from: `${this.selectedDate} ${this.selectedTime}`,
-                datetime_to: `${endDateTime.toISOString().slice(0, 10)} ${endDateTime.toTimeString().slice(0, 5)}`
+                datetime_to: `${endDateTime.toISOString().slice(0, 10)} ${endDateTime.toTimeString().slice(0, 5)}`,
+                first_name: this.contactInfo.firstName,
+                last_name: this.contactInfo.lastName,
+                phone_number: this.contactInfo.phoneNumber,
+                email: this.contactInfo.email
             };
 
-            await axios.post('http://localhost:8000/api/orders', reservationData, {})
-                .then(response => {
-                    console.log('Order created successfully:', response.data);
-                    this.isModalOpen = false;
-                    this.$router.push('/');
-                    this.$router.go();
-                })
-                .catch(error => {
-                    console.error('Error creating order:', error);
+            try {
+                const response = await axios.post('http://localhost:8000/api/orders', reservationData, {});
+                console.log('Order created successfully:', response.data);
+
+                this.$router.push({
+                    name: 'reservation-complete',
+                    query: {
+                        email: this.contactInfo.email
+                    }
                 });
+                this.isModalOpen = false;
+            } catch (error) {
+                console.error('Error creating order:', error);
+            }
         },
         close() {
             this.isModalOpen = false;

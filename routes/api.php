@@ -27,24 +27,23 @@ Route::group([
 ], function () {
     Route::post("logout", [AuthController::class, 'logout']);
     Route::get('/validateToken', [AuthController::class, 'validateToken']);
-   Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
+    Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
     Route::patch("profile", [UpdateProfile::class, 'setProfileInfo']);
 
 
     Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
     Route::get('orders',  [OrderController::class, 'index']);
-   Route::post('employees', [EmployeeController::class, 'store']);
-   Route::post('services', [ServiceController::class, 'store']);
+    Route::post('employees', [EmployeeController::class, 'store']);
+    Route::post('services', [ServiceController::class, 'store']);
 
     Route::get('stats/orders', [QuickStatsController::class, 'getOrders']);
     Route::get('stats/revenue', [QuickStatsController::class, 'getRevenue']);
     Route::get('stats/customers', [QuickStatsController::class, 'getNewCustomers']);
     Route::get('stats/retention', [QuickStatsController::class, 'getCustomerRetention']);
     Route::get('stats/latest-orders', [QuickStatsController::class, 'getLatestOrders']);
-    Route::get('stats/profit', [QuickStatsController::class, 'getProfit']);
 
-    Route::get('stats/new-customers', [QuickStatsController::class, 'getNewCustomers']);
-    Route::get('stats/new-customers-overtime', [QuickStatsController::class, 'getNewCustomersOverTime']);
+    Route::get('stats/unique-customers', [QuickStatsController::class, 'showUniqueCustomers']);
+
 
 });
 

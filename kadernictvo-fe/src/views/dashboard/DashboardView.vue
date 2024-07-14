@@ -58,8 +58,9 @@
                 align-self-center
             >
                 <EarningCard
-                    :title="$t('earning_cards.customers')"
-                    :value="[5, 7, 8, 6, 10, 9, 11]"
+                    :title="$t('earning_cards.new_customers')"
+                    :value="newCustomersCount"
+                    :labels="newCustomersLabels"
                     color="blue"
                     sparklineColor="info"
                 />
@@ -133,7 +134,6 @@
     </v-container>
 </template>
 
-
 <script>
 import { format, parseISO, differenceInMinutes } from 'date-fns'; // Import necessary functions from date-fns
 import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
@@ -151,6 +151,8 @@ export default {
             ordersLabels: [],
             revenuesCount: [],
             revenuesLabels: [],
+            newCustomersCount: [],
+            newCustomersLabels: [],
             selectedEvent: {},
             showDialog: false,
         };
@@ -240,6 +242,28 @@ export default {
             this.ordersCount = Object.values(data);
         },
 
+        async getNewCustomers() {
+            const response = await axios.get('http://localhost:8000/api/stats/new-customers?range=' + this.selectedOption, {
+                headers: {
+                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                }
+            });
+            const data = response.data.data;
+
+            this.newCustomersLabels = Object.keys(data).map(dateString => {
+                const date = parseISO(dateString);
+                if (this.selectedOption === '2') { // Weekly
+                    return format(date, 'dd/MM');
+                } else if (this.selectedOption === '3') { // Monthly
+                    return format(date, 'dd/MM');
+                }
+                return dateString;
+            });
+
+            this.newCustomersCount = Object.values(data);
+            console.log(this.newCustomersCount);
+        },
+
         formatMinutes(minutes) {
             if (minutes < 60) {
                 return `${minutes}m`;
@@ -272,16 +296,17 @@ export default {
             this.getOrdersCount();
             this.getOrders();
             this.getRevenues();
+            this.getNewCustomers();
         }
     },
     mounted() {
         this.getOrdersCount();
         this.getOrders();
         this.getRevenues();
+        this.getNewCustomers();
     }
 };
 </script>
-
 
 <style scoped>
 .order-link {

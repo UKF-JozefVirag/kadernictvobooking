@@ -38,6 +38,11 @@
             }
         ]
     },
+    "error_page": {
+        "title": "Sorry, we couldn't find this page.",
+        "subtitle": "But don't worry, you can find plenty of other things on our homepage.",
+        "button": "Back to homepage"
+    },
     "reservation": {
         "firstSectionName": "Reservation",
         "secondSectionName": "Employees",
@@ -69,6 +74,13 @@
         "date": "Date",
         "time": "Time",
         "contactInfo": "Your contact"
+    },
+    "reservation_complete": {
+        "title": "Thank you for booking!",
+        "subtitleFirst": "Your reservation has been successfully completed.",
+        "subtitleSecond": "We have sent a confirmation with details to",
+        "subtitleThird": "We look forward to your visit!",
+        "button": "Back to home page"
     },
     "services": {
         "sectionName": "Our services"

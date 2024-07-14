@@ -6,6 +6,8 @@ use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use InvalidArgumentException;
 
 class QuickStatsController extends Controller
 {
@@ -128,147 +130,11 @@ class QuickStatsController extends Controller
         return $revenueOverTime;
     }
 
-
-    public function getNewCustomers(Request $request)
-    {
-        $timeRange = $request->query('range', 'day');
-        $newCustomersOverTime = $this->getNewCustomersOverTime($timeRange);
-
-        return response()->json([
-            'title' => 'New Customers',
-            'value' => $newCustomersOverTime,
-            'color' => 'blue',
-            'sparklineColor' => 'info',
-        ]);
-    }
-
-    private function getNewCustomersOverTime($timeRange)
-    {
-        $now = Carbon::now();
-        $newCustomersOverTime = [];
-
-        $startDate = $this->getStartDate($timeRange, $now);
-        $endDate = $this->getEndDate($timeRange, $now);
-
-        switch ($timeRange) {
-            case '1':
-            case 'day':
-                $customers = Order::select(DB::raw('HOUR(datetime_from) as hour'), DB::raw('count(distinct customer_email) as count'))
-                    ->whereBetween('datetime_from', [$startDate, $endDate])
-                    ->whereNotIn('customer_email', function($query) use ($startDate) {
-                        $query->select('customer_email')
-                            ->from('orders')
-                            ->where('datetime_from', '<', $startDate);
-                    })
-                    ->groupBy('hour')
-                    ->get();
-                foreach ($customers as $customer) {
-                    $newCustomersOverTime[$customer->hour] = $customer->count;
-                }
-                break;
-            case '2':
-            case 'week':
-                $customers = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('count(distinct customer_email) as count'))
-                    ->whereBetween('datetime_from', [$startDate, $endDate])
-                    ->whereNotIn('customer_email', function($query) use ($startDate) {
-                        $query->select('customer_email')
-                            ->from('orders')
-                            ->where('datetime_from', '<', $startDate);
-                    })
-                    ->groupBy('date')
-                    ->get();
-                foreach ($customers as $customer) {
-                    $newCustomersOverTime[$customer->date] = $customer->count;
-                }
-                break;
-            case '3':
-            case 'month':
-                $customers = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('count(distinct customer_email) as count'))
-                    ->whereBetween('datetime_from', [$startDate, $endDate])
-                    ->whereNotIn('customer_email', function($query) use ($startDate) {
-                        $query->select('customer_email')
-                            ->from('orders')
-                            ->where('datetime_from', '<', $startDate);
-                    })
-                    ->groupBy('date')
-                    ->get();
-                foreach ($customers as $customer) {
-                    $newCustomersOverTime[$customer->date] = $customer->count;
-                }
-                break;
-        }
-
-        return $newCustomersOverTime;
-    }
-
-    private function getStartDate($timeRange, $now)
-    {
-        switch ($timeRange) {
-            case '1':
-            case 'day':
-                return $now->startOfDay();
-            case '2':
-            case 'week':
-                return $now->startOfWeek();
-            case '3':
-            case 'month':
-                return $now->startOfMonth();
-            default:
-                return $now->startOfDay();
-        }
-    }
-
-    private function getEndDate($timeRange, $now)
-    {
-        switch ($timeRange) {
-            case '1':
-            case 'day':
-                return $now->endOfDay();
-            case '2':
-            case 'week':
-                return $now->endOfWeek();
-            case '3':
-            case 'month':
-                return $now->endOfMonth();
-            default:
-                return $now->endOfDay();
-        }
-    }
-
-    public function getCustomerRetention(Request $request)
-    {
-        $timeRange = $request->query('range', 'day');
-        $retentionRate = $this->getCustomerRetentionRate($timeRange);
-
-        return response()->json([
-            'title' => 'Customer Retention',
-            'value' => $retentionRate,
-            'color' => 'orange',
-            'sparklineColor' => 'warning',
-        ]);
-    }
-
     private function getRevenueAmount($timeRange)
     {
         $query = Order::query();
         $query = $this->applyDateRangeFilter($query, $timeRange);
         return $query->sum('total_price');
-    }
-
-    private function getCustomerRetentionRate($timeRange)
-    {
-        $totalCustomersQuery = Order::query();
-        $totalCustomersQuery = $this->applyDateRangeFilter($totalCustomersQuery, $timeRange);
-        $totalCustomers = $totalCustomersQuery->distinct('customer_id')->count('customer_id');
-
-        $retainedCustomersQuery = Order::query()
-            ->select('customer_id', DB::raw('count(*) as order_count'))
-            ->groupBy('customer_id')
-            ->having('order_count', '>', 1);
-        $retainedCustomersQuery = $this->applyDateRangeFilter($retainedCustomersQuery, $timeRange);
-        $retainedCustomers = $retainedCustomersQuery->distinct('customer_id')->count('customer_id');
-
-        return $totalCustomers > 0 ? ($retainedCustomers / $totalCustomers) * 100 : 0;
     }
 
     private function applyDateRangeFilter($query, $timeRange)
@@ -299,4 +165,13 @@ class QuickStatsController extends Controller
         return response()->json($latestOrders);
     }
 
+    public function showUniqueCustomers(Request $request)
+    {
+        $query = Order::all()
+            ->count();
+
+
+        return $query;
+    }
 }
+

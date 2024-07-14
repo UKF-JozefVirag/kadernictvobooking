@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Order;
 use App\Models\Service;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
@@ -60,7 +62,6 @@ class OrderController extends Controller
             ],
         ]);
 
-        // Check for conflicting orders
         if ($validatedData['employee_id']) {
             $conflictingOrders = Order::where('employee_id', $validatedData['employee_id'])
                 ->where(function ($query) use ($validatedData) {
@@ -78,6 +79,15 @@ class OrderController extends Controller
             }
         }
 
+        $customer = Customer::firstOrCreate(
+            ['email' => $validatedData['email']],
+            [
+                'first_name' => $request->input('first_name'),
+                'last_name' => $request->input('last_name'),
+                'phone_number' => $validatedData['phone_number'],
+            ]
+        );
+
         $services = Service::whereIn('id', $validatedData['services'])->get();
         $totalPrice = $services->sum('price');
 
@@ -86,9 +96,10 @@ class OrderController extends Controller
             'datetime_to' => $validatedData['datetime_to'],
             'total_price' => $totalPrice,
             'employee_id' => $validatedData['employee_id'],
-            'email' => $validatedData['email'],
-            'phone_number' => $validatedData['phone_number'],
         ]);
+
+        $order->customer()->associate($customer);
+        $order->save();
 
         if ($request->has('services')) {
             $order->services()->attach($validatedData['services']);
@@ -96,6 +107,7 @@ class OrderController extends Controller
 
         return response()->json($order->load('services'), 201);
     }
+
 
 
 

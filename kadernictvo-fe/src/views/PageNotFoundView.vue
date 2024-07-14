@@ -8,14 +8,14 @@
                         404
                     </h2>
                     <p class="text-status-error">
-                        Sorry, we couldn't find this page.
+                        {{ this.$t('error_page.title') }}
                     </p>
                     <p class="text-status-error-2 mt-4 mb-8">
-                        But don't worry, you can find plenty of other things on our homepage.
+                        {{ this.$t('error_page.subtitle') }}
                     </p>
                 </v-col>
                 <v-col cols="12" xs="12" sm="8" md="4" lg="2" xl="2" offset-sm="2" offset-lg="4" offset-xl="5" class="d-flex justify-center">
-                    <v-btn type="submit" class="submit-button" @click="$router.push('/')" :ripple="false" plain block>Back to homepage</v-btn>
+                    <v-btn type="submit" class="submit-button" @click="$router.push('/')" :ripple="false" plain block>{{ this.$t('error_page.button') }}</v-btn>
                 </v-col>
             </v-row>
         </v-container>

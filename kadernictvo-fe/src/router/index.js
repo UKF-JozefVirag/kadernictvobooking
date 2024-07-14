@@ -7,6 +7,7 @@ import ProfileView from '@/views/dashboard/ProfileView.vue'
 import CalendarView from '@/views/dashboard/CalendarView.vue'
 import ReservationView from '@/views/ReservationView.vue'
 import axios from 'axios'
+import ReservationCompleteView from '@/views/ReservationCompleteView.vue'
 
 const routes = [
     {
@@ -25,7 +26,22 @@ const routes = [
         component: ReservationView
     },
     {
+        path: '/reservation/complete',
+        name: 'reservation-complete',
+        component: ReservationCompleteView,
+        meta: { requiresReservationView: true },
+        beforeEnter: (to, from, next) => {
+            if (from.name === 'reservation') {
+                next();
+            } else {
+                next({ name: 'error' });
+            }
+        }
+    }
+    ,
+    {
         path: '/:pathMatch(.*)*',
+        name: 'error',
         component: PageNotFoundView
     },
     {

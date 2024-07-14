@@ -38,6 +38,11 @@
             }
         ]
     },
+    "error_page": {
+        "title": "Je nám ľúto, ale túto stránku sme nenašli.",
+        "subtitle": "Ale nebojte sa, na našej domovskej stránke nájdete veľa ďalších vecí.",
+        "button": "Späť na domovskú stránku"
+    },
     "reservation": {
         "firstSectionName": "Rezervácia",
         "secondSectionName": "Zamestnanci",
@@ -69,6 +74,13 @@
         "date": "Dátum",
         "time": "Čas",
         "contactInfo": "Váš kontakt"
+    },
+    "reservation_complete": {
+        "title": "Ďakujeme za rezerváciu!",
+        "subtitleFirst": "Tvoja rezervácia bola úspešne dokončená.",
+        "subtitleSecond": "Potvrdenie s podrobnosťami sme odoslali na",
+        "subtitleThird": "Tešíme sa na tvoju návštevu!",
+        "button": "Späť na hlavnú stránku"
     },
     "services": {
         "sectionName": "Naše služby"
