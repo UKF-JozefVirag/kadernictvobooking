@@ -55,18 +55,9 @@ export default {
     data: () => ({
         drawer: false,
         group: null,
-        email: 'email@email.com',
-        dashboardItems: [
-            {title: 'Dashboard', value: 'dashboard', icon: "mdi-view-dashboard"},
-            {title: 'Calendar', value: 'calendar', icon: "mdi-calendar-blank"},
-            {title: 'Customers', value: 'customers', icon: "mdi-account-multiple"},
-            {title: 'Report', value: 'report', icon: "mdi-chart-bar"},
-        ],
-        profileItems: [
-            {title: "My profile", value: 'profile'},
-            {title: "Settings", value: "settings"},
-            {title: "Logout", value: "logout"}
-        ],
+        email: 'User',
+        dashboardItems: [],
+        profileItems: [],
         languages: [
             {name: "English", short: "EN"},
             {name: "Slovak", short: "SK"}
@@ -78,8 +69,43 @@ export default {
             this.drawer = false;
         },
     },
+    created() {
+        this.getUser();
+        this.initializeMenuItems();
+    },
 
     methods: {
+        async getUser() {
+            try {
+                await axios.get('/sanctum/csrf-cookie');
+                const response = await axios.get('http://localhost:8000/api/user', {
+                    headers: {
+                        Authorization: `Bearer ${decodeURIComponent($cookies.get('token'))}`
+                    }
+                });
+                this.email = response.data.email;
+            } catch (error) {
+                console.log('Error fetching user:', error);
+                return null;
+            }
+        },
+
+        initializeMenuItems() {
+            this.dashboardItems = [
+                {title: this.$t('sidebar.dashboard'), value: 'dashboard', icon: "mdi-view-dashboard"},
+                {title: this.$t('sidebar.calendar'), value: 'calendar', icon: "mdi-calendar-blank"},
+                // {title: this.$t('sidebar.customers'), value: 'customers', icon: "mdi-account-multiple"},
+                // {title: this.$t('sidebar.report'), value: 'report', icon: "mdi-chart-bar"},
+                {title: this.$t('sidebar.employees'), value: 'employee', icon: "mdi-account-group"},
+                {title: this.$t('sidebar.services'), value: 'service', icon: "mdi-briefcase"},
+            ];
+            this.profileItems = [
+                {title: this.$t('sidebar.profile'), value: 'profile'},
+                // {title: this.$t('sidebar.settings'), value: "settings"},
+                {title: this.$t('sidebar.logout'), value: "logout"}
+            ];
+        },
+
         handleProfileItemClick(item) {
             switch (item.value) {
                 case "logout":
@@ -94,14 +120,18 @@ export default {
                 case "calendar":
                     this.$router.push('/calendar');
                     break;
-                default:
-                    console.log(`Navigating to ${item.value}`);
+                case "employee":
+                    this.$router.push('/employee');
+                    break;
+                case "service":
+                    this.$router.push('/services');
+                    break;
             }
         },
 
         async logout() {
             try {
-                const response = await axios.post(
+                await axios.post(
                     'http://localhost:8000/api/logout',
                     {},
                     {
@@ -110,16 +140,17 @@ export default {
                             'Authorization': 'Bearer ' + decodeURIComponent($cookies.get('token'))
                         }
                     }
-                );
+                )
                 $cookies.remove('token');
                 this.$router.push('/login');
             } catch (error) {
                 console.log(error);
             }
-        },
+        }
     }
 }
 </script>
+
 
 <style lang="scss" scoped>
 #icon-caret {

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
 {
@@ -20,7 +22,14 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
-        $employee = Employee::create($request->all());
+        $validatedData = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'required|email|unique:employee,email',
+            'phone_number' => 'required|string|max:10',
+        ]);
+
+        $employee = Employee::create($validatedData);
         return response()->json($employee, 201);
     }
 
@@ -34,15 +43,37 @@ class EmployeeController extends Controller
 
     }
 
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
-        $employee->update($request->all());
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => 'unique:employees,email,' . $id,
+            'phone_number' => 'required|string|max:10',
+        ]);
+
+        $employee = Employee::find($id);
+        if (!$employee) {
+            return response()->json(['error' => 'Employee not found'], 404);
+        }
+
+        Log::info($request);
+
+        $employee->first_name = $request->input('first_name');
+        $employee->last_name = $request->input('last_name');
+        $employee->email = $request->input('email');
+        $employee->phone_number = $request->input('phone_number');
+        $employee->save();
+
         return response()->json($employee);
     }
+
+
 
     public function destroy(Employee $employee)
     {
         $employee->delete();
         return response()->json("User successfully deleted", 204);
     }
+
 }

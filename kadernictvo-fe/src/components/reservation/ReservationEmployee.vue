@@ -61,7 +61,7 @@ export default {
                 this.employees = response.data;
                 this.loadingEvents = false;
             } catch (error) {
-                console.error('Error fetching employees:', error);
+                console.error('Error fetching employee:', error);
             }
         },
     },

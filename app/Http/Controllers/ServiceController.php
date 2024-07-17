@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ServiceController extends Controller
 {
@@ -20,7 +21,15 @@ class ServiceController extends Controller
 
     public function store(Request $request)
     {
-        $service = Service::create($request->all());
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'desc' => 'nullable|string|max:255',
+            'image' => 'nullable|string|max:255',
+            'price' => 'required|numeric|between:0,200',
+            'duration' => 'required|numeric|between:0,200',
+        ]);
+        Log::info(print_r($validatedData, true));
+        $service = Service::create($validatedData);
         return response()->json($service, 201);
     }
 

@@ -167,5 +167,44 @@
         "cancelled": "Cancelled",
         "completed": "Completed",
         "noShow": "No Show"
+    },
+    "employees_view": {
+        "employees": "Employees",
+        "search": "Search",
+        "addEmployee": "Add employee",
+        "editEmployee": "Edit employee",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email",
+        "actions": "Actions",
+        "phoneNumber": "Phone number",
+        "picture": "Image",
+        "isRequired": "is required field",
+        "wrongFormat": "is in wrong format",
+        "itemsPerPage": "items per page"
+    },
+    "services_view": {
+        "service": "Services",
+        "search": "Search",
+        "addService": "Add Service",
+        "editService": "Edit Service",
+        "name": "Name",
+        "desc": "Description",
+        "image": "Image",
+        "price": "Price",
+        "duration": "Duration",
+        "actions": "Actions",
+        "isRequired": "is required field",
+        "itemsPerPage": "items per page"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "calendar": "Calendar",
+        "employees": "Employees",
+        "services": "Services",
+        "customers": "Customers",
+        "report": "Report",
+        "profile": "My profile",
+        "logout": "Logout"
     }
 }

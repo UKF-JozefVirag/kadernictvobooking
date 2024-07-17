@@ -127,7 +127,7 @@ export default {
                     };
                 });
             } catch (error) {
-                console.error('Error fetching employees or orders:', error);
+                console.error('Error fetching employee or orders:', error);
             }
         },
 

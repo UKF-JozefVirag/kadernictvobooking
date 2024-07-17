@@ -24,7 +24,7 @@ class OrderController extends Controller
     {
         $validatedData = $request->validate([
             'date' => 'required|date',
-            'employee_id' => 'required|exists:employees,id',
+            'employee_id' => 'required|exists:employee,id',
         ]);
 
         $orders = Order::whereDate('datetime_from', $validatedData['date'])
@@ -52,7 +52,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'datetime_from' => 'required|date|after_or_equal:now',
             'datetime_to' => 'required|date|after:datetime_from',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'nullable|exists:employee,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
             'email' => 'required|email',
@@ -135,7 +135,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'datetime_from' => 'required|date|after_or_equal:now',
             'datetime_to' => 'required|date|after:datetime_from',
-            'employee_id' => 'nullable|exists:employees,id',
+            'employee_id' => 'nullable|exists:employee,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
         ]);

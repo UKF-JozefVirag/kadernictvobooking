@@ -8,6 +8,8 @@ import CalendarView from '@/views/dashboard/CalendarView.vue'
 import ReservationView from '@/views/ReservationView.vue'
 import axios from 'axios'
 import ReservationCompleteView from '@/views/ReservationCompleteView.vue'
+import ServicesView from '@/views/dashboard/ServicesView.vue'
+import EmployeesView from '@/views/dashboard/EmployeesView.vue'
 
 const routes = [
     {
@@ -37,8 +39,7 @@ const routes = [
                 next({ name: 'error' });
             }
         }
-    }
-    ,
+    },
     {
         path: '/:pathMatch(.*)*',
         name: 'error',
@@ -60,6 +61,18 @@ const routes = [
         path: '/calendar',
         name: 'calendar',
         component: CalendarView,
+        beforeEnter: isAuthenticated
+    },
+    {
+        path: '/employee',
+        name: 'employees',
+        component: EmployeesView,
+        beforeEnter: isAuthenticated
+    },
+    {
+        path: '/services',
+        name: 'services',
+        component: ServicesView,
         beforeEnter: isAuthenticated
     }
 ]

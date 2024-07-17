@@ -168,5 +168,44 @@
         "cancelled": "Zrušené",
         "completed": "Dokončené",
         "noShow": "Nezúčastnené"
+    },
+    "employees_view": {
+        "search": "Hľadať",
+        "employees": "Zamestnanci",
+        "addEmployee": "Pridať zamestnanca",
+        "editEmployee": "Upraviť zamestnanca",
+        "firstName": "Meno",
+        "lastName": "Priezvisko",
+        "email": "Email",
+        "actions": "Akcie",
+        "phoneNumber": "Telefónne číslo",
+        "picture": "Obrázok",
+        "isRequired": "je povinné pole",
+        "wrongFormat": "má zlý formát",
+        "itemsPerPage": "Položky na strane"
+    },
+    "services_view": {
+        "service": "Služby",
+        "addService": "Pridať službu",
+        "editService": "Upraviť službu",
+        "name": "Názov",
+        "desc": "Popis",
+        "image": "Obrázok",
+        "price": "Cena",
+        "duration": "Trvanie",
+        "search": "Hľadať",
+        "actions": "Akcie",
+        "isRequired": "je povinné pole",
+        "itemsPerPage": "Položky na stránku"
+    },
+    "sidebar": {
+        "dashboard": "Dashboard",
+        "calendar": "Kalendár",
+        "employees": "Zamestnanci",
+        "services": "Služby",
+        "customers": "Zákazníci",
+        "report": "Report",
+        "profile": "Môj profil",
+        "logout": "Odhlásiť sa"
     }
 }

@@ -243,25 +243,26 @@ export default {
         },
 
         async getNewCustomers() {
-            const response = await axios.get('http://localhost:8000/api/stats/new-customers?range=' + this.selectedOption, {
-                headers: {
-                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
-                }
-            });
-            const data = response.data.data;
-
-            this.newCustomersLabels = Object.keys(data).map(dateString => {
-                const date = parseISO(dateString);
-                if (this.selectedOption === '2') { // Weekly
-                    return format(date, 'dd/MM');
-                } else if (this.selectedOption === '3') { // Monthly
-                    return format(date, 'dd/MM');
-                }
-                return dateString;
-            });
-
-            this.newCustomersCount = Object.values(data);
-            console.log(this.newCustomersCount);
+            console.log("TBA");
+            // const response = await axios.get('http://localhost:8000/api/stats/new-customers?range=' + this.selectedOption, {
+            //     headers: {
+            //         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+            //     }
+            // });
+            // const data = response.data.data;
+            //
+            // this.newCustomersLabels = Object.keys(data).map(dateString => {
+            //     const date = parseISO(dateString);
+            //     if (this.selectedOption === '2') { // Weekly
+            //         return format(date, 'dd/MM');
+            //     } else if (this.selectedOption === '3') { // Monthly
+            //         return format(date, 'dd/MM');
+            //     }
+            //     return dateString;
+            // });
+            //
+            // this.newCustomersCount = Object.values(data);
+            // console.log(this.newCustomersCount);
         },
 
         formatMinutes(minutes) {
