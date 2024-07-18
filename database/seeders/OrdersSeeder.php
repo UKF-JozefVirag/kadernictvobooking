@@ -23,7 +23,6 @@ class OrdersSeeder extends Seeder
         $employeeIds = Employee::pluck('id')->all();
         $serviceIds = Service::pluck('id')->all();
 
-        $batchSize = 100;
         $orders = [];
         $orderServices = [];
         $year = 2024;
@@ -38,7 +37,7 @@ class OrdersSeeder extends Seeder
             if ($minute < 30) {
                 $datetimeFrom->setTime($hour, 30);
             } else {
-                $datetimeFrom->setTime($hour + 1, 0);
+                $datetimeFrom->setTime($hour . 1, 0);
             }
 
             $datetimeTo = (clone $datetimeFrom)->modify('+' . rand(1, 8) . ' hours');
@@ -66,11 +65,9 @@ class OrdersSeeder extends Seeder
             $orderServices[] = $selectedServiceIds;
         }
 
-        // Vloženie objednávok a ich ID
         DB::table('orders')->insert($orders);
         $orderIds = DB::table('orders')->orderBy('id', 'desc')->take(count($orders))->pluck('id')->reverse()->values();
 
-        // Priradenie správnych `order_id` k službám
         $orderServiceData = [];
         foreach ($orderIds as $index => $orderId) {
             foreach ($orderServices[$index] as $serviceId) {

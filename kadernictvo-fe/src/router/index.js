@@ -20,7 +20,15 @@ const routes = [
     {
         path: '/login',
         name: 'login',
-        component: LoginView
+        component: LoginView,
+        beforeEnter: async (to, from, next) => {
+            const user = await fetchUser();
+            if (user) {
+                next({ name: 'dashboard' });
+            } else {
+                next();
+            }
+        }
     },
     {
         path: '/reservation',

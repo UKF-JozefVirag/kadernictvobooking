@@ -58,7 +58,7 @@ class Order extends Model
             ->count();
     }
 
-    public function employees(): BelongsTo
+    public function employee(): BelongsTo
     {
         return $this->belongsTo(Employee::class);
     }
