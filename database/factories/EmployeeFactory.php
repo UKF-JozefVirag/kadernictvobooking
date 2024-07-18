@@ -15,8 +15,8 @@ class EmployeeFactory extends Factory
         return [
             'first_name' => $this->faker->firstName,
             'last_name' => $this->faker->lastName,
-            'image' => $this->faker->imageUrl(400, 400, 'people'),
-            'phone_number' => $this->faker->phoneNumber,
+            'image' => "employees/placeholder.png",
+            'phone_number' => "09" . $this->faker->numerify('########'),
             'email' => $this->faker->unique()->safeEmail,
         ];
     }

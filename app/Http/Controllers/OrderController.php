@@ -24,12 +24,12 @@ class OrderController extends Controller
     {
         $validatedData = $request->validate([
             'date' => 'required|date',
-            'employee_id' => 'required|exists:employee,id',
+            'employee_id' => 'required|exists:employees,id',
         ]);
 
         $orders = Order::whereDate('datetime_from', $validatedData['date'])
             ->where('employee_id', $validatedData['employee_id'])
-            ->with('services', 'employee', 'customer')
+            ->with('services', 'employees', 'customer')
             ->get();
 
         return response()->json($orders, 200);
@@ -52,7 +52,7 @@ class OrderController extends Controller
         $validatedData = $request->validate([
             'datetime_from' => 'required|date|after_or_equal:now',
             'datetime_to' => 'required|date|after:datetime_from',
-            'employee_id' => 'nullable|exists:employee,id',
+            'employee_id' => 'nullable|exists:employees,id',
             'services' => 'required|array',
             'services.*' => 'exists:services,id',
             'email' => 'required|email',
@@ -173,7 +173,7 @@ class OrderController extends Controller
         ]);
 
         $date = $validatedData['date'];
-        $orders = Order::with('employee', 'services')
+        $orders = Order::with('employees', 'services')
             ->whereDate('datetime_from', $date)
             ->get();
 

@@ -29,16 +29,18 @@
                             :items-per-page-text="this.$t('services_view.itemsPerPage')"
                         >
                             <template v-slot:item.image="{ item }">
-                                <v-img
-                                    :src="getImageUrl(item.image)"
-                                    max-height="50"
-                                    max-width="50"
-                                    contain
-                                ></v-img>
+                                <div class="image-container">
+                                    <v-img
+                                        :src="getImageUrl(item.image)"
+                                        height="50"
+                                        width="50"
+                                        class="border border-dark"
+                                    ></v-img>
+                                </div>
                             </template>
                             <template v-slot:item.actions="{ item }">
-                                <v-icon small @click="editService(item)">mdi-pencil</v-icon>
-                                <v-icon small @click="deleteService(item.id)">mdi-delete</v-icon>
+                                <v-icon small id="action-icon" @click="editService(item)">mdi-pencil</v-icon>
+                                <v-icon small id="action-icon" @click="deleteService(item.id)">mdi-delete</v-icon>
                             </template>
                         </v-data-table>
                     </v-card-text>
@@ -134,11 +136,17 @@ export default {
             }
         },
         getImageUrl(image) {
-            return image ? `http://localhost:8000/storage/services/${image}` : '';
+            return image ? `http://localhost:8000/storage/${image}` : '';
         }
     }
 }
 </script>
 
 <style scoped>
+.image-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
 </style>

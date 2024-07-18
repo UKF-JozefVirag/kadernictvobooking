@@ -18,7 +18,7 @@
                     @click="selectEmployee(employee)"
                     :card-title="employee.first_name"
                     :card-text="employee.description"
-                    :card-image="employee.image"
+                    :card-image="getImageUrl(employee.image)"
                     :service="false"
                     :reservation="true"
                 ></ServiceCard>
@@ -63,6 +63,9 @@ export default {
             } catch (error) {
                 console.error('Error fetching employee:', error);
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/${image}` : '';
         },
     },
     created() {

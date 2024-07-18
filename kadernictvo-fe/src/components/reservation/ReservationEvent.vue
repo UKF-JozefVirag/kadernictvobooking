@@ -1,51 +1,50 @@
 <template>
-    <v-container class="text-dark mt-5">
+    <v-container class="mt-5" id="services">
         <v-row>
             <v-col>
-                <SectionDescriber :section-name="$t('reservation.firstSectionName')"></SectionDescriber>
+                <SectionDescriber :section-name="$t('services.sectionName')"></SectionDescriber>
             </v-col>
         </v-row>
         <v-row>
-            <v-col
-                v-for="service in services"
-                :key="service.id"
-                cols="12"
-                sm="6"
-                md="4"
-            >
-                <v-skeleton-loader type="card" v-if="loadingEvents"></v-skeleton-loader>
+            <v-col lg="4"
+                   md="6"
+                   sm="6"
+                   xs="12"
+                   v-for="(service) in services"
+                   :key="service.id">
                 <ServiceCard
-                    v-else
                     :class="{'selected': isSelected(service.id)}"
-                    @click="toggleService(service)"
                     :card-title="service.name"
                     :card-text="service.desc"
                     :card-price="service.price"
-                    :card-image="service.image"
+                    :card-image="getImageUrl(service.image)"
+                    @click="toggleService(service)"
                     :card-second-text="service.duration"
                     :reservation="true"
                     :service="true"
                 ></ServiceCard>
             </v-col>
         </v-row>
-        <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
     </v-container>
 </template>
 
 <script>
+import SectionDescriber from "@/components/home/SectionDescriber.vue";
+import ServiceCard from "@/components/home/ServiceCard.vue";
 import axios from 'axios';
-import SectionDescriber from '@/components/home/SectionDescriber.vue';
-import ServiceCard from '@/components/home/ServiceCard.vue';
 
 export default {
-    name: 'ReservationEvent',
+    name: "ServicesView",
     components: { ServiceCard, SectionDescriber },
     data() {
         return {
-            loadingEvents: true,
             services: [],
+            loadingEvents: true,
             selectedServices: []
         };
+    },
+    created() {
+        this.fetchServices();
     },
     methods: {
         async fetchServices() {
@@ -53,10 +52,12 @@ export default {
                 const response = await axios.get('http://localhost:8000/api/services');
                 this.services = response.data;
                 this.loadingEvents = false;
-                console.log(this.services);
             } catch (error) {
                 console.error('Error fetching services:', error);
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/${image}` : '';
         },
         toggleService(service) {
             const index = this.selectedServices.findIndex(s => s.id === service.id);
@@ -72,9 +73,6 @@ export default {
         isSelected(serviceId) {
             return this.selectedServices.some(service => service.id === serviceId);
         }
-    },
-    created() {
-        this.fetchServices();
     }
 }
 </script>

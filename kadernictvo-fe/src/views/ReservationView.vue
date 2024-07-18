@@ -63,7 +63,7 @@ export default {
     data() {
         return {
             selectedServices: [],
-            selectedEmployee: '', // Employee ID
+            selectedEmployee: '',
             selectedEmployeeName: '',
             selectedDate: null,
             selectedTime: null,

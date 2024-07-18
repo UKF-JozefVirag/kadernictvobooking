@@ -28,7 +28,7 @@ export default {
         cardSecondText: String,
         reservation: Boolean,
         service: Boolean
-    }
+    },
 }
 </script>
 

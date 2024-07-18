@@ -480,3 +480,11 @@ input[type="text"] {
         color: black;
     }
 }
+
+#action-icon{
+    color:black;
+    transition: 0.25s ease-in-out;
+    &:hover {
+        color: #d09c6e;
+    }
+}
