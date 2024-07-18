@@ -1,11 +1,7 @@
 <template>
     <v-container>
         <v-row>
-            <v-col lg="8"
-                   md="12"
-                   sm="12"
-                   offset-lg="2"
-            >
+            <v-col lg="8" md="12" sm="12" offset-lg="2">
                 <v-card class="shadow-lg">
                     <v-card-title class="text-center">
                         <h4>{{ $t('services_view.service') }}</h4>
@@ -26,10 +22,20 @@
                             v-ripple="false"
                         ></v-text-field>
                         <ServiceForm v-if="isFormVisible" :service="currentService" @save="saveService" @cancel="hideForm" />
-                        <v-data-table :headers="headers"
-                                      :items="filteredServices"
-                                      class="elevation-1"
-                                      :items-per-page-text="this.$t('services_view.itemsPerPage')">
+                        <v-data-table
+                            :headers="headers"
+                            :items="filteredServices"
+                            class="elevation-1"
+                            :items-per-page-text="this.$t('services_view.itemsPerPage')"
+                        >
+                            <template v-slot:item.image="{ item }">
+                                <v-img
+                                    :src="getImageUrl(item.image)"
+                                    max-height="50"
+                                    max-width="50"
+                                    contain
+                                ></v-img>
+                            </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-icon small @click="editService(item)">mdi-pencil</v-icon>
                                 <v-icon small @click="deleteService(item.id)">mdi-delete</v-icon>
@@ -56,7 +62,7 @@ export default {
             headers: [
                 { text: this.$t('services_view.name'), value: 'name' },
                 { text: this.$t('services_view.desc'), value: 'desc' },
-                { text: this.$t('services_view.image'), value: 'image' },
+                { text: this.$t('services_view.image'), value: 'image', sortable: false },
                 { text: this.$t('services_view.price'), value: 'price' },
                 { text: this.$t('services_view.duration'), value: 'duration' },
                 { text: this.$t('services_view.actions'), value: 'actions', sortable: false }
@@ -101,7 +107,7 @@ export default {
         },
         async saveService(service) {
             if (service.id) {
-                const index = this.services.findIndex(svc => svc.id === service.id);
+                const index = this.services.findIndex(s => s.id === service.id);
                 if (index !== -1) {
                     this.services.splice(index, 1, service);
                 }
@@ -126,6 +132,9 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/services/${image}` : '';
         }
     }
 }

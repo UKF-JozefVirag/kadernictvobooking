@@ -11,7 +11,7 @@ class ServicesTableSeeder extends Seeder
 {
     public function run()
     {
-        $src = '/src/assets/images/services/';
+        $src = 'services/';
         $now = Carbon::now();
         $services = [
             [

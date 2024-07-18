@@ -23,9 +23,9 @@
                     <v-file-input
                         v-model="serviceData.image"
                         :label="$t('services_view.image')"
-                        accept="image/*"
-                        prepend-icon=""
+                        :rules="[v => !!v || $t('services_view.image') + ' ' + $t('services_view.isRequired')]"
                         variant="outlined"
+                        required
                     ></v-file-input>
                     <v-text-field
                         v-model="serviceData.price"
@@ -64,7 +64,8 @@ export default {
         return {
             dialog: true,
             valid: false,
-            serviceData: this.service ? { ...this.service } : { name: '', desc: '', image: '', price: '', duration: '' }
+            serviceData: this.service ? { ...this.service } : { name: '', desc: '', image: '', price: '', duration: '' },
+            imageFile: null
         }
     },
     watch: {
@@ -81,19 +82,23 @@ export default {
                 try {
                     let response;
                     const token = this.$cookies.get('token');
-                    console.log(this.serviceData)
+                    const formData = new FormData();
+                    for (const key in this.serviceData) {
+                        formData.append(key, this.serviceData[key]);
+                    }
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
+                    }
+                    const config = {
+                        headers: {
+                            'Authorization': `Bearer ${decodeURIComponent(token)}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    };
                     if (this.serviceData.id) {
-                        response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, {
-                            headers: {
-                                Authorization: `Bearer ${decodeURIComponent(token)}`
-                            }
-                        });
+                        response = await axios.post(`http://localhost:8000/api/services/${this.serviceData.id}`, formData, config);
                     } else {
-                        response = await axios.post('http://localhost:8000/api/services', this.serviceData, {
-                            headers: {
-                                Authorization: `Bearer ${decodeURIComponent(token)}`
-                            }
-                        });
+                        response = await axios.post('http://localhost:8000/api/services', formData, config);
                     }
                     this.$emit('save', response.data);
                 } catch (error) {

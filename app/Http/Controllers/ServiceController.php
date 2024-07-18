@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
@@ -16,7 +17,7 @@ class ServiceController extends Controller
 
     public function create()
     {
-
+        // Tento metod sa tu môže odstrániť alebo nechať prázdny
     }
 
     public function store(Request $request)
@@ -24,11 +25,16 @@ class ServiceController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'desc' => 'nullable|string|max:255',
-            'image' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'price' => 'required|numeric|between:0,200',
             'duration' => 'required|numeric|between:0,200',
         ]);
-        Log::info(print_r($validatedData, true));
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('services', 'public');
+            $validatedData['image'] = $path;
+        }
+
         $service = Service::create($validatedData);
         return response()->json($service, 201);
     }
@@ -45,13 +51,35 @@ class ServiceController extends Controller
 
     public function update(Request $request, Service $service)
     {
-        $service->update($request->all());
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'desc' => 'nullable|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'price' => 'required|numeric|between:0,200',
+            'duration' => 'required|numeric|between:0,200',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($service->image && Storage::disk('public')->exists($service->image)) {
+                Storage::disk('public')->delete($service->image);
+            }
+
+            $path = $request->file('image')->store('services', 'public');
+            $validatedData['image'] = $path;
+        }
+
+        $service->update($validatedData);
         return response()->json($service);
     }
 
     public function destroy(Service $service)
     {
+        if ($service->image && Storage::disk('public')->exists($service->image)) {
+            Storage::disk('public')->delete($service->image);
+        }
+
         $service->delete();
         return response()->json(null, 204);
     }
 }
+
