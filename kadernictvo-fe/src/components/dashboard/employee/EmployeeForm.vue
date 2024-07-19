@@ -2,7 +2,9 @@
     <v-dialog v-model="dialog" persistent max-width="600px">
         <v-card>
             <v-card-title>
-                <span class="headline">{{ employee ? $t('employees_view.editEmployee') : $t('employees_view.addEmployee') }}</span>
+                <span
+                    class="headline">{{ employee ? $t('employees_view.editEmployee') : $t('employees_view.addEmployee')
+                    }}</span>
             </v-card-title>
             <v-card-text>
                 <v-form ref="form" v-model="valid" lazy-validation>
@@ -52,15 +54,15 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="cancel">{{ $t('buttons.cancel') }}</v-btn>
-                <v-btn color="blue darken-1" text @click="save">{{ $t('buttons.submit') }}</v-btn>
+                <v-btn color="blue darken-1" @click="cancel">{{ $t('buttons.cancel') }}</v-btn>
+                <v-btn color="blue darken-1" @click="save">{{ $t('buttons.submit') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
     name: 'EmployeeForm',
@@ -71,52 +73,78 @@ export default {
         return {
             dialog: true,
             valid: false,
-            employeeData: this.employee ? { ...this.employee } : { first_name: '', last_name: '', image: '', email: '', phone_number: '' },
+            employeeData: this.employee ? { ...this.employee } : {
+                first_name: '',
+                last_name: '',
+                image: '',
+                email: '',
+                phone_number: ''
+            },
             imageFile: null
         }
     },
     watch: {
         employee(newVal) {
-            this.employeeData = newVal ? { ...newVal } : { first_name: '', last_name: '', image: '', email: '', phone_number: '' };
+            this.employeeData = newVal ? { ...newVal } : {
+                first_name: '',
+                last_name: '',
+                image: '',
+                email: '',
+                phone_number: ''
+            }
         },
         imageFile() {
             if (this.imageFile) {
-                this.employeeData.image = null;
+                this.employeeData.image = null
             }
         }
     },
     methods: {
         cancel() {
-            this.$emit('cancel');
+            this.$emit('cancel')
         },
         async save() {
-            if (this.$refs.form.validate()) {
+            if (await this.$refs.form.validate()) {
                 try {
-                    let response;
-                    const token = this.$cookies.get('token');
-                    if (this.employeeData.id) {
-                        console.log(this.imageFile);
-                        response = await axios.patch(`http://localhost:8000/api/employees/${this.employeeData.id}`, this.employeeData, {
-                            headers: {
-                                Authorization: `Bearer ${decodeURIComponent(token)}`
-                            }
-                        });
-                        console.log(response);
-                    } else {
-                        response = await axios.post('http://localhost:8000/api/employees', this.employeeData, {
-                            headers: {
-                                Authorization: `Bearer ${decodeURIComponent(token)}`
-                            }
-                        });
+                    const token = this.$cookies.get('token')
+                    const config = {
+                        headers: {
+                            'Authorization': `Bearer ${decodeURIComponent(token)}`,
+                            'Content-Type': 'multipart/form-data'
+                        }
                     }
-                    this.$emit('save', response.data);
+
+                    const formData = new FormData()
+                    formData.append('first_name', this.employeeData.first_name)
+                    formData.append('last_name', this.employeeData.last_name)
+                    formData.append('email', this.employeeData.email)
+                    formData.append('phone_number', this.employeeData.phone_number)
+
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile)
+                    }
+
+                    if (this.employeeData.id) {
+                        formData.append('_method', 'PATCH');
+                    }
+
+                    await this.sendData(formData, config);
                 } catch (error) {
                     console.error(error);
                 }
             }
         },
+        async sendData(formData, config) {
+            let response;
+            if (this.employeeData.id) {
+                response = await axios.post(`http://localhost:8000/api/employees/${this.employeeData.id}`, formData, config);
+            } else {
+                response = await axios.post(`http://localhost:8000/api/employees`, formData, config);
+            }
+            this.$emit('save', response.data);
+        },
         getImageUrl(image) {
-            return image ? `http://localhost:8000/storage/${image}` : '';
+            return image ? `http://localhost:8000/storage/${image}` : ''
         }
     }
 }

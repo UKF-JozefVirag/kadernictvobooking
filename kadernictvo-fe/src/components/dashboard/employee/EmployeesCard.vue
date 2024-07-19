@@ -105,7 +105,7 @@ export default {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }
                 });
-                this.getEmployees();
+                await this.getEmployees();
             } catch (error) {
                 console.error(error);
             }

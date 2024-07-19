@@ -27,16 +27,14 @@ class ServiceController extends Controller
             'desc' => 'nullable|string|max:255',
             'price' => 'required|numeric|between:0,200',
             'duration' => 'required|numeric|between:0,200',
+            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif|max:2048',
         ]);
 
-        if ($request->has('image') && preg_match('/^data:image\/(\w+);base64,/', $request->image, $type)) {
-            $imageData = substr($request->image, strpos($request->image, ',') + 1);
-            $imageData = base64_decode($imageData);
-
-            $fileName = uniqid('service_', true) . '.' . $type[1];
-            $path = 'services/' . $fileName;
-
-            Storage::disk('public')->put($path, $imageData);
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $extension = $imageFile->getClientOriginalExtension();
+            $fileName = uniqid('service_', true) . '_' . time() . '.' . $extension;
+            $path = $imageFile->storeAs('services', $fileName, 'public');
 
             $validatedData['image'] = $path;
         }
@@ -44,6 +42,7 @@ class ServiceController extends Controller
         $service = Service::create($validatedData);
         return response()->json($service, 201);
     }
+
 
     public function show(Service $service)
     {

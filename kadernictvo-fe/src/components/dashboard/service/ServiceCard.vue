@@ -102,7 +102,7 @@ export default {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }
                 });
-                this.getServices();
+                await this.getServices();
             } catch (error) {
                 console.error(error);
             }

@@ -30,9 +30,14 @@ class EmployeeController extends Controller
             'email' => 'required|email|unique:employees,email',
             'phone_number' => 'required|string|max:10',
         ]);
-        Log::info($request);
+
+
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('employees', 'public');
+            $imageFile = $request->file('image');
+            $extension = $imageFile->getClientOriginalExtension();
+            $fileName = uniqid('employee_', true) . '_' . time() . '.' . $extension;
+            $path = $imageFile->storeAs('employees', $fileName, 'public');
+
             $validatedData['image'] = $path;
         }
 
@@ -50,34 +55,39 @@ class EmployeeController extends Controller
 
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'email' => 'unique:employees,email,' . $id,
+            'email'=>'required|string|email|max:255|unique:users,email,'.$request->id,
             'phone_number' => 'required|string|max:10',
         ]);
 
-        $employee = Employee::find($id);
+        $employee = Employee::find($request->id);
         if (!$employee) {
             return response()->json(['error' => 'Employee not found'], 404);
-        }
-
-        if ($request->hasFile('image')) {
-            if ($employee->image && Storage::disk('public')->exists($employee->image)) {
-                Storage::disk('public')->delete($employee->image);
-            }
-
-            $path = $request->file('image')->store('employees', 'public');
-            $employee->image = $path;
         }
 
         $employee->first_name = $validatedData['first_name'];
         $employee->last_name = $validatedData['last_name'];
         $employee->email = $validatedData['email'];
         $employee->phone_number = $validatedData['phone_number'];
+
+        if ($request->hasFile('image')) {
+            $imageFile = $request->file('image');
+            $extension = $imageFile->getClientOriginalExtension();
+            $fileName = uniqid('employee_', true) . '_' . time() . '.' . $extension;
+            $path = $imageFile->storeAs('employees', $fileName, 'public');
+
+            if ($employee->image && Storage::disk('public')->exists($employee->image)) {
+                Storage::disk('public')->delete($employee->image);
+            }
+
+            $employee->image = $path;
+        }
+
         $employee->save();
 
         return response()->json($employee);

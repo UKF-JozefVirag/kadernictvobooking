@@ -91,7 +91,7 @@ export default {
             this.$emit('cancel');
         },
         async save() {
-            if (this.$refs.form.validate()) {
+            if (await this.$refs.form.validate()) {
                 try {
                     const token = this.$cookies.get('token');
                     const config = {
