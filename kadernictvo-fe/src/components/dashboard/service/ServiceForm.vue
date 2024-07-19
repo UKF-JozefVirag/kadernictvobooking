@@ -91,44 +91,42 @@ export default {
             this.$emit('cancel');
         },
         async save() {
-            if (await this.$refs.form.validate()) {
+            if (this.$refs.form.validate()) {
                 try {
                     const token = this.$cookies.get('token');
                     const config = {
                         headers: {
                             'Authorization': `Bearer ${decodeURIComponent(token)}`,
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'multipart/form-data'
                         }
                     };
 
-                    if (this.imageFile) {
-                        const reader = new FileReader();
-                        reader.readAsDataURL(this.imageFile);
-                        reader.onload = async () => {
-                            this.serviceData.image = reader.result;
-                            await this.sendData(config);
-                        };
-                        console.log(this.serviceData.name);
+                    const formData = new FormData();
+                    formData.append('name', this.serviceData.name);
+                    formData.append('desc', this.serviceData.desc);
+                    formData.append('price', this.serviceData.price);
+                    formData.append('duration', this.serviceData.duration);
 
-                    } else {
-                        await this.sendData(config);
+                    if (this.imageFile) {
+                        formData.append('image', this.imageFile);
                     }
+
+                    if (this.serviceData.id) {
+                        formData.append('_method', 'PATCH');
+                    }
+
+                    await this.sendData(formData, config);
                 } catch (error) {
                     console.error(error);
                 }
             }
         },
-
-        async sendData(config) {
+        async sendData(formData, config) {
             let response;
-            console.log(this.imageFile);
             if (this.serviceData.id) {
-                console.log(this.serviceData);
-                response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
+                response = await axios.post(`http://localhost:8000/api/services/${this.serviceData.id}`, formData, config);
             } else {
-                console.log(this.serviceData);
-
-                response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
+                response = await axios.post(`http://localhost:8000/api/services`, formData, config);
             }
             this.$emit('save', response.data);
         },
