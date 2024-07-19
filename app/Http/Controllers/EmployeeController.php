@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class EmployeeController extends Controller
@@ -25,9 +26,15 @@ class EmployeeController extends Controller
         $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'required|email|unique:employees,email',
             'phone_number' => 'required|string|max:10',
         ]);
+        Log::info($request);
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('employees', 'public');
+            $validatedData['image'] = $path;
+        }
 
         $employee = Employee::create($validatedData);
         return response()->json($employee, 201);
@@ -45,9 +52,10 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validatedData = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'email' => 'unique:employees,email,' . $id,
             'phone_number' => 'required|string|max:10',
         ]);
@@ -57,16 +65,24 @@ class EmployeeController extends Controller
             return response()->json(['error' => 'Employee not found'], 404);
         }
 
-        Log::info($request);
+        if ($request->hasFile('image')) {
+            if ($employee->image && Storage::disk('public')->exists($employee->image)) {
+                Storage::disk('public')->delete($employee->image);
+            }
 
-        $employee->first_name = $request->input('first_name');
-        $employee->last_name = $request->input('last_name');
-        $employee->email = $request->input('email');
-        $employee->phone_number = $request->input('phone_number');
+            $path = $request->file('image')->store('employees', 'public');
+            $employee->image = $path;
+        }
+
+        $employee->first_name = $validatedData['first_name'];
+        $employee->last_name = $validatedData['last_name'];
+        $employee->email = $validatedData['email'];
+        $employee->phone_number = $validatedData['phone_number'];
         $employee->save();
 
         return response()->json($employee);
     }
+
 
 
 

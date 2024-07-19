@@ -30,6 +30,15 @@
                                       :items="filteredEmployees"
                                       class="elevation-1"
                                       :items-per-page-text="this.$t('employees_view.itemsPerPage')">
+                            <template v-slot:item.image="{ item }">
+                                <div class="image-container">
+                                    <v-img
+                                        :src="getImageUrl(item.image)"
+                                        height="75"
+                                        width="75"
+                                    ></v-img>
+                                </div>
+                            </template>
                             <template v-slot:item.actions="{ item }">
                                 <v-icon small @click="editEmployee(item)">mdi-pencil</v-icon>
                                 <v-icon small @click="deleteEmployee(item.id)">mdi-delete</v-icon>
@@ -57,6 +66,7 @@ export default {
                 { text: this.$t('employees_view.firstName'), value: 'first_name' },
                 { text: this.$t('employees_view.lastName'), value: 'last_name' },
                 { text: this.$t('employees_view.email'), value: 'email' },
+                { text: this.$t('employees_view.image'), value: 'image', sortable: false },
                 { text: this.$t('employees_view.phoneNumber'), value: 'phone_number' },
                 { text: this.$t('employees_view.actions'), value: 'actions', sortable: false }
             ],
@@ -127,6 +137,9 @@ export default {
             } catch (error) {
                 console.error(error);
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/${image}` : '';
         }
     }
 }

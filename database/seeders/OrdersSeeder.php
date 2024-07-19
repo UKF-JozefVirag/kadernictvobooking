@@ -45,11 +45,9 @@ class OrdersSeeder extends Seeder
                 $datetimeTo->setTime(18, 0);
             }
 
-            // Náhodne vyberieme 1 až 3 služby
             $numServices = rand(1, 3);
             $selectedServiceIds = $faker->randomElements($serviceIds, $numServices);
 
-            // Vypočítať celkovú cenu vybraných služieb
             $totalPrice = Service::whereIn('id', $selectedServiceIds)->sum('price');
 
             $orders[] = [

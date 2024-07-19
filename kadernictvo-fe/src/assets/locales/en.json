@@ -175,6 +175,7 @@
         "editEmployee": "Edit employee",
         "firstName": "First name",
         "lastName": "Last name",
+        "image": "Image",
         "email": "Email",
         "actions": "Actions",
         "phoneNumber": "Phone number",

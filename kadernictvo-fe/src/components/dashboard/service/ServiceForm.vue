@@ -21,12 +21,19 @@
                         required
                     ></v-text-field>
                     <v-file-input
-                        v-model="serviceData.image"
+                        v-model="imageFile"
                         :label="$t('services_view.image')"
                         :rules="[v => !!v || $t('services_view.image') + ' ' + $t('services_view.isRequired')]"
                         variant="outlined"
-                        required
                     ></v-file-input>
+                    <v-img
+                        v-if="serviceData.image && !imageFile"
+                        :src="getImageUrl(serviceData.image)"
+                        :alt="serviceData.name"
+                        class="my-3 mx-auto"
+                        width="100px"
+                        height="100px"
+                    ></v-img>
                     <v-text-field
                         v-model="serviceData.price"
                         :label="$t('services_view.price')"
@@ -71,6 +78,12 @@ export default {
     watch: {
         service(newVal) {
             this.serviceData = newVal ? { ...newVal } : { name: '', desc: '', image: '', price: '', duration: '' };
+            this.imageFile = null;
+        },
+        imageFile() {
+            if (this.imageFile) {
+                this.serviceData.image = null;
+            }
         }
     },
     methods: {
@@ -80,31 +93,43 @@ export default {
         async save() {
             if (this.$refs.form.validate()) {
                 try {
-                    let response;
                     const token = this.$cookies.get('token');
-                    const formData = new FormData();
-                    for (const key in this.serviceData) {
-                        formData.append(key, this.serviceData[key]);
-                    }
-                    if (this.imageFile) {
-                        formData.append('image', this.imageFile);
-                    }
                     const config = {
                         headers: {
                             'Authorization': `Bearer ${decodeURIComponent(token)}`,
-                            'Content-Type': 'multipart/form-data'
+                            'Content-Type': 'application/json'
                         }
                     };
-                    if (this.serviceData.id) {
-                        response = await axios.post(`http://localhost:8000/api/services/${this.serviceData.id}`, formData, config);
+
+                    let response;
+                    if (this.imageFile) {
+                        const reader = new FileReader();
+                        reader.readAsDataURL(this.imageFile);
+                        reader.onload = async () => {
+                            this.serviceData.image = reader.result;
+
+                            if (this.serviceData.id) {
+                                response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
+                            } else {
+                                response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
+                            }
+                            this.$emit('save', response.data);
+                        };
                     } else {
-                        response = await axios.post('http://localhost:8000/api/services', formData, config);
+                        if (this.serviceData.id) {
+                            response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
+                        } else {
+                            response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
+                        }
+                        this.$emit('save', response.data);
                     }
-                    this.$emit('save', response.data);
                 } catch (error) {
                     console.error(error);
                 }
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/${image}` : '';
         }
     }
 }

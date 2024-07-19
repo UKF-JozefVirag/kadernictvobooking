@@ -17,7 +17,7 @@ class ServiceController extends Controller
 
     public function create()
     {
-        // Tento metod sa tu môže odstrániť alebo nechať prázdny
+
     }
 
     public function store(Request $request)
@@ -52,11 +52,11 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'desc' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'price' => 'required|numeric|between:0,200',
-            'duration' => 'required|numeric|between:0,200',
+            'price' => 'nullable|numeric|between:0,200',
+            'duration' => 'nullable|numeric|between:0,200',
         ]);
 
         if ($request->hasFile('image')) {

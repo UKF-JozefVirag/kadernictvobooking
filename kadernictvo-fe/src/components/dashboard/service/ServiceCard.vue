@@ -32,9 +32,8 @@
                                 <div class="image-container">
                                     <v-img
                                         :src="getImageUrl(item.image)"
-                                        height="50"
-                                        width="50"
-                                        class="border border-dark"
+                                        height="75"
+                                        width="75"
                                     ></v-img>
                                 </div>
                             </template>

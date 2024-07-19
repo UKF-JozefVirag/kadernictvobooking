@@ -20,6 +20,20 @@
                         variant="outlined"
                         required
                     ></v-text-field>
+                    <v-file-input
+                        v-model="imageFile"
+                        :label="$t('employees_view.image')"
+                        :rules="[v => !!v || $t('employees_view.image') + ' ' + $t('employees_view.isRequired')]"
+                        variant="outlined"
+                    ></v-file-input>
+                    <v-img
+                        v-if="employeeData.image && !imageFile"
+                        :src="getImageUrl(employeeData.image)"
+                        :alt="employeeData.name"
+                        class="my-3 mx-auto"
+                        width="100px"
+                        height="100px"
+                    ></v-img>
                     <v-text-field
                         v-model="employeeData.email"
                         :label="$t('employees_view.email')"
@@ -57,12 +71,18 @@ export default {
         return {
             dialog: true,
             valid: false,
-            employeeData: this.employee ? { ...this.employee } : { first_name: '', last_name: '', email: '', phone_number: '' }
+            employeeData: this.employee ? { ...this.employee } : { first_name: '', last_name: '', image: '', email: '', phone_number: '' },
+            imageFile: null
         }
     },
     watch: {
         employee(newVal) {
-            this.employeeData = newVal ? { ...newVal } : { first_name: '', last_name: '', email: '', phone_number: '' };
+            this.employeeData = newVal ? { ...newVal } : { first_name: '', last_name: '', image: '', email: '', phone_number: '' };
+        },
+        imageFile() {
+            if (this.imageFile) {
+                this.employeeData.image = null;
+            }
         }
     },
     methods: {
@@ -75,11 +95,13 @@ export default {
                     let response;
                     const token = this.$cookies.get('token');
                     if (this.employeeData.id) {
+                        console.log(this.imageFile);
                         response = await axios.patch(`http://localhost:8000/api/employees/${this.employeeData.id}`, this.employeeData, {
                             headers: {
                                 Authorization: `Bearer ${decodeURIComponent(token)}`
                             }
                         });
+                        console.log(response);
                     } else {
                         response = await axios.post('http://localhost:8000/api/employees', this.employeeData, {
                             headers: {
@@ -92,6 +114,9 @@ export default {
                     console.error(error);
                 }
             }
+        },
+        getImageUrl(image) {
+            return image ? `http://localhost:8000/storage/${image}` : '';
         }
     }
 }
