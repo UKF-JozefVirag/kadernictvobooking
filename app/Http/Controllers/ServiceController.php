@@ -76,7 +76,8 @@ class ServiceController extends Controller
 
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
-            $fileName = $imageFile->getClientOriginalName();
+            $extension = $imageFile->getClientOriginalExtension();
+            $fileName = uniqid('service_', true) . '_' . time() . '.' . $extension;
             $path = $imageFile->storeAs('services', $fileName, 'public');
 
             if ($service->image && Storage::disk('public')->exists($service->image)) {
@@ -90,6 +91,7 @@ class ServiceController extends Controller
 
         return response()->json($service);
     }
+
 
 
 
