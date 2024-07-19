@@ -77,7 +77,8 @@ export default {
     computed: {
         filteredServices() {
             return this.services.filter(service => {
-                return service.name.toLowerCase().includes(this.search.toLowerCase());
+                const serviceName = service.name ? service.name.toLowerCase() : '';
+                return serviceName.includes(this.search.toLowerCase());
             });
         }
     },

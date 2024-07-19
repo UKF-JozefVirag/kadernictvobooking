@@ -1,12 +1,12 @@
 <template>
-    <v-card width="300px" class="mx-auto text-center" v-ripple="false">
-        <template v-slot:title>
-            <span class="font-weight-black">{{cardTitle}}</span>
-        </template>
+    <v-card width="350px" class="mx-auto text-center" v-ripple="false">
+        <v-card-title>
+            <h6 class="font-weight-black">{{cardTitle}}</h6>
+        </v-card-title>
         <v-card-text style="color: #d09c6e">
-            <h5>
+            <h4>
                 {{cardPrice}} <span v-if="cardPrice!=null">€</span>
-            </h5>
+            </h4>
             <span v-if="reservation && service" class="text-black"> {{cardSecondText}} min.</span>
         </v-card-text>
         <img :src="cardImage" width="60px" alt="logo"/>

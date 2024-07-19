@@ -60,7 +60,7 @@ export default {
     name: "FooterComponent",
     computed: {
         interpolatedEmail() {
-            return this.$t('footer.emailInterpolation', { at: '@' });
+            return this.$t('footer.email', { at: '@' });
         }
     }
 }

@@ -52,8 +52,8 @@
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="cancel">{{ $t('buttons.cancel') }}</v-btn>
-                <v-btn color="blue darken-1" text @click="save">{{ $t('buttons.submit') }}</v-btn>
+                <v-btn color="blue darken-1" @click="cancel">{{ $t('buttons.cancel') }}</v-btn>
+                <v-btn color="blue darken-1" @click="save">{{ $t('buttons.submit') }}</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -91,7 +91,7 @@ export default {
             this.$emit('cancel');
         },
         async save() {
-            if (this.$refs.form.validate()) {
+            if (await this.$refs.form.validate()) {
                 try {
                     const token = this.$cookies.get('token');
                     const config = {
@@ -101,32 +101,36 @@ export default {
                         }
                     };
 
-                    let response;
                     if (this.imageFile) {
                         const reader = new FileReader();
                         reader.readAsDataURL(this.imageFile);
                         reader.onload = async () => {
                             this.serviceData.image = reader.result;
-
-                            if (this.serviceData.id) {
-                                response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
-                            } else {
-                                response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
-                            }
-                            this.$emit('save', response.data);
+                            await this.sendData(config);
                         };
+                        console.log(this.serviceData.name);
+
                     } else {
-                        if (this.serviceData.id) {
-                            response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
-                        } else {
-                            response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
-                        }
-                        this.$emit('save', response.data);
+                        await this.sendData(config);
                     }
                 } catch (error) {
                     console.error(error);
                 }
             }
+        },
+
+        async sendData(config) {
+            let response;
+            console.log(this.imageFile);
+            if (this.serviceData.id) {
+                console.log(this.serviceData);
+                response = await axios.patch(`http://localhost:8000/api/services/${this.serviceData.id}`, this.serviceData, config);
+            } else {
+                console.log(this.serviceData);
+
+                response = await axios.post('http://localhost:8000/api/services', this.serviceData, config);
+            }
+            this.$emit('save', response.data);
         },
         getImageUrl(image) {
             return image ? `http://localhost:8000/storage/${image}` : '';
