@@ -42,6 +42,7 @@ Route::group([
     Route::delete('services/{service}', [ServiceController::class, 'destroy']);
 
     Route::get('orders',  [OrderController::class, 'index']);
+    Route::delete('orders/{order}', [OrderController::class, 'destroy']);
 
     Route::get('stats/orders', [QuickStatsController::class, 'getOrders']);
     Route::get('stats/revenue', [QuickStatsController::class, 'getRevenue']);

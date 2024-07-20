@@ -32,8 +32,7 @@
             <v-card-title>
                 <p class="text-center">{{ selectedEvent.title }}</p>
                 <div class="d-flex justify-content-end">
-                    <v-btn variant="text" size="regular" prepend-icon="mdi-pencil" :ripple="false" color="success"></v-btn>
-                    <v-btn variant="text" size="regular" prepend-icon="mdi-delete" :ripple="false" color="danger"></v-btn>
+                    <v-btn @click="deleteEvent" variant="text" size="regular" prepend-icon="mdi-delete" :ripple="false" color="danger"></v-btn>
                 </div>
             </v-card-title>
             <v-card-text>
@@ -48,13 +47,10 @@
                         <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
                     </div>
                 </v-list>
-
             </v-card-text>
         </v-card>
     </v-dialog>
 </template>
-
-
 
 <script>
 import VueCal from 'vue-cal';
@@ -110,6 +106,7 @@ export default {
                 this.events = ordersResponse.data.map(order => {
                     const employee = this.employeesMap[order.employee_id];
                     return {
+                        id: order.id,
                         start: order.datetime_from,
                         end: order.datetime_to,
                         title: this.$t('calendar.orderTitle', {
@@ -136,6 +133,23 @@ export default {
             this.showDialog = true;
             e.stopPropagation();
         },
+
+        async deleteEvent() {
+            const token = decodeURIComponent($cookies.get('token'))
+            try {
+                await axios.delete(`http://localhost:8000/api/orders/${this.selectedEvent.id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                });
+
+                this.events = this.events.filter(event => event.id !== this.selectedEvent.id);
+                this.showDialog = false;
+            } catch (error) {
+                console.error('Error deleting order:', error);
+            }
+        },
+
         getEventStyle(event) {
             const split = this.customDaySplitLabels.find(label => label.id === event.split);
             const backgroundColor = split ? split.color : 'transparent';
@@ -149,9 +163,11 @@ export default {
                 backgroundColor: hexToRgba(backgroundColor, 0.65),
             };
         },
+
         getShortTitle(title) {
             return title.length > 20 ? title.slice(0, 20) + '...' : title;
         },
+
         assignColor(id) {
             const colors = ['#0000FF', '#008000', '#FFA500', '#FF0000', '#000000', '#4a7300', '#f900ff', '#5b2c00'];
             return colors[id % colors.length];
@@ -160,25 +176,14 @@ export default {
 };
 </script>
 
-
 <style lang="scss" scoped>
 .event-card {
-    display: flex;
-    justify-content: left;
-    align-items: start;
-    padding: 4px;
-    font-size: 0.9em;
     color: white;
     width: 100%;
     height: 100%;
 }
 
 .event-text {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 4px;
-    font-size: 0.9em;
 }
 
 @media (max-width: 600px) {

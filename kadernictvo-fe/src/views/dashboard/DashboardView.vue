@@ -135,7 +135,7 @@
 </template>
 
 <script>
-import { format, parseISO, differenceInMinutes } from 'date-fns'; // Import necessary functions from date-fns
+import { format, parseISO, differenceInMinutes } from 'date-fns';
 import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
 import SideBar from '@/components/dashboard/SideBar.vue';
 import EarningCard from '@/components/dashboard/EarningCard.vue';

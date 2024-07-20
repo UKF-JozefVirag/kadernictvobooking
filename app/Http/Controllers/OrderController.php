@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
 use App\Models\Order;
-use App\Models\Service;
-use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -33,15 +30,6 @@ class OrderController extends Controller
             ->get();
 
         return response()->json($orders, 200);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -108,23 +96,12 @@ class OrderController extends Controller
         return response()->json($order->load('services'), 201);
     }
 
-
-
-
     /**
      * Display the specified resource.
      */
     public function show(Order $order)
     {
         return response()->json($order);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
     }
 
     /**
@@ -162,8 +139,16 @@ class OrderController extends Controller
      */
     public function destroy(Order $order)
     {
-        $order->delete();
-        return response()->json(null, 204);
+        try {
+            // If your Order model has related services in a pivot table
+            $order->services()->detach();
+
+            $order->delete();
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            Log::error('Error deleting order: '.$e->getMessage());
+            return response()->json(['message' => 'Error deleting order'], 500);
+        }
     }
 
     public function getOrdersByDate(Request $request)
@@ -180,3 +165,4 @@ class OrderController extends Controller
         return response()->json($orders);
     }
 }
+
