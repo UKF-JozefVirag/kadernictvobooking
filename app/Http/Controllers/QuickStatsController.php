@@ -237,13 +237,36 @@ class QuickStatsController extends Controller
         return response()->json($latestOrders);
     }
 
-    public function showUniqueCustomers(Request $request)
+    public function getMostValuableEmployees($timeRange)
     {
-        $query = Order::all()
-            ->count();
+        $now = Carbon::now();
+        $query = Order::select('employee_id',
+                               DB::raw('sum(total_price) as total_revenue'));
 
+        switch ($timeRange) {
+            case '1': // Day
+                $query->addSelect(DB::raw('HOUR(datetime_from) as time_unit'))
+                      ->whereDate('datetime_from', $now->toDateString());
+                break;
+            case '2': // Week
+                $query->addSelect(DB::raw('DATE(datetime_from) as time_unit'))
+                      ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()]);
+                break;
+            case '3': // Month
+                $query->addSelect(DB::raw('DATE(datetime_from) as time_unit'))
+                      ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()]);
+                break;
+            default:
+                throw new InvalidArgumentException("Invalid time range provided.");
+        }
 
-        return $query;
+        $query->groupBy('employee_id', 'time_unit')
+              ->orderBy('total_revenue', 'desc');
+
+        $results = $query->get();
+
+        return response()->json($results);
     }
+
 }
 
