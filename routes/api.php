@@ -52,5 +52,7 @@ Route::group([
 
     Route::get('stats/unique-customers', [QuickStatsController::class, 'showUniqueCustomers']);
 
+    Route::get('stats/employee-revenue', [QuickStatsController::class, 'getEmployeeRevenue']);
+
 
 });

@@ -137,6 +137,78 @@ class QuickStatsController extends Controller
         return $query->sum('total_price');
     }
 
+    public function getEmployeeRevenue(Request $request)
+    {
+        $timeRange = $request->query('range', '1'); // Default to '1' (day)
+        $revenueOverTime = $this->getEmployeeRevenueOverTime($timeRange);
+
+        return response()->json([
+            'title' => 'Employee Revenue',
+            'data' => $revenueOverTime,
+        ]);
+    }
+
+    private function getEmployeeRevenueOverTime($timeRange)
+    {
+        $now = Carbon::now();
+        $revenueOverTime = [];
+
+        switch ($timeRange) {
+            case '1': // Day
+                $revenues = Order::select('employee_id', DB::raw('HOUR(datetime_from) as hour'), DB::raw('SUM(total_price) as total_revenue'))
+                    ->whereDate('datetime_from', $now->toDateString())
+                    ->groupBy('employee_id', 'hour')
+                    ->orderBy('employee_id')
+                    ->orderBy('hour')
+                    ->get();
+                foreach ($revenues as $revenue) {
+                    $revenueOverTime[] = [
+                        'employee_id' => $revenue->employee_id,
+                        'hour' => $revenue->hour,
+                        'total_revenue' => $revenue->total_revenue,
+                    ];
+                }
+                break;
+
+            case '2': // Week
+                $revenues = Order::select('employee_id', DB::raw('DATE(datetime_from) as date'), DB::raw('SUM(total_price) as total_revenue'))
+                    ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()])
+                    ->groupBy('employee_id', 'date')
+                    ->orderBy('employee_id')
+                    ->orderBy('date')
+                    ->get();
+                foreach ($revenues as $revenue) {
+                    $revenueOverTime[] = [
+                        'employee_id' => $revenue->employee_id,
+                        'date' => $revenue->date,
+                        'total_revenue' => $revenue->total_revenue,
+                    ];
+                }
+                break;
+
+            case '3': // Month
+                $revenues = Order::select('employee_id', DB::raw('DATE(datetime_from) as date'), DB::raw('SUM(total_price) as total_revenue'))
+                    ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()])
+                    ->groupBy('employee_id', 'date')
+                    ->orderBy('employee_id')
+                    ->orderBy('date')
+                    ->get();
+                foreach ($revenues as $revenue) {
+                    $revenueOverTime[] = [
+                        'employee_id' => $revenue->employee_id,
+                        'date' => $revenue->date,
+                        'total_revenue' => $revenue->total_revenue,
+                    ];
+                }
+                break;
+
+            default:
+                throw new InvalidArgumentException("Invalid time range provided.");
+        }
+
+        return $revenueOverTime;
+    }
+
     private function applyDateRangeFilter($query, $timeRange)
     {
         $now = Carbon::now();
