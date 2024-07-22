@@ -77,7 +77,7 @@
                 align-self-end
             >
                 <EarningCard
-                    :title="$t('earning_cards.retention')"
+                    :title="$t('earning_cards.newCustomers')"
                     :value="newCustomersCount"
                     :labels="newCustomersLabels"
                     color="orange"
@@ -250,16 +250,12 @@ export default {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }
                 });
+                const data = response.data;
 
-                const data = response.data; // Úprava pre priamy prístup k dátam
-                console.log(data);
-
-                // Formátovanie dát pre EarningCard
                 this.newCustomersLabels = Object.keys(data).map(dateString => {
                     const date = parseISO(dateString);
                     return this.selectedOption === '2' || this.selectedOption === '3' ? format(date, 'dd/MM') : dateString;
                 });
-
                 this.newCustomersCount = Object.values(data);
             } catch (error) {
                 console.error('Error fetching new customers:', error);
@@ -273,29 +269,23 @@ export default {
                     }
                 });
                 const data = response.data;
-
-                // Initialize arrays for labels and datasets
                 const labels = [];
                 const datasets = [];
 
-                // Check if data is an array
                 if (Array.isArray(data)) {
                     data.forEach((employeeData, index) => {
                         if (employeeData && employeeData.employee && employeeData.times) {
                             const times = employeeData.times;
                             const employeeName = employeeData.employee;
 
-                            // Add time keys as labels (if not already added)
                             if (labels.length === 0) {
                                 labels.push(...Object.keys(times));
                             }
-
-                            // Add employee's times values to datasets
                             datasets.push({
-                                label: employeeName, // Employee name as label
-                                data: Object.values(times), // Employee's times values
-                                backgroundColor: this.generateColor(index), // Unique color for each employee
-                                borderColor: this.generateColor(index), // Same color for border
+                                label: employeeName,
+                                data: Object.values(times),
+                                backgroundColor: this.generateColor(index),
+                                borderColor: this.generateColor(index),
                                 fill: false
                             });
                         } else {
@@ -330,7 +320,7 @@ export default {
                 } else {
                     return `${hours}h ${remainingMinutes}m`;
                 }
-            } else { // 24 hours or more
+            } else {
                 const days = Math.floor(minutes / 1440);
                 const remainingHours = Math.floor((minutes % 1440) / 60);
                 const remainingMinutes = minutes % 60;

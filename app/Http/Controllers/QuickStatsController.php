@@ -43,14 +43,26 @@ class QuickStatsController extends Controller
         switch ($timeRange) {
             case '1':
             case 'day':
-                $orders = Order::select(DB::raw('HOUR(datetime_from) as hour'), DB::raw('count(*) as count'))
+                // Initialize the array with half-hour intervals from 08:00 to 18:00, all set to 0
+                for ($hour = 8; $hour <= 18; $hour++) {
+                    $ordersOverTime["{$hour}:00"] = 0;
+                    $ordersOverTime["{$hour}:30"] = 0;
+                }
+
+                // Fetch orders with half-hour intervals
+                $orders = Order::select(DB::raw("CONCAT(HOUR(datetime_from), ':', LPAD(MINUTE(datetime_from) DIV 30 * 30, 2, '0')) AS time_interval"), DB::raw('count(*) as count'))
                     ->whereDate('datetime_from', $now->toDateString())
-                    ->groupBy('hour')
+                    ->groupBy('time_interval')
                     ->get();
+
                 foreach ($orders as $order) {
-                    $ordersOverTime[$order->hour] = $order->count;
+                    // Update the array for each time interval
+                    if (isset($ordersOverTime[$order->time_interval])) {
+                        $ordersOverTime[$order->time_interval] = $order->count;
+                    }
                 }
                 break;
+
             case '2':
             case 'week':
                 $orders = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('count(*) as count'))
@@ -61,6 +73,7 @@ class QuickStatsController extends Controller
                     $ordersOverTime[$order->date] = $order->count;
                 }
                 break;
+
             case '3':
             case 'month':
                 $orders = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('count(*) as count'))
@@ -75,6 +88,7 @@ class QuickStatsController extends Controller
 
         return $ordersOverTime;
     }
+
 
     public function getRevenue(Request $request)
     {
@@ -99,14 +113,26 @@ class QuickStatsController extends Controller
         switch ($timeRange) {
             case '1':
             case 'day':
-                $revenues = Order::select(DB::raw('HOUR(datetime_from) as hour'), DB::raw('sum(total_price) as total'))
+                // Initialize the array with half-hour intervals from 08:00 to 18:00, all set to 0
+                for ($hour = 8; $hour <= 18; $hour++) {
+                    $revenueOverTime["{$hour}:00"] = 0;
+                    $revenueOverTime["{$hour}:30"] = 0;
+                }
+
+                // Fetch revenues with half-hour intervals
+                $revenues = Order::select(DB::raw("CONCAT(HOUR(datetime_from), ':', LPAD(MINUTE(datetime_from) DIV 30 * 30, 2, '0')) AS time_interval"), DB::raw('sum(total_price) as total'))
                     ->whereDate('datetime_from', $now->toDateString())
-                    ->groupBy('hour')
+                    ->groupBy('time_interval')
                     ->get();
+
                 foreach ($revenues as $revenue) {
-                    $revenueOverTime[$revenue->hour] = $revenue->total;
+                    // Update the array for each time interval
+                    if (isset($revenueOverTime[$revenue->time_interval])) {
+                        $revenueOverTime[$revenue->time_interval] = $revenue->total;
+                    }
                 }
                 break;
+
             case '2':
             case 'week':
                 $revenues = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('sum(total_price) as total'))
@@ -117,6 +143,7 @@ class QuickStatsController extends Controller
                     $revenueOverTime[$revenue->date] = $revenue->total;
                 }
                 break;
+
             case '3':
             case 'month':
                 $revenues = Order::select(DB::raw('DATE(datetime_from) as date'), DB::raw('sum(total_price) as total'))
@@ -139,77 +166,6 @@ class QuickStatsController extends Controller
         return $query->sum('total_price');
     }
 
-    public function getEmployeeRevenue(Request $request)
-    {
-        $timeRange = $request->query('range', '1'); // Default to '1' (day)
-        $revenueOverTime = $this->getEmployeeRevenueOverTime($timeRange);
-
-        return response()->json([
-            'title' => 'Employee Revenue',
-            'data' => $revenueOverTime,
-        ]);
-    }
-
-    private function getEmployeeRevenueOverTime($timeRange)
-    {
-        $now = Carbon::now();
-        $revenueOverTime = [];
-
-        switch ($timeRange) {
-            case '1': // Day
-                $revenues = Order::select('employee_id', DB::raw('HOUR(datetime_from) as hour'), DB::raw('SUM(total_price) as total_revenue'))
-                    ->whereDate('datetime_from', $now->toDateString())
-                    ->groupBy('employee_id', 'hour')
-                    ->orderBy('employee_id')
-                    ->orderBy('hour')
-                    ->get();
-                foreach ($revenues as $revenue) {
-                    $revenueOverTime[] = [
-                        'employee_id' => $revenue->employee_id,
-                        'hour' => $revenue->hour,
-                        'total_revenue' => $revenue->total_revenue,
-                    ];
-                }
-                break;
-
-            case '2': // Week
-                $revenues = Order::select('employee_id', DB::raw('DATE(datetime_from) as date'), DB::raw('SUM(total_price) as total_revenue'))
-                    ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()])
-                    ->groupBy('employee_id', 'date')
-                    ->orderBy('employee_id')
-                    ->orderBy('date')
-                    ->get();
-                foreach ($revenues as $revenue) {
-                    $revenueOverTime[] = [
-                        'employee_id' => $revenue->employee_id,
-                        'date' => $revenue->date,
-                        'total_revenue' => $revenue->total_revenue,
-                    ];
-                }
-                break;
-
-            case '3': // Month
-                $revenues = Order::select('employee_id', DB::raw('DATE(datetime_from) as date'), DB::raw('SUM(total_price) as total_revenue'))
-                    ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()])
-                    ->groupBy('employee_id', 'date')
-                    ->orderBy('employee_id')
-                    ->orderBy('date')
-                    ->get();
-                foreach ($revenues as $revenue) {
-                    $revenueOverTime[] = [
-                        'employee_id' => $revenue->employee_id,
-                        'date' => $revenue->date,
-                        'total_revenue' => $revenue->total_revenue,
-                    ];
-                }
-                break;
-
-            default:
-                throw new InvalidArgumentException("Invalid time range provided.");
-        }
-
-        return $revenueOverTime;
-    }
 
     private function applyDateRangeFilter($query, $timeRange)
     {
@@ -245,24 +201,19 @@ class QuickStatsController extends Controller
         $range = $request->query('range', 'day');
 
         if ($range === '1') {
-            // Ak je range=1, vypíše dnešný deň s hodinami od 00:00 do 23:30 v intervaloch 30 minút
             $today = $now->toDateString();
 
-            // Inicializácia výsledkového poľa pre dnešný deň, s hodinami a minútami od 00:00 do 23:30
             $customerCountsByTime = [];
             for ($hour = 0; $hour < 24; $hour++) {
                 $customerCountsByTime[sprintf('%02d:00', $hour)] = 0;
                 $customerCountsByTime[sprintf('%02d:30', $hour)] = 0;
             }
-
-            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa hodiny a minúty vytvorenia objednávky za dnešný deň
             $customers = Order::select(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30 as minute_interval'), DB::raw('HOUR(created_at) as hour'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereDate('created_at', $today)
                 ->groupBy(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30'), DB::raw('HOUR(created_at)'))
                 ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
-            // Vyplnenie počtov pre hodiny a minúty dnešného dňa
             foreach ($customers as $customer) {
                 $minuteKey = sprintf('%02d:%02d', $customer->hour, $customer->minute_interval);
                 if (isset($customerCountsByTime[$minuteKey])) {
@@ -272,70 +223,58 @@ class QuickStatsController extends Controller
 
             return response()->json($customerCountsByTime);
         } elseif ($range === '2') {
-            // Ak je range=2, vypíše dni dnešného týždňa
             $startOfWeek = $now->copy()->startOfWeek();
             $endOfWeek = $now->copy()->endOfWeek();
 
-            // Inicializácia výsledkového poľa pre dni aktuálneho týždňa, všetky počty nastavené na 0
             $customerCountsByDayOfWeek = [];
             for ($date = $startOfWeek->copy(); $date->lte($endOfWeek); $date->addDay()) {
                 $customerCountsByDayOfWeek[$date->format('Y-m-d')] = 0;
             }
 
-            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky v aktuálnom týždni
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
                 ->groupBy(DB::raw('DATE(created_at)'))
                 ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
-            // Vyplnenie počtov pre dni týždňa, kde sú zákazníci s presne jednou objednávkou
             foreach ($customers as $customer) {
                 $customerCountsByDayOfWeek[$customer->date] = $customer->customer_count;
             }
 
             return response()->json($customerCountsByDayOfWeek);
         } elseif ($range === '3') {
-            // Ak je range=3, vypíše všetky dni aktuálneho mesiaca
             $startOfMonth = $now->copy()->startOfMonth();
             $endOfMonth = $now->copy()->endOfMonth();
 
-            // Inicializácia výsledkového poľa s dátumami aktuálneho mesiaca, všetky počty nastavené na 0
             $customerCountsByDate = [];
             for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
                 $customerCountsByDate[$date->format('Y-m-d')] = 0;
             }
 
-            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky v aktuálnom mesiaci
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
                 ->groupBy(DB::raw('DATE(created_at)'))
                 ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
-            // Vyplnenie počtu pre dátumy, kde sú zákazníci s presne jednou objednávkou
             foreach ($customers as $customer) {
                 $customerCountsByDate[$customer->date] = $customer->customer_count;
             }
 
             return response()->json($customerCountsByDate);
         } else {
-            // Ak nie je range=3 ani range=2 ani range=1, vypíše iba dnešný deň
             $today = $now->toDateString();
 
-            // Inicializácia výsledkového poľa pre dnešný deň, s počtom nastaveným na 0
             $customerCountsByDate = [
                 $today => 0
             ];
 
-            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky za dnešný deň
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereDate('created_at', $today)
                 ->groupBy(DB::raw('DATE(created_at)'))
                 ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
-            // Vyplnenie počtu pre dnešný deň
             foreach ($customers as $customer) {
                 $customerCountsByDate[$customer->date] = $customer->customer_count;
             }
