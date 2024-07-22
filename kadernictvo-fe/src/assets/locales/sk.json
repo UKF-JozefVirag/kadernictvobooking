@@ -152,7 +152,8 @@
         "orders": "Objednávky",
         "revenue": "Príjmy",
         "customers": "Nový zákazníci",
-        "retention": "Miera udržania zákazníkov"
+        "retention": "Miera udržania zákazníkov",
+        "employeeRevenue": "Príjmy zamestnancov"
     },
     "latest_orders": {
         "latestOrder": "Posledné objednávky",

@@ -46,13 +46,9 @@ Route::group([
 
     Route::get('stats/orders', [QuickStatsController::class, 'getOrders']);
     Route::get('stats/revenue', [QuickStatsController::class, 'getRevenue']);
-    Route::get('stats/customers', [QuickStatsController::class, 'getNewCustomers']);
-    Route::get('stats/retention', [QuickStatsController::class, 'getCustomerRetention']);
     Route::get('stats/latest-orders', [QuickStatsController::class, 'getLatestOrders']);
-
-    Route::get('stats/unique-customers', [QuickStatsController::class, 'showUniqueCustomers']);
-
-    Route::get('stats/employee-revenue', [QuickStatsController::class, 'getEmployeeRevenue']);
+    Route::get('stats/getEmployeeValue', [QuickStatsController::class, 'getMostValuableEmployees']);
+    Route::get('stats/getNewCustomers', [QuickStatsController::class, 'getNewCustomers']);
 
 
 });

@@ -58,9 +58,11 @@
                 align-self-center
             >
                 <EarningCard
-                    :title="$t('earning_cards.new_customers')"
-                    :value="newCustomersCount"
-                    :labels="newCustomersLabels"
+                    :title="$t('earning_cards.employeeRevenue')"
+                    :value="employeeRevenuesCount"
+                    :labels="employeeRevenuesLabels"
+                    :colors="employeeColors"
+                    :second-values="secondValues"
                     color="blue"
                     sparklineColor="info"
                 />
@@ -76,7 +78,8 @@
             >
                 <EarningCard
                     :title="$t('earning_cards.retention')"
-                    :value="[2, 3, 5, 6, 7, 10, 12]"
+                    :value="newCustomersCount"
+                    :labels="newCustomersLabels"
                     color="orange"
                     sparklineColor="warning"
                 />
@@ -103,13 +106,11 @@
                         </template>
                     </v-virtual-scroll>
                 </v-card>
-
             </v-col>
             <v-col cols="12" md="3" lg="4" align-self="start">
                 <AppointmentsStats></AppointmentsStats>
             </v-col>
         </v-row>
-
         <v-dialog v-model="showDialog" max-width="500" variant="flat">
             <v-card>
                 <v-card-title>
@@ -127,7 +128,6 @@
                             <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
                         </div>
                     </v-list>
-
                 </v-card-text>
             </v-card>
         </v-dialog>
@@ -153,8 +153,12 @@ export default {
             revenuesLabels: [],
             newCustomersCount: [],
             newCustomersLabels: [],
+            employeeRevenuesCount: [],
+            employeeRevenuesLabels: [],
+            employeeColors: [],
             selectedEvent: {},
             showDialog: false,
+            secondValues: []
         };
     },
     computed: {
@@ -177,7 +181,6 @@ export default {
             const parsedDateTime = parseISO(datetime);
             return format(parsedDateTime, 'dd/MM/yyyy HH:mm:ss');
         },
-
         async getOrders() {
             const response = await axios.get('http://localhost:8000/api/stats/latest-orders', {
                 headers: {
@@ -220,7 +223,6 @@ export default {
 
             this.revenuesCount = Object.values(data);
         },
-
         async getOrdersCount() {
             const response = await axios.get('http://localhost:8000/api/stats/orders?range=' + this.selectedOption, {
                 headers: {
@@ -241,30 +243,82 @@ export default {
 
             this.ordersCount = Object.values(data);
         },
-
         async getNewCustomers() {
-            console.log("TBA");
-            // const response = await axios.get('http://localhost:8000/api/stats/new-customers?range=' + this.selectedOption, {
-            //     headers: {
-            //         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
-            //     }
-            // });
-            // const data = response.data.data;
-            //
-            // this.newCustomersLabels = Object.keys(data).map(dateString => {
-            //     const date = parseISO(dateString);
-            //     if (this.selectedOption === '2') { // Weekly
-            //         return format(date, 'dd/MM');
-            //     } else if (this.selectedOption === '3') { // Monthly
-            //         return format(date, 'dd/MM');
-            //     }
-            //     return dateString;
-            // });
-            //
-            // this.newCustomersCount = Object.values(data);
-            // console.log(this.newCustomersCount);
-        },
+            try {
+                const response = await axios.get('http://localhost:8000/api/stats/getNewCustomers?range=' + this.selectedOption, {
+                    headers: {
+                        Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                    }
+                });
 
+                const data = response.data; // Úprava pre priamy prístup k dátam
+                console.log(data);
+
+                // Formátovanie dát pre EarningCard
+                this.newCustomersLabels = Object.keys(data).map(dateString => {
+                    const date = parseISO(dateString);
+                    return this.selectedOption === '2' || this.selectedOption === '3' ? format(date, 'dd/MM') : dateString;
+                });
+
+                this.newCustomersCount = Object.values(data);
+            } catch (error) {
+                console.error('Error fetching new customers:', error);
+            }
+        },
+        async getEmployeeRevenues() {
+            try {
+                const response = await axios.get('http://localhost:8000/api/stats/getEmployeeValue?range=' + this.selectedOption, {
+                    headers: {
+                        Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                    }
+                });
+                const data = response.data;
+
+                // Initialize arrays for labels and datasets
+                const labels = [];
+                const datasets = [];
+
+                // Check if data is an array
+                if (Array.isArray(data)) {
+                    data.forEach((employeeData, index) => {
+                        if (employeeData && employeeData.employee && employeeData.times) {
+                            const times = employeeData.times;
+                            const employeeName = employeeData.employee;
+
+                            // Add time keys as labels (if not already added)
+                            if (labels.length === 0) {
+                                labels.push(...Object.keys(times));
+                            }
+
+                            // Add employee's times values to datasets
+                            datasets.push({
+                                label: employeeName, // Employee name as label
+                                data: Object.values(times), // Employee's times values
+                                backgroundColor: this.generateColor(index), // Unique color for each employee
+                                borderColor: this.generateColor(index), // Same color for border
+                                fill: false
+                            });
+                        } else {
+                            console.error('Invalid employee data structure', employeeData);
+                        }
+                    });
+                    this.employeeRevenuesLabels = labels;
+                    this.employeeRevenuesCount = datasets;
+                    this.secondValues = data;
+                } else {
+                    console.error('Invalid response data format', data);
+                }
+            } catch (error) {
+                console.error('Error fetching data', error);
+            }
+        },
+        generateColor(index) {
+            const colors = [
+                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+                '#E7E9ED', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+            ];
+            return colors[index % colors.length];
+        },
         formatMinutes(minutes) {
             if (minutes < 60) {
                 return `${minutes}m`;
@@ -298,6 +352,7 @@ export default {
             this.getOrders();
             this.getRevenues();
             this.getNewCustomers();
+            this.getEmployeeRevenues();
         }
     },
     mounted() {
@@ -305,6 +360,7 @@ export default {
         this.getOrders();
         this.getRevenues();
         this.getNewCustomers();
+        this.getEmployeeRevenues();
     }
 };
 </script>

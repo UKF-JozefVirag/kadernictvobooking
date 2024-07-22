@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
+use App\Models\Employee;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -237,36 +239,240 @@ class QuickStatsController extends Controller
         return response()->json($latestOrders);
     }
 
-    public function getMostValuableEmployees($timeRange)
+    public function getNewCustomers(Request $request)
     {
         $now = Carbon::now();
-        $query = Order::select('employee_id',
-                               DB::raw('sum(total_price) as total_revenue'));
+        $range = $request->query('range', 'day');
+
+        if ($range === '1') {
+            // Ak je range=1, vypíše dnešný deň s hodinami od 00:00 do 23:30 v intervaloch 30 minút
+            $today = $now->toDateString();
+
+            // Inicializácia výsledkového poľa pre dnešný deň, s hodinami a minútami od 00:00 do 23:30
+            $customerCountsByTime = [];
+            for ($hour = 0; $hour < 24; $hour++) {
+                $customerCountsByTime[sprintf('%02d:00', $hour)] = 0;
+                $customerCountsByTime[sprintf('%02d:30', $hour)] = 0;
+            }
+
+            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa hodiny a minúty vytvorenia objednávky za dnešný deň
+            $customers = Order::select(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30 as minute_interval'), DB::raw('HOUR(created_at) as hour'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
+                ->whereDate('created_at', $today)
+                ->groupBy(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30'), DB::raw('HOUR(created_at)'))
+                ->havingRaw('COUNT(customer_id) = 1')
+                ->get();
+
+            // Vyplnenie počtov pre hodiny a minúty dnešného dňa
+            foreach ($customers as $customer) {
+                $minuteKey = sprintf('%02d:%02d', $customer->hour, $customer->minute_interval);
+                if (isset($customerCountsByTime[$minuteKey])) {
+                    $customerCountsByTime[$minuteKey] = $customer->customer_count;
+                }
+            }
+
+            return response()->json($customerCountsByTime);
+        } elseif ($range === '2') {
+            // Ak je range=2, vypíše dni dnešného týždňa
+            $startOfWeek = $now->copy()->startOfWeek();
+            $endOfWeek = $now->copy()->endOfWeek();
+
+            // Inicializácia výsledkového poľa pre dni aktuálneho týždňa, všetky počty nastavené na 0
+            $customerCountsByDayOfWeek = [];
+            for ($date = $startOfWeek->copy(); $date->lte($endOfWeek); $date->addDay()) {
+                $customerCountsByDayOfWeek[$date->format('Y-m-d')] = 0;
+            }
+
+            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky v aktuálnom týždni
+            $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
+                ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->havingRaw('COUNT(customer_id) = 1')
+                ->get();
+
+            // Vyplnenie počtov pre dni týždňa, kde sú zákazníci s presne jednou objednávkou
+            foreach ($customers as $customer) {
+                $customerCountsByDayOfWeek[$customer->date] = $customer->customer_count;
+            }
+
+            return response()->json($customerCountsByDayOfWeek);
+        } elseif ($range === '3') {
+            // Ak je range=3, vypíše všetky dni aktuálneho mesiaca
+            $startOfMonth = $now->copy()->startOfMonth();
+            $endOfMonth = $now->copy()->endOfMonth();
+
+            // Inicializácia výsledkového poľa s dátumami aktuálneho mesiaca, všetky počty nastavené na 0
+            $customerCountsByDate = [];
+            for ($date = $startOfMonth->copy(); $date->lte($endOfMonth); $date->addDay()) {
+                $customerCountsByDate[$date->format('Y-m-d')] = 0;
+            }
+
+            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky v aktuálnom mesiaci
+            $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
+                ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->havingRaw('COUNT(customer_id) = 1')
+                ->get();
+
+            // Vyplnenie počtu pre dátumy, kde sú zákazníci s presne jednou objednávkou
+            foreach ($customers as $customer) {
+                $customerCountsByDate[$customer->date] = $customer->customer_count;
+            }
+
+            return response()->json($customerCountsByDate);
+        } else {
+            // Ak nie je range=3 ani range=2 ani range=1, vypíše iba dnešný deň
+            $today = $now->toDateString();
+
+            // Inicializácia výsledkového poľa pre dnešný deň, s počtom nastaveným na 0
+            $customerCountsByDate = [
+                $today => 0
+            ];
+
+            // Získanie počtu zákazníkov s presne jednou objednávkou, rozdelených podľa dátumu vytvorenia objednávky za dnešný deň
+            $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
+                ->whereDate('created_at', $today)
+                ->groupBy(DB::raw('DATE(created_at)'))
+                ->havingRaw('COUNT(customer_id) = 1')
+                ->get();
+
+            // Vyplnenie počtu pre dnešný deň
+            foreach ($customers as $customer) {
+                $customerCountsByDate[$customer->date] = $customer->customer_count;
+            }
+
+            return response()->json($customerCountsByDate);
+        }
+    }
+
+
+    public function getMostValuableEmployees(Request $request)
+    {
+        $timeRange = $request->query('range', '1'); // Default to '1' (day)
+        $now = Carbon::now();
+        $query = Order::select('employee_id', DB::raw('SUM(total_price) as total_revenue'));
 
         switch ($timeRange) {
             case '1': // Day
-                $query->addSelect(DB::raw('HOUR(datetime_from) as time_unit'))
-                      ->whereDate('datetime_from', $now->toDateString());
+                $query->addSelect(DB::raw('CONCAT(HOUR(datetime_from), \':\', IF(MINUTE(datetime_from) >= 30, \'30\', \'00\')) as time_unit'))
+                    ->whereDate('datetime_from', $now->toDateString())
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
+                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
                 break;
             case '2': // Week
-                $query->addSelect(DB::raw('DATE(datetime_from) as time_unit'))
-                      ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()]);
+                $query->addSelect(DB::raw('DATE(datetime_from) as date'))
+                    ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()])
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
+                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
                 break;
             case '3': // Month
-                $query->addSelect(DB::raw('DATE(datetime_from) as time_unit'))
-                      ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()]);
+                $query->addSelect(DB::raw('DATE(datetime_from) as date'))
+                    ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()])
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
+                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
                 break;
             default:
                 throw new InvalidArgumentException("Invalid time range provided.");
         }
 
-        $query->groupBy('employee_id', 'time_unit')
-              ->orderBy('total_revenue', 'desc');
+        if ($timeRange == '2' || $timeRange == '3') {
+            $query->groupBy('employee_id', 'date')
+                ->orderBy('employee_id')
+                ->orderBy('date', 'asc');
+        } else {
+            $query->groupBy('employee_id', 'time_unit')
+                ->orderBy('employee_id')
+                ->orderBy('time_unit', 'asc');
+        }
 
         $results = $query->get();
 
-        return response()->json($results);
+        // Load all employees
+        $employees = Employee::select('id', 'first_name', 'last_name')->get();
+
+        // Initialize results array
+        $formattedResults = [];
+        foreach ($employees as $employee) {
+            $employeeResult = [
+                'employee' => $employee->first_name . ' ' . $employee->last_name,
+                'times' => []
+            ];
+
+            if ($timeRange == '2') { // For weekly range
+                $daysOfWeek = $this->getDaysOfWeek();
+                foreach ($daysOfWeek as $day) {
+                    $employeeResult['times'][$day] = 0; // Initialize revenue to 0
+                }
+            } elseif ($timeRange == '3') { // For monthly range
+                $daysOfMonth = $this->getDaysOfMonth();
+                foreach ($daysOfMonth as $day) {
+                    $employeeResult['times'][$day] = 0; // Initialize revenue to 0
+                }
+            } else { // For day range
+                foreach ($this->generateTimeIntervals() as $interval) {
+                    $employeeResult['times'][$interval] = 0; // Initialize revenue to 0
+                }
+            }
+
+            $formattedResults[$employee->id] = $employeeResult;
+        }
+
+        // Fill in the actual revenue from the query results
+        foreach ($results as $result) {
+            $employeeId = $result->employee_id;
+            if (isset($formattedResults[$employeeId])) {
+                if ($timeRange == '2') { // Weekly range
+                    $formattedResults[$employeeId]['times'][$result->date] = $result->total_revenue;
+                } elseif ($timeRange == '3') { // Monthly range
+                    $formattedResults[$employeeId]['times'][$result->date] = $result->total_revenue;
+                } else { // Day range
+                    $formattedResults[$employeeId]['times'][$result->time_unit] = $result->total_revenue;
+                }
+            }
+        }
+
+        // Convert the formatted results to a simple array
+        $formattedResults = array_values($formattedResults);
+
+        return response()->json($formattedResults);
     }
+
+    private function generateTimeIntervals()
+    {
+        $intervals = [];
+        for ($hour = 1; $hour <= 23; $hour++) {
+            $intervals[] = sprintf('%02d:00', $hour);
+            $intervals[] = sprintf('%02d:30', $hour);
+        }
+        return $intervals;
+    }
+
+    private function getDaysOfWeek()
+    {
+        $daysOfWeek = [];
+        $startOfWeek = Carbon::now()->startOfWeek();
+        for ($i = 0; $i < 7; $i++) {
+            $day = $startOfWeek->copy()->addDays($i)->format('Y-m-d');
+            $daysOfWeek[$day] = $day;
+        }
+        return $daysOfWeek;
+    }
+
+    private function getDaysOfMonth()
+    {
+        $daysOfMonth = [];
+        $startOfMonth = Carbon::now()->startOfMonth();
+        $endOfMonth = Carbon::now()->endOfMonth();
+        $currentDate = $startOfMonth->copy();
+
+        while ($currentDate->lte($endOfMonth)) {
+            $day = $currentDate->format('Y-m-d');
+            $daysOfMonth[$day] = $day;
+            $currentDate->addDay();
+        }
+
+        return $daysOfMonth;
+    }
+
 
 }
 

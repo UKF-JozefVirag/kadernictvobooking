@@ -3,14 +3,16 @@
         <v-card-text>
             <strong>{{ title }}</strong>
         </v-card-text>
-        <v-card-text :class="{'text-danger': isNegative, 'text-success': !isNegative}">
+        <v-card-text :class="{'text-danger': isNegative && !secondValues, 'text-success': !isNegative && !secondValues, 'text-transparent': secondValues}">
             <span>{{ subtitle }}</span>
         </v-card-text>
         <v-card-text>
             <v-sheet color="white">
                 <v-row no-gutters>
                     <v-col cols="12">
-                        <Line :data="chartData" :options="chartOptions"></Line>
+                        <div style="position: relative; height: 200px;">
+                            <Line :data="chartData" :options="chartOptions"></Line>
+                        </div>
                     </v-col>
                 </v-row>
             </v-sheet>
@@ -19,7 +21,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed } from 'vue'
+import { defineProps, computed, onMounted } from 'vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js'
 
@@ -45,6 +47,10 @@ const props = defineProps({
     labels: {
         type: Array,
         required: false
+    },
+    secondValues: {
+        type: Array,
+        required: false
     }
 })
 
@@ -65,9 +71,16 @@ const isNegative = computed(() => {
     return calculatePercentageChange(props.value) < 0
 })
 
-const chartData = computed(() => ({
-    labels: props.labels,
-    datasets: [
+const generateColor = (index) => {
+    const colors = [
+        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
+        '#E7E9ED', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+    ]
+    return colors[index % colors.length]
+}
+
+const chartData = computed(() => {
+    const datasets = [
         {
             label: props.title,
             backgroundColor: props.color,
@@ -77,7 +90,26 @@ const chartData = computed(() => ({
             tension: 0.4
         }
     ]
-}))
+
+    if (props.secondValues && props.secondValues.length > 0) {
+        props.secondValues.forEach((item, index) => {
+            datasets.push({
+                label: item.employee,
+                backgroundColor: generateColor(index),
+                borderColor: generateColor(index),
+                data: Object.values(item.times),
+                fill: false,
+                tension: 0.4,
+                borderWidth: 0.5
+            })
+        })
+    }
+
+    return {
+        labels: props.labels || (props.secondValues && props.secondValues.length > 0 ? Object.keys(props.secondValues[0].times) : []),
+        datasets
+    }
+})
 
 const chartOptions = {
     responsive: true,
@@ -86,6 +118,12 @@ const chartOptions = {
         x: {
             grid: {
                 drawOnChartArea: false
+            },
+            ticks: {
+                autoSkip: true,
+                maxTicksLimit: 5,
+                maxRotation: 45,
+                minRotation: 0
             }
         },
         y: {
@@ -93,11 +131,30 @@ const chartOptions = {
                 drawOnChartArea: false
             },
             ticks: {
-                stepSize: 1
+                stepSize: 1,
+                beginAtZero: true
+            }
+        }
+    },
+    plugins: {
+        legend: {
+            display: false
+        },
+        tooltip: {
+            callbacks: {
+                label: function(context) {
+                    return `${context.dataset.label}: ${context.raw}`;
+                }
             }
         }
     }
 }
+
+onMounted(() => {
+    if (props.secondValues && props.secondValues.length > 0) {
+        console.log('secondValues:', props.secondValues)
+    }
+})
 </script>
 
 <style scoped>
@@ -107,5 +164,10 @@ const chartOptions = {
 
 .text-success {
     color: green;
+}
+
+.text-transparent {
+    color: transparent;
+    user-select: none;
 }
 </style>

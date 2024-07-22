@@ -151,7 +151,8 @@
         "orders": "Orders",
         "revenue": "Revenue",
         "customers": "New customers",
-        "retention": "Customer retention rate"
+        "retention": "Customer retention rate",
+        "employee_revenue": "Employee revenue"
     },
     "latest_orders": {
         "latestOrder": "Latest orders",
