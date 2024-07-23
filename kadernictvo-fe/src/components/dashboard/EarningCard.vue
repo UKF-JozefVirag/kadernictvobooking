@@ -4,7 +4,7 @@
             <strong>{{ title }}</strong>
         </v-card-text>
         <v-card-text :class="{'text-danger': isNegative && !secondValues, 'text-success': !isNegative && !secondValues, 'text-transparent': secondValues}">
-            <span>{{ subtitle }}</span>
+            <span v-if="props.percentage">{{ subtitle }}</span>
         </v-card-text>
         <v-card-text>
             <v-sheet color="white">
@@ -46,6 +46,10 @@ const props = defineProps({
     },
     labels: {
         type: Array,
+        required: false
+    },
+    percentage: {
+        type: Boolean,
         required: false
     },
     secondValues: {

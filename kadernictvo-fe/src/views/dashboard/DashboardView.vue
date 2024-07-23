@@ -24,12 +24,17 @@
                 flex-column
             >
                 <EarningCard
+                    v-if="!loadingOrdersCount"
                     :title="$t('earning_cards.orders')"
                     :value="ordersCount"
                     :labels="ordersLabels"
                     color="green"
                     sparklineColor="success"
+                    :percentage="false"
                 >{{ $t('earning_cards.orders') }}</EarningCard>
+                <v-card v-else class="d-flex align-center justify-center loader-card">
+                    <v-progress-circular indeterminate color="black" size="70"></v-progress-circular>
+                </v-card>
             </v-col>
             <v-col
                 cols="12"
@@ -41,12 +46,17 @@
                 align-self-center
             >
                 <EarningCard
+                    v-if="!loadingRevenues"
                     :title="$t('earning_cards.revenue')"
                     :value="revenuesCount"
                     :labels="revenuesLabels"
                     color="blue"
                     sparklineColor="info"
+                    :percentage="false"
                 ></EarningCard>
+                <v-card v-else class="d-flex align-center justify-center loader-card">
+                    <v-progress-circular indeterminate color="black" size="70"></v-progress-circular>
+                </v-card>
             </v-col>
             <v-col
                 cols="12"
@@ -58,14 +68,19 @@
                 align-self-center
             >
                 <EarningCard
+                    v-if="!loadingEmployeeRevenues"
                     :title="$t('earning_cards.employeeRevenue')"
                     :value="employeeRevenuesCount"
                     :labels="employeeRevenuesLabels"
                     :colors="employeeColors"
                     :second-values="secondValues"
+                    :percentage="false"
                     color="blue"
                     sparklineColor="info"
                 />
+                <v-card v-else class="d-flex align-center justify-center loader-card">
+                    <v-progress-circular indeterminate color="black" size="70"></v-progress-circular>
+                </v-card>
             </v-col>
             <v-col
                 cols="12"
@@ -77,12 +92,16 @@
                 align-self-end
             >
                 <EarningCard
+                    v-if="!loadingNewCustomers"
                     :title="$t('earning_cards.newCustomers')"
                     :value="newCustomersCount"
                     :labels="newCustomersLabels"
                     color="orange"
                     sparklineColor="warning"
                 />
+                <v-card v-else class="d-flex align-center justify-center loader-card">
+                    <v-progress-circular indeterminate color="black" size="70"></v-progress-circular>
+                </v-card>
             </v-col>
         </v-row>
         <v-row>
@@ -134,6 +153,9 @@
     </v-container>
 </template>
 
+
+
+
 <script>
 import { format, parseISO, differenceInMinutes } from 'date-fns';
 import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
@@ -158,7 +180,11 @@ export default {
             employeeColors: [],
             selectedEvent: {},
             showDialog: false,
-            secondValues: []
+            secondValues: [],
+            loadingOrdersCount: true,
+            loadingRevenues: true,
+            loadingNewCustomers: true,
+            loadingEmployeeRevenues: true
         };
     },
     computed: {
@@ -182,68 +208,90 @@ export default {
             return format(parsedDateTime, 'dd/MM/yyyy HH:mm:ss');
         },
         async getOrders() {
-            const response = await axios.get('http://localhost:8000/api/stats/latest-orders', {
-                headers: {
-                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
-                }
-            });
-            const now = new Date();
-            this.orders = response.data.map(order => {
-                const createdAt = parseISO(order.created_at);
-                const minutesAgo = differenceInMinutes(now, createdAt);
-                return {
-                    ...order,
-                    time: format(createdAt, 'HH:mm'),
-                    minutesAgo: minutesAgo,
-                    formattedMinutesAgo: this.formatMinutes(minutesAgo),
-                    items: order.services.length,
-                    customer: `${order.employee.first_name} ${order.employee.last_name}`
-                };
-            });
+            this.loadingOrdersCount = true;
+            try {
+                const response = await axios.get('http://localhost:8000/api/stats/latest-orders', {
+                    headers: {
+                        Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                    }
+                });
+                const now = new Date();
+                this.orders = response.data.map(order => {
+                    const createdAt = parseISO(order.created_at);
+                    const minutesAgo = differenceInMinutes(now, createdAt);
+                    return {
+                        ...order,
+                        time: format(createdAt, 'HH:mm'),
+                        minutesAgo: minutesAgo,
+                        formattedMinutesAgo: this.formatMinutes(minutesAgo),
+                        items: order.services.length,
+                        customer: `${order.employee.first_name} ${order.employee.last_name}`
+                    };
+                });
 
-            this.orders.sort((a, b) => b.id - a.id);
+                this.orders.sort((a, b) => b.id - a.id);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            } finally {
+                this.loadingOrdersCount = false;
+            }
         },
         async getRevenues() {
-            const response = await axios.get('http://localhost:8000/api/stats/revenue?range=' + this.selectedOption, {
-                headers: {
-                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
-                }
-            });
-            const data = response.data.data;
+            this.loadingRevenues = true;
+            try {
+                const response = await axios.get('http://localhost:8000/api/stats/revenue?range=' + this.selectedOption, {
+                    headers: {
+                        Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                    }
+                });
+                const data = response.data.data;
 
-            this.revenuesLabels = Object.keys(data).map(dateString => {
-                const date = parseISO(dateString);
-                if (this.selectedOption === '2') { // Weekly
-                    return format(date, 'dd/MM');
-                } else if (this.selectedOption === '3') { // Monthly
-                    return format(date, 'dd/MM');
-                }
-                return dateString;
-            });
+                this.revenuesLabels = Object.keys(data).map(dateString => {
+                    const date = parseISO(dateString);
+                    if (this.selectedOption === '2') { // Weekly
+                        return format(date, 'dd/MM');
+                    } else if (this.selectedOption === '3') { // Monthly
+                        return format(date, 'dd/MM');
+                    }
+                    return dateString;
+                });
 
-            this.revenuesCount = Object.values(data);
+                this.revenuesCount = Object.values(data);
+            } catch (error) {
+                console.error('Error fetching revenues:', error);
+            } finally {
+                this.loadingRevenues = false;
+            }
         },
         async getOrdersCount() {
-            const response = await axios.get('http://localhost:8000/api/stats/orders?range=' + this.selectedOption, {
-                headers: {
-                    Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
-                }
-            });
-            const data = response.data.data;
+            this.loadingOrdersCount = true;
+            try {
+                const response = await axios.get('http://localhost:8000/api/stats/orders?range=' + this.selectedOption, {
+                    headers: {
+                        Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                    }
+                });
+                const data = response.data.data;
 
-            this.ordersLabels = Object.keys(data).map(dateString => {
-                const date = parseISO(dateString);
-                if (this.selectedOption === '2') { // Weekly
-                    return format(date, 'dd/MM');
-                } else if (this.selectedOption === '3') { // Monthly
-                    return format(date, 'dd/MM');
-                }
-                return dateString;
-            });
+                this.ordersLabels = Object.keys(data).map(dateString => {
+                    const date = parseISO(dateString);
+                    if (this.selectedOption === '2') { // Weekly
+                        return format(date, 'dd/MM');
+                    } else if (this.selectedOption === '3') { // Monthly
+                        return format(date, 'dd/MM');
+                    }
+                    return dateString;
+                });
 
-            this.ordersCount = Object.values(data);
+                this.ordersCount = Object.values(data);
+            } catch (error) {
+                console.error('Error fetching orders count:', error);
+            } finally {
+                this.loadingOrdersCount = false;
+            }
         },
         async getNewCustomers() {
+            this.loadingNewCustomers = true;
             try {
                 const response = await axios.get('http://localhost:8000/api/stats/getNewCustomers?range=' + this.selectedOption, {
                     headers: {
@@ -259,9 +307,12 @@ export default {
                 this.newCustomersCount = Object.values(data);
             } catch (error) {
                 console.error('Error fetching new customers:', error);
+            } finally {
+                this.loadingNewCustomers = false;
             }
         },
         async getEmployeeRevenues() {
+            this.loadingEmployeeRevenues = true;
             try {
                 const response = await axios.get('http://localhost:8000/api/stats/getEmployeeValue?range=' + this.selectedOption, {
                     headers: {
@@ -299,7 +350,9 @@ export default {
                     console.error('Invalid response data format', data);
                 }
             } catch (error) {
-                console.error('Error fetching data', error);
+                console.error('Error fetching employee revenues:', error);
+            } finally {
+                this.loadingEmployeeRevenues = false;
             }
         },
         generateColor(index) {
@@ -355,6 +408,7 @@ export default {
 };
 </script>
 
+
 <style scoped>
 .order-link {
     color: #d09c6e;
@@ -383,5 +437,13 @@ export default {
 
 .v-list-item:hover {
     color: black !important;
+}
+
+.loader-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 150px;
 }
 </style>

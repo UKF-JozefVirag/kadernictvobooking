@@ -1,7 +1,14 @@
 <template>
     <v-container>
         <v-row>
-            <v-col>
+            <v-col v-if="loading" class="loader-container">
+                <v-progress-circular
+                    indeterminate
+                    color="black"
+                    size="100"
+                ></v-progress-circular>
+            </v-col>
+            <v-col v-else>
                 <vue-cal
                     :disable-views="['years', 'year', 'month']"
                     active-view="day"
@@ -27,35 +34,12 @@
             </v-col>
         </v-row>
     </v-container>
-    <v-dialog v-model="showDialog" max-width="500" variant="flat">
-        <v-card>
-            <v-card-title>
-                <p class="text-center">{{ selectedEvent.title }}</p>
-                <div class="d-flex justify-content-end">
-                    <v-btn @click="deleteEvent" variant="text" size="regular" prepend-icon="mdi-delete" :ripple="false" color="danger"></v-btn>
-                </div>
-            </v-card-title>
-            <v-card-text>
-                <v-list>
-                    <strong>{{$t('calendar.orderDetail')}}</strong>
-                    <v-list-item :title="$t('calendar.employee')" :subtitle="selectedEvent.employee ? selectedEvent.employee.first_name + ' ' + selectedEvent.employee.last_name : 'Unknown'"></v-list-item>
-                    <v-list-item :title="$t('calendar.orderFrom')" :subtitle="selectedEvent.start && selectedEvent.start.formatTime()"></v-list-item>
-                    <v-list-item :title="$t('calendar.orderTo')" :subtitle="selectedEvent.end && selectedEvent.end.formatTime()"></v-list-item>
-                    <v-list-item :title="$t('calendar.price')" :subtitle="selectedEvent.price + ' €'"></v-list-item>
-                    <strong>{{$t('calendar.services')}}</strong>
-                    <div v-for="(service, index) in selectedEvent.services" :key="index">
-                        <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
-                    </div>
-                </v-list>
-            </v-card-text>
-        </v-card>
-    </v-dialog>
 </template>
 
 <script>
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
-import axios from 'axios'
+import axios from 'axios';
 
 export default {
     name: 'Calendar',
@@ -68,7 +52,8 @@ export default {
             showDialog: false,
             customDaySplitLabels: [],
             events: [],
-            employeesMap: {}
+            employeesMap: {},
+            loading: false
         };
     },
     created() {
@@ -76,14 +61,14 @@ export default {
     },
     methods: {
         async fetchEmployeesAndOrders() {
-            const token = decodeURIComponent($cookies.get('token'))
+            const token = decodeURIComponent($cookies.get('token'));
+            this.loading = true;
             try {
                 const employeesResponse = await axios.get('http://localhost:8000/api/employees', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-
                 const employees = employeesResponse.data;
                 this.customDaySplitLabels = employees.map(employee => ({
                     id: employee.id,
@@ -124,7 +109,9 @@ export default {
                     };
                 });
             } catch (error) {
-                console.error('Error fetching employee or orders:', error);
+                console.error('Error fetching employees or orders:', error);
+            } finally {
+                this.loading = false;
             }
         },
 
@@ -135,14 +122,13 @@ export default {
         },
 
         async deleteEvent() {
-            const token = decodeURIComponent($cookies.get('token'))
+            const token = decodeURIComponent($cookies.get('token'));
             try {
                 await axios.delete(`http://localhost:8000/api/orders/${this.selectedEvent.id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
                 });
-
                 this.events = this.events.filter(event => event.id !== this.selectedEvent.id);
                 this.showDialog = false;
             } catch (error) {
@@ -183,8 +169,7 @@ export default {
     height: 100%;
 }
 
-.event-text {
-}
+.event-text {}
 
 @media (max-width: 600px) {
     .event-text {
@@ -194,5 +179,12 @@ export default {
 
 .v-list-item:hover {
     color: black !important;
+}
+
+.loader-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
 }
 </style>

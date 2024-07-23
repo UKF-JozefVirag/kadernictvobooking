@@ -191,7 +191,7 @@ class QuickStatsController extends Controller
             ->orderBy('datetime_from', 'desc')
             ->take(20)
             ->get();
-
+        sleep(6);
         return response()->json($latestOrders);
     }
 
