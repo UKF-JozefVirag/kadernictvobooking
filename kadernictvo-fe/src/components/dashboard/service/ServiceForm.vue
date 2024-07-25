@@ -61,6 +61,7 @@
 
 <script>
 import axios from 'axios';
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'ServiceForm',
@@ -124,9 +125,9 @@ export default {
         async sendData(formData, config) {
             let response;
             if (this.serviceData.id) {
-                response = await axios.post(`http://localhost:8000/api/services/${this.serviceData.id}`, formData, config);
+                response = await axiosInstance.post(`/services/${this.serviceData.id}`, formData, config);
             } else {
-                response = await axios.post(`http://localhost:8000/api/services`, formData, config);
+                response = await axiosInstance.post(`/services`, formData, config);
             }
             this.$emit('save', response.data);
         },

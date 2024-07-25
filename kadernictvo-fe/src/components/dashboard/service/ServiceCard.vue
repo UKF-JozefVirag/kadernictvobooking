@@ -52,6 +52,7 @@
 <script>
 import ServiceForm from './ServiceForm.vue'
 import axios from 'axios'
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'ServiceCard',
@@ -97,7 +98,7 @@ export default {
         async deleteService(id) {
             try {
                 const token = this.$cookies.get('token');
-                await axios.delete(`http://localhost:8000/api/services/${id}`, {
+                await axiosInstance.delete(`/services/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }
@@ -125,7 +126,7 @@ export default {
         async getServices() {
             try {
                 const token = this.$cookies.get('token');
-                const response = await axios.get('http://localhost:8000/api/services', {
+                const response = await axiosInstance.get('/services', {
                     headers: {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }

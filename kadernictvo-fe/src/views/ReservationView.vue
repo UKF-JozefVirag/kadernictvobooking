@@ -48,6 +48,7 @@ import ReservationDateTime from '@/components/reservation/ReservationDateTime.vu
 import ReservationContactInfo from '@/components/reservation/ReservationContactInfo.vue';
 import FooterComponent from '@/components/FooterComponent.vue';
 import SnackComponent from "@/components/common/SnackComponent.vue";
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'ReservationView',
@@ -206,7 +207,7 @@ export default {
             };
 
             try {
-                const response = await axios.post('http://localhost:8000/api/orders', reservationData, {});
+                const response = await axiosInstance.post('/orders', reservationData, {});
                 console.log('Order created successfully:', response.data);
 
                 this.$router.push({

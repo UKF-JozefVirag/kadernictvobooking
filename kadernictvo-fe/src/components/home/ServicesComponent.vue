@@ -38,6 +38,7 @@ import SectionDescriber from "@/components/home/SectionDescriber.vue";
 import ServiceCard from "@/components/home/ServiceCard.vue";
 import axios from 'axios';
 import SnackComponent from '@/components/common/SnackComponent.vue';
+import axiosInstance from '@/axios.js'
 
 export default {
     name: "ServicesComponent",
@@ -58,7 +59,7 @@ export default {
         async fetchServices() {
             try {
                 this.loadingEvents = true;
-                const response = await axios.get('http://localhost:8000/api/services');
+                const response = await axiosInstance('/services');
                 this.services = response.data;
                 this.loadingEvents = false;
             } catch (error) {

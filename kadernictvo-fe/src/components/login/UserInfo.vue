@@ -52,6 +52,7 @@
 <script>
 import axios from "axios";
 import SnackComponent from "@/components/common/SnackComponent.vue";
+import axiosInstance from '@/axios.js'
 
 export default {
     name: "UserInfo",
@@ -93,8 +94,8 @@ export default {
 
             try {
                 const token = decodeURIComponent($cookies.get('token'))
-                await axios.patch(
-                    'http://localhost:8000/api/user',
+                await axiosInstance.patch(
+                    '/user',
                     {
                         firstName: this.firstName,
                         lastName: this.lastName,
@@ -128,7 +129,7 @@ export default {
         async fetchProfileInfo() {
             try {
                 const token = decodeURIComponent($cookies.get('token'))
-                const response = await axios.get(`http://localhost:8000/api/user`, {
+                const response = await axiosInstance.get(`/user`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

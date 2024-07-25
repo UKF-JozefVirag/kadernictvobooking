@@ -38,6 +38,7 @@ import 'vue-cal/dist/vuecal.css';
 import SectionDescriber from '@/components/home/SectionDescriber.vue';
 import TimePicker from '@/components/reservation/TimePicker.vue';
 import axios from 'axios';
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'ReservationDateTime',
@@ -85,7 +86,7 @@ export default {
         async fetchOrdersForDate(formattedDate) {
             const token = decodeURIComponent(this.$cookies.get('token'));
             try {
-                const response = await axios.get(`http://localhost:8000/api/getEmployeeOrders?date=${formattedDate}&employee_id=${this.employeeId}`, {
+                const response = await axiosInstance.get(`/getEmployeeOrders?date=${formattedDate}&employee_id=${this.employeeId}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

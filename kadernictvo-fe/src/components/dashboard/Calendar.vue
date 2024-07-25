@@ -40,6 +40,7 @@
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
 import axios from 'axios';
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'Calendar',
@@ -64,7 +65,7 @@ export default {
             const token = decodeURIComponent($cookies.get('token'));
             this.loading = true;
             try {
-                const employeesResponse = await axios.get('http://localhost:8000/api/employees', {
+                const employeesResponse = await axiosInstance.get('/employees', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -82,7 +83,7 @@ export default {
                     return map;
                 }, {});
 
-                const ordersResponse = await axios.get('http://localhost:8000/api/orders', {
+                const ordersResponse = await axiosInstance.get('/orders', {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }
@@ -124,7 +125,7 @@ export default {
         async deleteEvent() {
             const token = decodeURIComponent($cookies.get('token'));
             try {
-                await axios.delete(`http://localhost:8000/api/orders/${this.selectedEvent.id}`, {
+                await axiosInstance.delete(`/orders/${this.selectedEvent.id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`
                     }

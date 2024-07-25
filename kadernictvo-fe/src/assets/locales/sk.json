@@ -15,8 +15,8 @@
     },
     "about": {
         "section_name": "O nás",
-        "paragraph_1": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquid at commodi cum dignissimos eveniet excepturi exercitationem, facilis, illum in laboriosam molestiae odio quis reiciendis saepe sapiente sint tempora ut voluptatibus. Amet dignissimos esse quas quibusdam? Dignissimos, dolorum totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-        "paragraph_2": "A alias doloribus fuga odit quisquam, reprehenderit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti minus quas sequi sint tenetur! Cupiditate fugit rerum sequi ullam veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet animi aspernatur atque, aut cumque dolores doloribus fugit illo illum itaque magnam minus modi numquam officia placeat quibusdam quidem quo ratione repudiandae sed sint soluta sunt totam ut vel vitae!"
+        "paragraph_1": "Sme tím profesionálnych holičov, ktorí milujú svoju prácu a záleží im na každom detaili. Našim cieľom je poskytnúť vám nielen perfektný účes, ale aj príjemný zážitok. Používame moderné techniky a kvalitné nástroje, aby sme dosiahli vynikajúce výsledky. Radi vám poradíme s výberom účesu, ktorý najlepšie vyhovuje vašej osobnosti a životnému štýlu. Príďte sa presvedčiť sami, že starostlivosť o vlasy môže byť aj zážitkom. Okrem klasických strihov a holení ponúkame aj špeciálne úpravy brady a kozmetické ošetrenia.",
+        "paragraph_2": "U nás nájdete priateľskú atmosféru a profesionálny prístup, ktorý vám zabezpečí maximálnu spokojnosť. Tešíme sa na vašu návštevu a veríme, že sa k nám budete radi vracať."
     },
     "reviews": {
         "title": "Čo o nás povedali?",
@@ -118,7 +118,7 @@
     },
     "footer": {
         "aboutUs": "O nás",
-        "aboutUsText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet..",
+        "aboutUsText": "Sme tím profesionálnych holičov, ktorí milujú svoju prácu a záleží im na každom detaili. Našim cieľom je poskytnúť vám nielen perfektný účes, ale..",
         "readMore": "Čítať viac",
         "contact": "Kontakt",
         "address": "Štefánikova trieda 61, 949 01 Nitra",

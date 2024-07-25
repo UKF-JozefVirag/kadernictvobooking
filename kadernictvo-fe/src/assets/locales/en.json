@@ -15,8 +15,8 @@
     },
     "about": {
         "section_name": "About Us",
-        "paragraph_1": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad alias aliquid at commodi cum dignissimos eveniet excepturi exercitationem, facilis, illum in laboriosam molestiae odio quis reiciendis saepe sapiente sint tempora ut voluptatibus. Amet dignissimos esse quas quibusdam? Dignissimos, dolorum totam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Lorem ipsum dolor sit amet, consectetur adipisicing elit.",
-        "paragraph_2": "A alias doloribus fuga odit quisquam, reprehenderit. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Deleniti minus quas sequi sint tenetur! Cupiditate fugit rerum sequi ullam veniam. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet animi aspernatur atque, aut cumque dolores doloribus fugit illo illum itaque magnam minus modi numquam officia placeat quibusdam quidem quo ratione repudiandae sed sint soluta sunt totam ut vel vitae!"
+        "paragraph_1": "We are a team of professional barbers who love their work and care about every detail. Our goal is to give you not only a perfect haircut, but also a pleasant experience. We use modern techniques and quality tools to achieve excellent results. We will be happy to advise you on choosing the hairstyle that best suits your personality and lifestyle. Come and see for yourself that hair care can also be an experience. In addition to traditional haircuts and shaves, we also offer special beard trims and beauty treatments.",
+        "paragraph_2": "At our salon you will find a friendly atmosphere and a professional approach that will ensure your maximum satisfaction. We look forward to your visit and hope that you will be happy to return to us."
     },
     "reviews": {
         "title": "What they said about us?",
@@ -118,7 +118,7 @@
     },
     "footer": {
         "aboutUs": "About Us",
-        "aboutUsText": "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, nobis. Lorem ipsum dolor sit amet..",
+        "aboutUsText": "We are a team of professional barbers who love their work and care about every detail. Our goal is to give you not only a perfect haircut, but..",
         "readMore": "Read more",
         "contact": "Contact",
         "address": "Štefánikova trieda 61, 949 01 Nitra",

@@ -162,6 +162,7 @@ import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
 import SideBar from '@/components/dashboard/SideBar.vue';
 import EarningCard from '@/components/dashboard/EarningCard.vue';
 import axios from 'axios';
+import axiosInstance from '@/axios.js'
 
 export default {
     components: { AppointmentsStats, SideBar, EarningCard },
@@ -210,7 +211,7 @@ export default {
         async getOrders() {
             this.loadingOrdersCount = true;
             try {
-                const response = await axios.get('http://localhost:8000/api/stats/latest-orders', {
+                const response = await axiosInstance.get('/stats/latest-orders', {
                     headers: {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }
@@ -239,7 +240,7 @@ export default {
         async getRevenues() {
             this.loadingRevenues = true;
             try {
-                const response = await axios.get('http://localhost:8000/api/stats/revenue?range=' + this.selectedOption, {
+                const response = await axiosInstance.get('/stats/revenue?range=' + this.selectedOption, {
                     headers: {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }
@@ -266,7 +267,7 @@ export default {
         async getOrdersCount() {
             this.loadingOrdersCount = true;
             try {
-                const response = await axios.get('http://localhost:8000/api/stats/orders?range=' + this.selectedOption, {
+                const response = await axiosInstance.get('/stats/orders?range=' + this.selectedOption, {
                     headers: {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }
@@ -293,7 +294,7 @@ export default {
         async getNewCustomers() {
             this.loadingNewCustomers = true;
             try {
-                const response = await axios.get('http://localhost:8000/api/stats/getNewCustomers?range=' + this.selectedOption, {
+                const response = await axiosInstance.get('/stats/getNewCustomers?range=' + this.selectedOption, {
                     headers: {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }
@@ -314,7 +315,7 @@ export default {
         async getEmployeeRevenues() {
             this.loadingEmployeeRevenues = true;
             try {
-                const response = await axios.get('http://localhost:8000/api/stats/getEmployeeValue?range=' + this.selectedOption, {
+                const response = await axiosInstance.get('/stats/getEmployeeValue?range=' + this.selectedOption, {
                     headers: {
                         Authorization: 'Bearer ' + decodeURIComponent($cookies.get('token'))
                     }

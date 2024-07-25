@@ -54,6 +54,7 @@
 <script>
 import EmployeeForm from './EmployeeForm.vue'
 import axios from 'axios'
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'EmployeesCard',
@@ -100,7 +101,7 @@ export default {
         async deleteEmployee(id) {
             try {
                 const token = this.$cookies.get('token');
-                await axios.delete(`http://localhost:8000/api/employees/${id}`, {
+                await axiosInstance.delete(`/employees/${id}`, {
                     headers: {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }
@@ -128,7 +129,7 @@ export default {
         async getEmployees() {
             try {
                 const token = this.$cookies.get('token');
-                const response = await axios.get('http://localhost:8000/api/employees', {
+                const response = await axiosInstance.get('/employees', {
                     headers: {
                         'Authorization': `Bearer ${decodeURIComponent(token)}`
                     }

@@ -49,6 +49,7 @@
 
 <script>
 import axios from "axios";
+import axiosInstance from '@/axios.js'
 
 export default {
     name: "SideBar",
@@ -78,7 +79,7 @@ export default {
         async getUser() {
             try {
                 await axios.get('/sanctum/csrf-cookie');
-                const response = await axios.get('http://localhost:8000/api/user', {
+                const response = await axiosInstance('/user', {
                     headers: {
                         Authorization: `Bearer ${decodeURIComponent($cookies.get('token'))}`
                     }
@@ -131,8 +132,8 @@ export default {
 
         async logout() {
             try {
-                await axios.post(
-                    'http://localhost:8000/api/logout',
+                await axiosInstance().post(
+                    '/logout',
                     {},
                     {
                         headers: {

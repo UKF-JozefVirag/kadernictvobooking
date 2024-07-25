@@ -63,6 +63,7 @@
 
 <script>
 import axios from 'axios'
+import axiosInstance from '@/axios.js'
 
 export default {
     name: 'EmployeeForm',
@@ -137,9 +138,9 @@ export default {
         async sendData(formData, config) {
             let response;
             if (this.employeeData.id) {
-                response = await axios.post(`http://localhost:8000/api/employees/${this.employeeData.id}`, formData, config);
+                response = await axiosInstance.post(`/employees/${this.employeeData.id}`, formData, config);
             } else {
-                response = await axios.post(`http://localhost:8000/api/employees`, formData, config);
+                response = await axiosInstance.post(`/employees`, formData, config);
             }
             this.$emit('save', response.data);
         },

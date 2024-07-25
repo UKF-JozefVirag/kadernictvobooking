@@ -10,6 +10,7 @@ import axios from 'axios'
 import ReservationCompleteView from '@/views/ReservationCompleteView.vue'
 import ServicesView from '@/views/dashboard/ServicesView.vue'
 import EmployeesView from '@/views/dashboard/EmployeesView.vue'
+import axiosInstance from '@/axios.js'
 
 const routes = [
     {
@@ -92,8 +93,8 @@ const router = createRouter({
 
 async function fetchUser() {
     try {
-        await axios.get('/sanctum/csrf-cookie');
-        const response = await axios.get('http://localhost:8000/api/user', {
+        await axios.get('http://localhost:8000/sanctum/csrf-cookie');
+        const response = await axiosInstance.get('/user', {
             headers: {
                 Authorization: `Bearer ${decodeURIComponent($cookies.get('token'))}`
             }
