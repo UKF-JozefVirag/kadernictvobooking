@@ -1,4 +1,5 @@
 <template>
+    <SnackComponent :color="snackColor" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
     <v-container class="mt-5" id="services">
         <v-row>
             <v-col>
@@ -6,36 +7,48 @@
             </v-col>
         </v-row>
         <v-row>
-            <v-col lg="4"
-                   md="6"
-                   sm="6"
-                   xs="12"
-                   v-for="(item, i) in services"
-                   :key="i">
-                <ServiceCard
-                    :card-title="item.name"
-                    :card-text="item.desc"
-                    :card-price="item.price"
-                    :card-image="getImageUrl(item.image)"
-                    :reservation="true"
-                ></ServiceCard>
-            </v-col>
+            <template v-if="loadingEvents">
+                <v-col lg="4" md="6" sm="6" xs="12" v-for="n in 9" :key="'skeleton-' + n">
+                    <v-skeleton-loader
+                        type="card"
+                        class="my-2">
+                    </v-skeleton-loader>
+                </v-col>
+            </template>
+            <template v-else>
+                <v-col lg="4" md="6" sm="6" xs="12" v-for="(item, i) in services" :key="i">
+                    <ServiceCard
+                        :card-title="item.name"
+                        :card-text="item.desc"
+                        :card-price="item.price"
+                        :card-image="getImageUrl(item.image)"
+                        :reservation="true"
+                    ></ServiceCard>
+                </v-col>
+            </template>
         </v-row>
     </v-container>
 </template>
+
+
+
 
 <script>
 import SectionDescriber from "@/components/home/SectionDescriber.vue";
 import ServiceCard from "@/components/home/ServiceCard.vue";
 import axios from 'axios';
+import SnackComponent from '@/components/common/SnackComponent.vue';
 
 export default {
-    name: "ServicesView",
-    components: { ServiceCard, SectionDescriber },
+    name: "ServicesComponent",
+    components: { SnackComponent, ServiceCard, SectionDescriber },
     data() {
         return {
             services: [],
-            loadingEvents: true
+            loadingEvents: false,
+            snackColor: "danger",
+            snackText: "",
+            snackOpen: false
         };
     },
     created() {
@@ -44,12 +57,13 @@ export default {
     methods: {
         async fetchServices() {
             try {
+                this.loadingEvents = true;
                 const response = await axios.get('http://localhost:8000/api/services');
                 this.services = response.data;
                 this.loadingEvents = false;
-                console.log(this.services);
             } catch (error) {
-                console.error('Error fetching services:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching services: ' + error;
             }
         },
         getImageUrl(image) {
@@ -57,6 +71,7 @@ export default {
         }
     }
 }
+
 </script>
 
 <style scoped>
