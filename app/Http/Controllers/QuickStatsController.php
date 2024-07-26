@@ -188,7 +188,7 @@ class QuickStatsController extends Controller
     public function getLatestOrders()
     {
         $latestOrders = Order::with('employee', 'services')
-            ->orderBy('datetime_from', 'desc')
+            ->orderBy('id', 'desc')
             ->take(20)
             ->get();
         return response()->json($latestOrders);
@@ -207,10 +207,11 @@ class QuickStatsController extends Controller
                 $customerCountsByTime[sprintf('%02d:00', $hour)] = 0;
                 $customerCountsByTime[sprintf('%02d:30', $hour)] = 0;
             }
+
             $customers = Order::select(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30 as minute_interval'), DB::raw('HOUR(created_at) as hour'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereDate('created_at', $today)
+                ->whereRaw('created_at = (SELECT MIN(created_at) FROM orders o WHERE o.customer_id = orders.customer_id)')
                 ->groupBy(DB::raw('FLOOR(MINUTE(created_at) / 30) * 30'), DB::raw('HOUR(created_at)'))
-                ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
             foreach ($customers as $customer) {
@@ -232,8 +233,8 @@ class QuickStatsController extends Controller
 
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->whereRaw('created_at = (SELECT MIN(created_at) FROM orders o WHERE o.customer_id = orders.customer_id)')
                 ->groupBy(DB::raw('DATE(created_at)'))
-                ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
             foreach ($customers as $customer) {
@@ -252,8 +253,8 @@ class QuickStatsController extends Controller
 
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->whereRaw('created_at = (SELECT MIN(created_at) FROM orders o WHERE o.customer_id = orders.customer_id)')
                 ->groupBy(DB::raw('DATE(created_at)'))
-                ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
             foreach ($customers as $customer) {
@@ -270,8 +271,8 @@ class QuickStatsController extends Controller
 
             $customers = Order::select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(DISTINCT customer_id) as customer_count'))
                 ->whereDate('created_at', $today)
+                ->whereRaw('created_at = (SELECT MIN(created_at) FROM orders o WHERE o.customer_id = orders.customer_id)')
                 ->groupBy(DB::raw('DATE(created_at)'))
-                ->havingRaw('COUNT(customer_id) = 1')
                 ->get();
 
             foreach ($customers as $customer) {
@@ -281,6 +282,7 @@ class QuickStatsController extends Controller
             return response()->json($customerCountsByDate);
         }
     }
+
 
 
     public function getMostValuableEmployees(Request $request)

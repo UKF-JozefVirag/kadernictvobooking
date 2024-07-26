@@ -37,24 +37,27 @@
         </v-row>
         <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
     </v-container>
+    <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
 
 <script>
 import SectionDescriber from '@/components/home/SectionDescriber.vue';
 import ServiceCard from '@/components/home/ServiceCard.vue';
-import axios from 'axios'
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: 'ReservationEmployee',
-    components: { ServiceCard, SectionDescriber },
+    components: { SnackComponent, ServiceCard, SectionDescriber },
     data() {
         return {
             employees: [],
             selectedEmployeeId: "",
             selectedEmployeeName: "",
-            loadingEvents: true
+            loadingEvents: true,
+            snackText: "",
+            snackOpen: false
         };
     },
     methods: {
@@ -74,7 +77,8 @@ export default {
                 this.employees = response.data;
                 this.loadingEvents = false;
             } catch (error) {
-                console.error('Error fetching employee:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching employee: ' + error;
             }
         },
         getImageUrl(image) {

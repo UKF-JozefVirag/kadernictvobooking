@@ -10,7 +10,9 @@
                 <h2 class="text-left">{{ $t('contact.whereToFindUs') }}</h2>
                 <a href="https://www.google.sk/maps/place/OC+Mlyny+Nitra/@48.3070976,18.0839326,17z/data=!3m1!4b1!4m6!3m5!1s0x476b3ee307b4e213:0xcc86d6ceb39dab2e!8m2!3d48.3070941!4d18.0865075!16s%2Fg%2F11xqzgkk1?entry=ttu"
                    target="_blank" class="mt-3 address"><BIconGeoAlt></BIconGeoAlt>{{ $t('contact.address') }}</a>
-                <iframe
+                <v-skeleton-loader v-if="loadingMap" type="image" height="450">
+                </v-skeleton-loader>
+                <iframe v-else
                     src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2653.779397425777!2d18.083927212399463!3d48.307094071142856!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x476b3ee307b4e213%3A0xcc86d6ceb39dab2e!2sOC%20Mlyny%20Nitra!5e0!3m2!1ssk!2ssk!4v1716199574037!5m2!1ssk!2ssk"
                     width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade"></iframe>

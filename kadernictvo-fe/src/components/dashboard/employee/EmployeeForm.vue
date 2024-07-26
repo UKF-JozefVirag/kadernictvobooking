@@ -59,14 +59,17 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
+    <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
+
 </template>
 
 <script>
-import axios from 'axios'
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: 'EmployeeForm',
+    components: { SnackComponent },
     props: {
         employee: Object
     },
@@ -81,7 +84,9 @@ export default {
                 email: '',
                 phone_number: ''
             },
-            imageFile: null
+            imageFile: null,
+            snackText: "",
+            snackOpen: false
         }
     },
     watch: {
@@ -91,7 +96,9 @@ export default {
                 last_name: '',
                 image: '',
                 email: '',
-                phone_number: ''
+                phone_number: '',
+                snackOpen: false,
+                snackText: ''
             }
         },
         imageFile() {
@@ -131,7 +138,8 @@ export default {
 
                     await this.sendData(formData, config);
                 } catch (error) {
-                    console.error(error);
+                    this.snackOpen = true;
+                    this.snackText = 'Error deleting order: ' + error;
                 }
             }
         },

@@ -35,12 +35,11 @@
             </v-card-actions>
         </v-card>
     </v-dialog>
-    <SnackComponent :color="yellow" :snack-open="snackOpen" :text="snackText"></SnackComponent>
+    <SnackComponent :color="snackColor" :snack-open="snackOpen" :text="snackText"></SnackComponent>
     <FooterComponent></FooterComponent>
 </template>
 
 <script>
-import axios from 'axios';
 import NavBar from '@/components/NavBar.vue';
 import ReservationEvent from '@/components/reservation/ReservationEvent.vue';
 import ReservationEmployee from '@/components/reservation/ReservationEmployee.vue';
@@ -77,6 +76,7 @@ export default {
             isModalOpen: false,
             endTime: '',
             snackText: '',
+            snackColor: 'danger',
             snackOpen: false,
         };
     },
@@ -160,9 +160,10 @@ export default {
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return emailRegex.test(email);
         },
-        async showSnackbar(message) {
+        async showSnackbar(message, color) {
             this.snackOpen = true;
             this.snackText = message;
+            this.snackColor = color;
 
             await this.sleep(2000);
             this.snackOpen = false;
@@ -188,7 +189,8 @@ export default {
 
             this.endTime = `${endHours}:${endMinutes}`;
         },
-        async submitReservation() {
+        async submitReservation()
+        {
             const totalDuration = this.selectedServices.reduce((acc, service) => acc + service.duration, 0);
             const [hours, minutes] = this.selectedTime.split(':').map(Number);
             const startDateTime = new Date(this.selectedDate);
@@ -207,8 +209,7 @@ export default {
             };
 
             try {
-                const response = await axiosInstance.post('/orders', reservationData, {});
-                console.log('Order created successfully:', response.data);
+                await axiosInstance.post('/orders', reservationData, {})
 
                 this.$router.push({
                     name: 'reservation-complete',
@@ -218,11 +219,13 @@ export default {
                 });
                 this.isModalOpen = false;
             } catch (error) {
-                console.error('Error creating order:', error);
+                await this.showSnackbar("Error creating order: " + error, "red");
             }
-        },
+        }
+,
         close() {
             this.isModalOpen = false;
+            this.snackColor = "danger";
         }
     }
 }

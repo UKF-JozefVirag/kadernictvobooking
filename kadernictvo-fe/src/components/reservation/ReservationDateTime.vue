@@ -30,6 +30,7 @@
         </v-row>
         <div class="mt-3" style="border-bottom: 1px solid #ececec;"></div>
     </v-container>
+    <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
 <script>
@@ -37,12 +38,13 @@ import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
 import SectionDescriber from '@/components/home/SectionDescriber.vue';
 import TimePicker from '@/components/reservation/TimePicker.vue';
-import axios from 'axios';
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: 'ReservationDateTime',
     components: {
+        SnackComponent,
         TimePicker,
         SectionDescriber,
         VueCal,
@@ -56,8 +58,10 @@ export default {
     data() {
         return {
             selectedDate: null,
-            minDate: new Date().toISOString().split('T')[0], // Today's date in YYYY-MM-DD format
-            orders: [], // Store all fetched orders
+            minDate: new Date().toISOString().split('T')[0],
+            orders: [],
+            snackText: "",
+            snackOpen: false
         }
     },
     computed: {
@@ -93,7 +97,8 @@ export default {
                 });
                 this.orders = response.data;
             } catch (error) {
-                console.error('Error fetching orders:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching orders: ' + error;
             }
         },
         formatDate(date) {

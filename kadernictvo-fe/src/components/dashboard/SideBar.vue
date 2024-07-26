@@ -45,14 +45,17 @@
             </v-list>
         </v-navigation-drawer>
     </v-layout>
+    <SnackComponent color="red" :text="snackText" :snack-open="snackOpen"></SnackComponent>
 </template>
 
 <script>
 import axios from "axios";
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: "SideBar",
+    components: { SnackComponent },
     data: () => ({
         drawer: false,
         group: null,
@@ -62,7 +65,9 @@ export default {
         languages: [
             {name: "English", short: "EN"},
             {name: "Slovak", short: "SK"}
-        ]
+        ],
+        snackText: "",
+        snackOpen: false
     }),
 
     watch: {
@@ -86,7 +91,8 @@ export default {
                 });
                 this.email = response.data.email;
             } catch (error) {
-                console.log('Error fetching user:', error);
+                this.snackOpen = true;
+                this.snackText = "Error logging out: " + error;
                 return null;
             }
         },
@@ -145,7 +151,8 @@ export default {
                 $cookies.remove('token');
                 this.$router.push('/login');
             } catch (error) {
-                console.log(error);
+                this.snackOpen = true;
+                this.snackText = "Error logging out: " + error;
             }
         }
     }

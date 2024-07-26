@@ -37,23 +37,26 @@
             </template>
         </v-row>
     </v-container>
+    <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
 
 <script>
 import SectionDescriber from "@/components/home/SectionDescriber.vue";
 import ServiceCard from "@/components/home/ServiceCard.vue";
-import axios from 'axios';
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: "ServicesView",
-    components: { ServiceCard, SectionDescriber },
+    components: { SnackComponent, ServiceCard, SectionDescriber },
     data() {
         return {
             services: [],
             loadingEvents: true,
-            selectedServices: []
+            selectedServices: [],
+            snackText: "",
+            snackOpen: false
         };
     },
     created() {
@@ -66,7 +69,8 @@ export default {
                 this.services = response.data;
                 this.loadingEvents = false;
             } catch (error) {
-                console.error('Error fetching services:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching services: ' + error;
             }
         },
         getImageUrl(image) {

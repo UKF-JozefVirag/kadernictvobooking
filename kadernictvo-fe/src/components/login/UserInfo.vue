@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import SnackComponent from "@/components/common/SnackComponent.vue";
 import axiosInstance from '@/axios.js'
 
@@ -147,7 +146,8 @@ export default {
                     email: data.email
                 };
             } catch (error) {
-                console.log(error);
+                this.snackOpen = true;
+                this.snackText = "Error logging out: " + error;
             }
         }
     }

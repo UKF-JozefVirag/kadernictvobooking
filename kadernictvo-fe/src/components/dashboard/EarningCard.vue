@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { defineProps, computed, onMounted } from 'vue'
+import { defineProps, computed } from 'vue'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, Legend, LineElement, CategoryScale, LinearScale, PointElement } from 'chart.js'
 
@@ -153,12 +153,6 @@ const chartOptions = {
         }
     }
 }
-
-onMounted(() => {
-    if (props.secondValues && props.secondValues.length > 0) {
-        console.log('secondValues:', props.secondValues)
-    }
-})
 </script>
 
 <style scoped>

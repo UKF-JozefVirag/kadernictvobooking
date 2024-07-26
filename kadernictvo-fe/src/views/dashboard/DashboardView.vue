@@ -151,6 +151,7 @@
             </v-card>
         </v-dialog>
     </v-container>
+    <SnackComponent color="danger" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
 
@@ -161,13 +162,15 @@ import { format, parseISO, differenceInMinutes } from 'date-fns';
 import AppointmentsStats from '@/components/dashboard/AppointmentsStats.vue';
 import SideBar from '@/components/dashboard/SideBar.vue';
 import EarningCard from '@/components/dashboard/EarningCard.vue';
-import axios from 'axios';
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
-    components: { AppointmentsStats, SideBar, EarningCard },
+    components: { SnackComponent, AppointmentsStats, SideBar, EarningCard },
     data() {
         return {
+            snackText: '',
+            snackOpen: false,
             selectedOption: '1',
             orders: [],
             ordersCount: [],
@@ -232,7 +235,8 @@ export default {
 
                 this.orders.sort((a, b) => b.id - a.id);
             } catch (error) {
-                console.error('Error fetching orders:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching orders: ' + error;
             } finally {
                 this.loadingOrdersCount = false;
             }
@@ -249,9 +253,9 @@ export default {
 
                 this.revenuesLabels = Object.keys(data).map(dateString => {
                     const date = parseISO(dateString);
-                    if (this.selectedOption === '2') { // Weekly
+                    if (this.selectedOption === '2') {
                         return format(date, 'dd/MM');
-                    } else if (this.selectedOption === '3') { // Monthly
+                    } else if (this.selectedOption === '3') {
                         return format(date, 'dd/MM');
                     }
                     return dateString;
@@ -259,7 +263,8 @@ export default {
 
                 this.revenuesCount = Object.values(data);
             } catch (error) {
-                console.error('Error fetching revenues:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching revenues: ' + error;
             } finally {
                 this.loadingRevenues = false;
             }
@@ -276,9 +281,9 @@ export default {
 
                 this.ordersLabels = Object.keys(data).map(dateString => {
                     const date = parseISO(dateString);
-                    if (this.selectedOption === '2') { // Weekly
+                    if (this.selectedOption === '2') {
                         return format(date, 'dd/MM');
-                    } else if (this.selectedOption === '3') { // Monthly
+                    } else if (this.selectedOption === '3') {
                         return format(date, 'dd/MM');
                     }
                     return dateString;
@@ -286,7 +291,8 @@ export default {
 
                 this.ordersCount = Object.values(data);
             } catch (error) {
-                console.error('Error fetching orders count:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching orders: ' + error;
             } finally {
                 this.loadingOrdersCount = false;
             }
@@ -307,7 +313,8 @@ export default {
                 });
                 this.newCustomersCount = Object.values(data);
             } catch (error) {
-                console.error('Error fetching new customers:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching new customers: ' + error;
             } finally {
                 this.loadingNewCustomers = false;
             }
@@ -341,17 +348,20 @@ export default {
                                 fill: false
                             });
                         } else {
-                            console.error('Invalid employee data structure', employeeData);
+                            this.snackOpen = true;
+                            this.snackText = 'Invalid employee data structure ' + employeeData;
                         }
                     });
                     this.employeeRevenuesLabels = labels;
                     this.employeeRevenuesCount = datasets;
                     this.secondValues = data;
                 } else {
-                    console.error('Invalid response data format', data);
+                    this.snackOpen = true;
+                    this.snackText = 'Invalid response data format ' + data;
                 }
             } catch (error) {
-                console.error('Error fetching employee revenues:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching employee revenues: ' + error;
             } finally {
                 this.loadingEmployeeRevenues = false;
             }

@@ -28,7 +28,7 @@ class OrderController extends Controller
 
         $orders = Order::whereDate('datetime_from', $validatedData['date'])
             ->where('employee_id', $validatedData['employee_id'])
-            ->with('services', 'employees', 'customer')
+            ->with('services', 'employee', 'customer')
             ->get();
 
         return response()->json($orders, 200);

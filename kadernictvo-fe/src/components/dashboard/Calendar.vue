@@ -34,17 +34,19 @@
             </v-col>
         </v-row>
     </v-container>
+    <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
 <script>
 import VueCal from 'vue-cal';
 import 'vue-cal/dist/vuecal.css';
-import axios from 'axios';
 import axiosInstance from '@/axios.js'
+import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
     name: 'Calendar',
     components: {
+        SnackComponent,
         VueCal
     },
     data() {
@@ -54,7 +56,9 @@ export default {
             customDaySplitLabels: [],
             events: [],
             employeesMap: {},
-            loading: false
+            loading: false,
+            snackText: "",
+            snackOpen: false
         };
     },
     created() {
@@ -110,7 +114,8 @@ export default {
                     };
                 });
             } catch (error) {
-                console.error('Error fetching employees or orders:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error fetching employees or orders: ' + error;
             } finally {
                 this.loading = false;
             }
@@ -133,7 +138,8 @@ export default {
                 this.events = this.events.filter(event => event.id !== this.selectedEvent.id);
                 this.showDialog = false;
             } catch (error) {
-                console.error('Error deleting order:', error);
+                this.snackOpen = true;
+                this.snackText = 'Error deleting order: ' + error;
             }
         },
 
