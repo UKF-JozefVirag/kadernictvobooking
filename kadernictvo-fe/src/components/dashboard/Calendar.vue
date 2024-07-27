@@ -34,6 +34,30 @@
             </v-col>
         </v-row>
     </v-container>
+    <v-dialog v-model="showDialog" max-width="500" variant="flat">
+        <v-card>
+            <v-card-title>
+                <p class="text-center">{{ selectedEvent.title }}</p>
+                <div class="d-flex justify-content-end">
+                    <v-btn variant="text" size="regular" prepend-icon="mdi-delete" :ripple="false" color="danger" @click="deleteEvent"></v-btn>
+                </div>
+            </v-card-title>
+            <v-card-text>
+                <v-list>
+                    <strong>{{$t('calendar.orderDetail')}}</strong>
+                    <v-list-item :title="$t('calendar.employee')" :subtitle="selectedEvent.employee ? selectedEvent.employee.first_name + ' ' + selectedEvent.employee.last_name : 'Unknown'"></v-list-item>
+                    <v-list-item :title="$t('calendar.orderFrom')" :subtitle="selectedEvent.start && selectedEvent.start.formatTime()"></v-list-item>
+                    <v-list-item :title="$t('calendar.orderTo')" :subtitle="selectedEvent.end && selectedEvent.end.formatTime()"></v-list-item>
+                    <v-list-item :title="$t('calendar.price')" :subtitle="selectedEvent.price + ' €'"></v-list-item>
+                    <strong>{{$t('calendar.services')}}</strong>
+                    <div v-for="(service, index) in selectedEvent.services" :key="index">
+                        <v-list-item :title="`${service.name} - ${service.price} €`"></v-list-item>
+                    </div>
+                </v-list>
+
+            </v-card-text>
+        </v-card>
+    </v-dialog>
     <SnackComponent color="warning" :text="snackText" :snackOpen="snackOpen"></SnackComponent>
 </template>
 
@@ -58,7 +82,7 @@ export default {
             employeesMap: {},
             loading: false,
             snackText: "",
-            snackOpen: false
+            snackOpen: false,
         };
     },
     created() {
@@ -66,6 +90,7 @@ export default {
     },
     methods: {
         async fetchEmployeesAndOrders() {
+            this.loading = true;
             const token = decodeURIComponent($cookies.get('token'));
             this.loading = true;
             try {
@@ -176,7 +201,8 @@ export default {
     height: 100%;
 }
 
-.event-text {}
+.event-text {
+}
 
 @media (max-width: 600px) {
     .event-text {
