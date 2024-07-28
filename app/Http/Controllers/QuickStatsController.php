@@ -113,7 +113,6 @@ class QuickStatsController extends Controller
         switch ($timeRange) {
             case '1':
             case 'day':
-                // Initialize the array with half-hour intervals from 08:00 to 18:00, all set to 0
                 for ($hour = 8; $hour <= 18; $hour++) {
                     $revenueOverTime["{$hour}:00"] = 0;
                     $revenueOverTime["{$hour}:30"] = 0;
@@ -283,45 +282,39 @@ class QuickStatsController extends Controller
         }
     }
 
-
-
     public function getMostValuableEmployees(Request $request)
     {
-        $timeRange = $request->query('range', '1'); // Default to '1' (day)
+        $timeRange = $request->query('range', '1');
         $now = Carbon::now();
         $query = Order::select('employee_id', DB::raw('SUM(total_price) as total_revenue'));
 
         switch ($timeRange) {
             case '1': // Day
-                $query->addSelect(DB::raw('CONCAT(HOUR(datetime_from), \':\', IF(MINUTE(datetime_from) >= 30, \'30\', \'00\')) as time_unit'))
+                $query->addSelect(DB::raw('CONCAT(LPAD(HOUR(datetime_from), 2, "0"), \':\', LPAD(IF(MINUTE(datetime_from) >= 30, 30, 0), 2, "0")) as time_unit'))
                     ->whereDate('datetime_from', $now->toDateString())
-                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
-                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [8, 18])
+                    ->groupBy('employee_id', 'time_unit')
+                    ->orderBy('employee_id')
+                    ->orderBy('time_unit', 'asc');
                 break;
             case '2': // Week
                 $query->addSelect(DB::raw('DATE(datetime_from) as date'))
                     ->whereBetween('datetime_from', [$now->startOfWeek()->toDateTimeString(), $now->endOfWeek()->toDateTimeString()])
-                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
-                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [8, 18])
+                    ->groupBy('employee_id', 'date')
+                    ->orderBy('employee_id')
+                    ->orderBy('date', 'asc');
                 break;
             case '3': // Month
                 $query->addSelect(DB::raw('DATE(datetime_from) as date'))
                     ->whereBetween('datetime_from', [$now->startOfMonth()->toDateTimeString(), $now->endOfMonth()->toDateTimeString()])
-                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [0, 23])
-                    ->whereRaw('MINUTE(datetime_from) % 30 = 0');
+                    ->whereBetween(DB::raw('HOUR(datetime_from)'), [8, 18])
+                    ->groupBy('employee_id', 'date')
+                    ->orderBy('employee_id')
+                    ->orderBy('date', 'asc');
                 break;
             default:
                 throw new InvalidArgumentException("Invalid time range provided.");
-        }
-
-        if ($timeRange == '2' || $timeRange == '3') {
-            $query->groupBy('employee_id', 'date')
-                ->orderBy('employee_id')
-                ->orderBy('date', 'asc');
-        } else {
-            $query->groupBy('employee_id', 'time_unit')
-                ->orderBy('employee_id')
-                ->orderBy('time_unit', 'asc');
         }
 
         $results = $query->get();
@@ -379,9 +372,11 @@ class QuickStatsController extends Controller
     private function generateTimeIntervals()
     {
         $intervals = [];
-        for ($hour = 1; $hour <= 23; $hour++) {
+        for ($hour = 8; $hour <= 18; $hour++) {
             $intervals[] = sprintf('%02d:00', $hour);
-            $intervals[] = sprintf('%02d:30', $hour);
+            if ($hour < 18) {
+                $intervals[] = sprintf('%02d:30', $hour);
+            }
         }
         return $intervals;
     }

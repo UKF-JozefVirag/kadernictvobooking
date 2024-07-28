@@ -78,7 +78,7 @@ const isNegative = computed(() => {
 const generateColor = (index) => {
     const colors = [
         '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
-        '#E7E9ED', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+        '#33369d', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
     ]
     return colors[index % colors.length]
 }

@@ -338,8 +338,13 @@ export default {
                             const employeeName = employeeData.employee;
 
                             if (labels.length === 0) {
-                                labels.push(...Object.keys(times));
+                                labels.push(...Object.keys(times).sort((a, b) => {
+                                    const [aHour, aMin] = a.split(':').map(Number);
+                                    const [bHour, bMin] = b.split(':').map(Number);
+                                    return aHour * 60 + aMin - (bHour * 60 + bMin);
+                                }));
                             }
+
                             datasets.push({
                                 label: employeeName,
                                 data: Object.values(times),
@@ -349,7 +354,7 @@ export default {
                             });
                         } else {
                             this.snackOpen = true;
-                            this.snackText = 'Invalid employee data structure ' + employeeData;
+                            this.snackText = this.$t('login.error') + ": " + employeeData;
                         }
                     });
                     this.employeeRevenuesLabels = labels;
@@ -357,11 +362,11 @@ export default {
                     this.secondValues = data;
                 } else {
                     this.snackOpen = true;
-                    this.snackText = 'Invalid response data format ' + data;
+                    this.snackText = this.$t('login.error') + ": " + data;
                 }
             } catch (error) {
                 this.snackOpen = true;
-                this.snackText = 'Error fetching employee revenues: ' + error;
+                this.snackText = this.$t('login.error') + ": " + error;
             } finally {
                 this.loadingEmployeeRevenues = false;
             }
@@ -369,7 +374,7 @@ export default {
         generateColor(index) {
             const colors = [
                 '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40',
-                '#E7E9ED', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
+                '#714dcc', '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0', '#9966FF'
             ];
             return colors[index % colors.length];
         },

@@ -5,8 +5,8 @@
                 <SectionDescriber :section-name="$t('contact.sectionName')"></SectionDescriber>
             </v-col>
         </v-row>
-        <v-row class="justify-content-md-center">
-            <v-col cols="8" md="6" sm="12">
+        <v-row class="justify-content-md-center justify-content-sm-center">
+            <v-col cols="8" md="6" sm="12" xs="12">
                 <h2 class="text-left">{{ $t('contact.whereToFindUs') }}</h2>
                 <a href="https://www.google.sk/maps/place/OC+Mlyny+Nitra/@48.3070976,18.0839326,17z/data=!3m1!4b1!4m6!3m5!1s0x476b3ee307b4e213:0xcc86d6ceb39dab2e!8m2!3d48.3070941!4d18.0865075!16s%2Fg%2F11xqzgkk1?entry=ttu"
                    target="_blank" class="mt-3 address"><BIconGeoAlt></BIconGeoAlt>{{ $t('contact.address') }}</a>
