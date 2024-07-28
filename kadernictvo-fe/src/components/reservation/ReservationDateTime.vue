@@ -110,7 +110,8 @@ export default {
         onTimeSelected(time) {
             this.$emit('time-selected', time);
         }
-    }
+    },
+    emits: ['date-selected', 'time-selected']
 }
 </script>
 

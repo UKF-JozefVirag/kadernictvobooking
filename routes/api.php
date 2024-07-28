@@ -27,7 +27,7 @@ Route::middleware('auth:sanctum')->get('user', function () {
 Route::group([
     "middleware" => ['auth:sanctum']
 ], function () {
-    Route::post("logout", [AuthController::class, 'logout']);
+    Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/validateToken', [AuthController::class, 'validateToken']);
     Route::get("profile", [UpdateProfile::class, 'getProfileInfo']);
     Route::patch("profile", [UpdateProfile::class, 'setProfileInfo']);

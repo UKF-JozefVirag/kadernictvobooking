@@ -208,5 +208,9 @@
         "report": "Report",
         "profile": "My profile",
         "logout": "Logout"
+    },
+    "login": {
+        "success": "Login was successful",
+        "error": "An error occurred"
     }
 }

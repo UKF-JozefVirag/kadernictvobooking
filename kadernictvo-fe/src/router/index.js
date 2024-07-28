@@ -101,7 +101,6 @@ async function fetchUser() {
         });
         return response.data;
     } catch (error) {
-        console.log('Error fetching user:', error);
         return null;
     }
 }

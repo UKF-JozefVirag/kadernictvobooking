@@ -209,5 +209,9 @@
         "report": "Report",
         "profile": "Môj profil",
         "logout": "Odhlásiť sa"
+    },
+    "login": {
+        "success": "Prihlasovanie prebehlo úspešne",
+        "error": "Vyskytla sa chyba"
     }
 }

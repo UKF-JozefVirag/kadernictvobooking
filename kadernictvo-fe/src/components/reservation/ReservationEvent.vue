@@ -48,7 +48,7 @@ import axiosInstance from '@/axios.js'
 import SnackComponent from '@/components/common/SnackComponent.vue'
 
 export default {
-    name: "ServicesView",
+    name: "ReservationEvent",
     components: { SnackComponent, ServiceCard, SectionDescriber },
     data() {
         return {
@@ -90,7 +90,8 @@ export default {
         isSelected(serviceId) {
             return this.selectedServices.some(service => service.id === serviceId);
         }
-    }
+    },
+    emits: ['services-selected']
 }
 </script>
 

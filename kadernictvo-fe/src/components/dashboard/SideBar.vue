@@ -20,7 +20,7 @@
                         class="navbarTile"
                         :active-class="'active-list-item'"
                     >
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
+                        <v-list-item-title :ripple="{ class: 'text-red' }">{{ item.title }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -138,23 +138,30 @@ export default {
 
         async logout() {
             try {
-                await axiosInstance().post(
+                const token = decodeURIComponent($cookies.get('token'));
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                await axiosInstance.post(
                     '/logout',
                     {},
                     {
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + decodeURIComponent($cookies.get('token'))
+                            'Authorization': 'Bearer ' + token
                         }
                     }
-                )
+                );
+
                 $cookies.remove('token');
                 this.$router.push('/login');
             } catch (error) {
+                console.error('Logout Error:', error);
                 this.snackOpen = true;
-                this.snackText = "Error logging out: " + error;
+                this.snackText = "Error logging out: " + error.message;
             }
         }
+
     }
 }
 </script>

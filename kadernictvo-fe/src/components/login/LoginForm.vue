@@ -87,7 +87,7 @@ export default {
                 );
                 this.snackOpen = true;
                 this.color = "success";
-                this.snackText = "Successfully logged in";
+                this.snackText = this.$t('login.success');
                 const token = response.data.token;
                 this.$cookies.set('token', encodeURIComponent(token), '1d');
                 this.$router.push('/dashboard');
@@ -97,7 +97,7 @@ export default {
                 if (e.response && e.response.data && e.response.data.message) {
                     this.snackText = e.response.data.message;
                 } else {
-                    this.snackText = "An error occurred";
+                    this.snackText = this.$t('login.error')
                 }
             } finally {
                 this.loading = false;

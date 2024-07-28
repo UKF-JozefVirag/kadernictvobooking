@@ -25,7 +25,7 @@ export default {
         cardText: String,
         cardPrice: Number,
         cardImage: String,
-        cardSecondText: String,
+        cardSecondText: Number,
         reservation: Boolean,
         service: Boolean
     },

@@ -87,7 +87,8 @@ export default {
     },
     created() {
         this.fetchEmployees();
-    }
+    },
+    emits: ['employee-selected']
 };
 
 </script>
