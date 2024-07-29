@@ -408,6 +408,38 @@ class QuickStatsController extends Controller
         return $daysOfMonth;
     }
 
+    public function getTodayOrders()
+    {
+        $today = Carbon::today();
+        $now = Carbon::now();
+
+        $employees = Employee::with(['orders' => function ($query) use ($today) {
+            $query->whereDate('datetime_from', $today);
+        }])->get();
+
+        $data = $employees->map(function ($employee) use ($now) {
+            $pending = $employee->orders->filter(function ($order) use ($now) {
+                return $order->datetime_from > $now;
+            })->count();
+
+            $completed = $employee->orders->filter(function ($order) use ($now) {
+                return $order->datetime_from <= $now;
+            })->count();
+
+            $cancelled = $employee->orders->filter(function ($order) {
+                return $order->status == 'cancelled';
+            })->count();
+
+            return [
+                'employee' => $employee,
+                'pending' => $pending,
+                'completed' => $completed,
+                'cancelled' => $cancelled,
+            ];
+        });
+
+        return response()->json($data);
+    }
 
 }
 

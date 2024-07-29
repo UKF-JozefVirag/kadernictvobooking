@@ -54,7 +54,7 @@
                     sparklineColor="info"
                     :percentage="false"
                 ></EarningCard>
-                <v-card v-else class="d-flex align-center justify-center loader-card">
+                <v-card v-else class="d-flex align-center justify-center loader-card">sad
                     <v-progress-circular indeterminate color="black" size="70"></v-progress-circular>
                 </v-card>
             </v-col>

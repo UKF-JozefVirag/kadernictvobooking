@@ -49,6 +49,7 @@ Route::group([
     Route::get('stats/latest-orders', [QuickStatsController::class, 'getLatestOrders']);
     Route::get('stats/getEmployeeValue', [QuickStatsController::class, 'getMostValuableEmployees']);
     Route::get('stats/getNewCustomers', [QuickStatsController::class, 'getNewCustomers']);
+    Route::get('stats/getTodayOrders', [QuickStatsController::class, 'getTodayOrders']);
 
 
 });
