@@ -19,8 +19,9 @@
                         @click="handleProfileItemClick(item)"
                         class="navbarTile"
                         :active-class="'active-list-item'"
+                        :v-ripple="false"
                     >
-                        <v-list-item-title :ripple="{ class: 'text-red' }">{{ item.title }}</v-list-item-title>
+                        <v-list-item-title >{{ item.title }}</v-list-item-title>
                     </v-list-item>
                 </v-list>
             </v-menu>
@@ -180,17 +181,13 @@ export default {
 .navbarTile {
     background-color: white !important;
     transition: none !important;
-}
-
-.dashboard-item:hover,
-.navbarTile:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
-    color: black !important;
-}
-
-.dashboard-item .v-list-item__title,
-.navbarTile .v-list-item__title {
-    color: black !important;
+    &:hover, &:active {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        color: black !important;
+    }
+    .v-list-item__title {
+        color: black !important;
+    }
 }
 
 .active-list-item {
@@ -200,15 +197,23 @@ export default {
 
 .v-list-item {
     transition: none !important;
+    &:hover, &:active {
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        color: black !important;
+    }
 }
 
-.v-list-item:hover {
-    background-color: rgba(0, 0, 0, 0.1) !important;
-    color: black !important;
+.dashboard-item:deep(.v-btn__overlay) {
+    display: none;
 }
-
-
+.dashboard-item:deep(.v-btn__underlay) {
+    display: none;
+}
+.dashboard-item:deep(.v-ripple__container) {
+    display: none;
+}
 </style>
+
 
 
 

@@ -1,12 +1,13 @@
 <template>
     <v-card height="450" class="shadow-lg">
         <v-card-title>{{ $t('appointments.title') }}</v-card-title>
+        <v-spacer></v-spacer>
         <v-card-actions class="d-flex align-center justify-center">
-            <v-btn icon @click="prevEmployee">
+            <v-btn icon="" :ripple="false" @click="prevEmployee">
                 <v-icon>mdi-chevron-left</v-icon>
             </v-btn>
-            <span class="mx-2 text-black">{{ currentEmployeeName }}</span>
-            <v-btn icon @click="nextEmployee">
+            <span class="mx-2 text-black employee-name">{{ currentEmployeeName }}</span>
+            <v-btn icon="" :ripple="false" @click="nextEmployee">
                 <v-icon>mdi-chevron-right</v-icon>
             </v-btn>
         </v-card-actions>
@@ -29,8 +30,8 @@
     </v-card>
 </template>
 
+
 <script>
-import axios from 'axios';
 import axiosInstance from '@/axios.js';
 
 export default {
@@ -46,12 +47,12 @@ export default {
                     color: 'rgb(255,165,0)',
                     backgroundColor: 'rgba(255, 165, 0, 0.15)'
                 },
-                [this.$t('appointments.cancelled')]: {
-                    value: 0,
-                    icon: 'cancel',
-                    color: 'rgb(176,0,0)',
-                    backgroundColor: 'rgba(176,0,0, 0.15)'
-                },
+                // [this.$t('appointments.cancelled')]: {
+                //     value: 0,
+                //     icon: 'cancel',
+                //     color: 'rgb(176,0,0)',
+                //     backgroundColor: 'rgba(176,0,0, 0.15)'
+                // },
                 [this.$t('appointments.completed')]: {
                     value: 0,
                     icon: 'checkbox-marked-outline',
@@ -82,7 +83,6 @@ export default {
                     }
                 });
                 this.employees = response.data;
-                console.log(response.data);
                 if (this.employees.length > 0) {
                     this.updateStats();
                 }
@@ -93,7 +93,6 @@ export default {
         updateStats() {
             const currentEmployeeData = this.currentEmployee;
             this.stats[this.$t('appointments.pending')].value = currentEmployeeData.pending;
-            this.stats[this.$t('appointments.cancelled')].value = currentEmployeeData.cancelled;
             this.stats[this.$t('appointments.completed')].value = currentEmployeeData.completed;
         },
         prevEmployee() {
@@ -122,6 +121,10 @@ export default {
 .d-flex {
     display: flex;
     justify-content: space-between;
+}
+
+.employee-name {
+    font-size: 1.3rem;
 }
 
 </style>

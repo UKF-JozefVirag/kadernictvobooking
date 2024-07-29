@@ -37,11 +37,11 @@
                     <v-btn type="submit" :ripple="false" plain class="w-100 submit-button" form="loginform" @click="login">Sign in</v-btn>
                 </v-col>
             </v-row>
-            <v-row class="text-center">
-                <v-col align-self="center">
-                    <a href="#" class="text-center text-decoration-underline forgot-pwd">Forgot password ?</a>
-                </v-col>
-            </v-row>
+<!--            <v-row class="text-center">-->
+<!--                <v-col align-self="center">-->
+<!--                    <a href="#" class="text-center text-decoration-underline forgot-pwd">Forgot password ?</a>-->
+<!--                </v-col>-->
+<!--            </v-row>-->
         </v-container>
     </v-form>
     <SnackComponent :color="color" :snack-open="snackOpen" :text="snackText"></SnackComponent>

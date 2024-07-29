@@ -7,11 +7,11 @@
             </v-col>
         </v-row>
 
-        <v-row>
-            <v-col cols="12" md="12" lg="8" offset-xl="2">
-                <ChangePassword></ChangePassword>
-            </v-col>
-        </v-row>
+<!--        <v-row>-->
+<!--            <v-col cols="12" md="12" lg="8" offset-xl="2">-->
+<!--                <ChangePassword></ChangePassword>-->
+<!--            </v-col>-->
+<!--        </v-row>-->
     </v-container>
 </template>
 
